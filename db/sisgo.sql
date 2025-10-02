@@ -1,0 +1,181 @@
+CREATE DATABASE `sisgo` /*!40100 COLLATE 'utf8_spanish_ci' */;
+
+USE sisgo;
+
+CREATE TABLE ACCION (
+	idAccion smallint AUTO_INCREMENT NOT NULL,
+	nombreAccion varchar(100) NOT NULL,
+ PRIMARY KEY (idAccion)
+ );
+
+CREATE TABLE CLIENTE(
+	idCliente int AUTO_INCREMENT NOT NULL,
+	razonSocial varchar(150) NOT NULL,
+	cuit numeric(11, 0) NOT NULL,
+	direccion varchar(255) NOT NULL,
+	telefono varchar(15) NOT NULL,
+	fechaAlta date NOT NULL,
+	fechaBaja date NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY (idCliente)
+);
+
+CREATE TABLE EMPLEADO(
+	idEmpleado int AUTO_INCREMENT NOT NULL,
+	legajo tinyint NOT NULL,
+	nombre varchar(20) NOT NULL,
+	apellido varchar(20) NOT NULL,
+	fechaAlta date NOT NULL,
+	fechaBaja date NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY (idEmpleado)
+ );
+
+CREATE TABLE EMPLEADO_PROYECTO(
+	idEmpleado int NOT NULL,
+	numeroProyecto int NOT NULL,
+ PRIMARY KEY (idEmpleado,numeroProyecto)
+);
+
+CREATE TABLE EQUIPO(
+	idEquipo int AUTO_INCREMENT NOT NULL,
+	descripcionEquipo varchar(100) NOT NULL,
+	cantidadEquipos smallint NOT NULL,
+	fechaAlta date NOT NULL,
+	fechaBaja date NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY (idEquipo)
+);
+
+CREATE TABLE EQUIPO_PROYECTO(
+	idEquipo int NOT NULL,
+	numeroProyecto int NOT NULL,
+	cantidad int NULL,
+ PRIMARY KEY(idEquipo,numeroProyecto)
+);
+
+CREATE TABLE INSUMO(
+	idInsumo int AUTO_INCREMENT NOT NULL,
+	descripcionInsumo varchar(100) NOT NULL,
+	cantidadStock smallint NOT NULL,
+	fechaAlta date NOT NULL,
+	fechaBaja date NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY(idInsumo)
+);
+
+CREATE TABLE INSUMO_PROYECTO(
+	idInsumo int NOT NULL,
+	numeroProyecto int NOT NULL,
+	cantidad int NULL,
+ PRIMARY KEY(idInsumo,numeroProyecto)
+);
+
+CREATE TABLE PEDIDO(
+	numeroPedido int AUTO_INCREMENT NOT NULL,
+	fechaPedido date NOT NULL,
+	numeroProyecto int NOT NULL,
+	idCliente int NOT NULL,
+	idUsuario int NOT NULL,
+	detallePedido varchar(1000) NOT NULL,
+	caracteristicasPedido varchar(1000) NOT NULL,
+ PRIMARY KEY(numeroPedido)
+);
+
+CREATE TABLE PERMISO(
+	idRol smallint NOT NULL,
+	idAccion smallint NOT NULL,
+ PRIMARY KEY(idRol,idAccion)
+);
+
+CREATE TABLE PRESUPUESTO(
+	numeroProyecto int NOT NULL,
+	numeroPresupuesto smallint NOT NULL,
+	fechaPresupuesto date NOT NULL,
+	diasValidez tinyint NOT NULL,
+	importePresupuestado float NOT NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY(numeroProyecto,numeroPresupuesto)
+);
+
+CREATE TABLE PROYECTO(
+	numeroProyecto int AUTO_INCREMENT NOT NULL,
+	fechaCreacion datetime NOT NULL,
+	nombreProyecto varchar(50) NOT NULL,
+	fechaEstimadaInicio date NOT NULL,
+	fechaFin date NOT NULL,
+	idUsuario int NOT NULL,
+ PRIMARY KEY (numeroProyecto)
+ );
+
+CREATE TABLE ROL(
+	idRol smallint AUTO_INCREMENT NOT NULL,
+	nombreRol varchar(100) NOT NULL,
+ PRIMARY KEY (idRol)
+);
+
+CREATE TABLE USUARIO(
+	idUsuario int AUTO_INCREMENT NOT NULL,
+	nombreUsuario varchar(20) NOT NULL,
+	claveUsuario varchar(64) NOT NULL,
+	descripcionUsuario varchar(100) NOT NULL,
+	fechaAlta date NOT NULL,
+	fechaBaja date NULL,
+	idRol smallint NOT NULL,
+ PRIMARY KEY (idUsuario)
+);
+
+ALTER TABLE CLIENTE ADD  CONSTRAINT FK_CLIENTE_USUARIO FOREIGN KEY(idUsuario) 
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE EMPLEADO  ADD  CONSTRAINT FK_EMPLEADO_USUARIO FOREIGN KEY(idUsuario)
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE EMPLEADO_PROYECTO  ADD  CONSTRAINT FK_EMPLEADO_PROYECTO_EMPLEADO FOREIGN KEY(idEmpleado)
+REFERENCES EMPLEADO (idEmpleado);
+
+ALTER TABLE EMPLEADO_PROYECTO  ADD  CONSTRAINT FK_EMPLEADO_PROYECTO_PROYECTO FOREIGN KEY(numeroProyecto)
+REFERENCES PROYECTO (numeroProyecto);
+
+ALTER TABLE EQUIPO  ADD  CONSTRAINT FK_EQUIPO_USUARIO FOREIGN KEY(idUsuario)
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE EQUIPO_PROYECTO  ADD  CONSTRAINT FK_EQUIPO_PROYECTO_EQUIPO FOREIGN KEY(idEquipo)
+REFERENCES EQUIPO (idEquipo);
+
+ALTER TABLE EQUIPO_PROYECTO  ADD  CONSTRAINT FK_EQUIPO_PROYECTO_PROYECTO FOREIGN KEY(numeroProyecto)
+REFERENCES PROYECTO (numeroProyecto);
+
+ALTER TABLE INSUMO  ADD  CONSTRAINT FK_INSUMO_USUARIO FOREIGN KEY(idUsuario)
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE INSUMO_PROYECTO  ADD  CONSTRAINT FK_INSUMO_PROYECTO_INSUMO FOREIGN KEY(idInsumo)
+REFERENCES INSUMO (idInsumo);
+
+ALTER TABLE INSUMO_PROYECTO  ADD  CONSTRAINT FK_INSUMO_PROYECTO_PROYECTO FOREIGN KEY(numeroProyecto)
+REFERENCES PROYECTO (numeroProyecto);
+
+ALTER TABLE PEDIDO  ADD  CONSTRAINT FK_PEDIDO_CLIENTE FOREIGN KEY(idCliente)
+REFERENCES CLIENTE (idCliente);
+
+ALTER TABLE PEDIDO  ADD  CONSTRAINT FK_PEDIDO_PROYECTO FOREIGN KEY(numeroProyecto)
+REFERENCES PROYECTO (numeroProyecto);
+
+ALTER TABLE PEDIDO  ADD  CONSTRAINT FK_PEDIDO_USUARIO FOREIGN KEY(idUsuario)
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE PERMISO  ADD  CONSTRAINT FK_PERMISO_ACCION FOREIGN KEY(idAccion)
+REFERENCES ACCION (idAccion);
+
+ALTER TABLE PERMISO  ADD  CONSTRAINT FK_PERMISO_ROL FOREIGN KEY(idRol)
+REFERENCES ROL (idRol);
+
+ALTER TABLE PRESUPUESTO  ADD  CONSTRAINT FK_PRESUPUESTO_PROYECTO FOREIGN KEY(numeroProyecto)
+REFERENCES PROYECTO (numeroProyecto);
+
+ALTER TABLE PROYECTO  ADD  CONSTRAINT FK_PROYECTO_USUARIO FOREIGN KEY(idUsuario)
+REFERENCES USUARIO (idUsuario);
+
+ALTER TABLE USUARIO  ADD  CONSTRAINT FK_USUARIO_ROL FOREIGN KEY(idRol)
+REFERENCES ROL (idRol)
+ON UPDATE CASCADE;
