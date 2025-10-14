@@ -13,32 +13,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class frmPedidos extends JFrame {
-	
-	private static final long serialVersionUID = 1L;
-	private JTable tblPedidos;
+public class FrmEquipos extends JFrame {
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frmClientes frame = new frmClientes();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private static final long serialVersionUID = 1L;
+	private JTable tblEquipos;
 
 	/**
 	 * Create the frame.
 	 */
-	public frmPedidos() {
-		setTitle("Listado de Pedidos");
+	public FrmEquipos() {
+		setTitle("Listado de Equipos");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
 		
@@ -46,10 +30,10 @@ public class frmPedidos extends JFrame {
 		scrollPane.setBounds(10, 11, 700, 267);
 		getContentPane().add(scrollPane);
 		
-		tblPedidos = new JTable();
-		scrollPane.setViewportView(tblPedidos);
-		tblPedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblPedidos.setModel(new DefaultTableModel(
+		tblEquipos = new JTable();
+		scrollPane.setViewportView(tblEquipos);
+		tblEquipos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblEquipos.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null},
 				{null, null, null, null, null},
@@ -68,7 +52,7 @@ public class frmPedidos extends JFrame {
 				{null, null, null, null, null},
 			},
 			new String[] {
-				"#", "Fecha Pedido", "Detalle de Pedido", "Caracter\u00EDsticas", "Proyecto Asignado"
+				"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -78,28 +62,25 @@ public class frmPedidos extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
-		tblPedidos.getColumnModel().getColumn(1).setPreferredWidth(100);
-		tblPedidos.getColumnModel().getColumn(2).setPreferredWidth(185);
-		tblPedidos.getColumnModel().getColumn(3).setPreferredWidth(152);
-		tblPedidos.getColumnModel().getColumn(4).setPreferredWidth(110);
+		tblEquipos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
-		JButton btnAnularPedido = new JButton("Anular");
-		btnAnularPedido.setBounds(618, 289, 89, 23);
-		getContentPane().add(btnAnularPedido);
+		JButton btnBajaEquipo = new JButton("Baja");
+		btnBajaEquipo.setBounds(618, 289, 89, 23);
+		getContentPane().add(btnBajaEquipo);
 		
-		JButton btnModificarPedido = new JButton("Editar");
-		btnModificarPedido.setBounds(519, 289, 89, 23);
-		getContentPane().add(btnModificarPedido);
+		JButton btnModificarEquipo = new JButton("Editar");
+		btnModificarEquipo.setBounds(519, 289, 89, 23);
+		getContentPane().add(btnModificarEquipo);
 		
-		JButton btnAgregarPedido = new JButton("Alta");
-		btnAgregarPedido.addActionListener(new ActionListener() {
+		JButton btnAgregarEquipo = new JButton("Alta");
+		btnAgregarEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmNuevoCliente frmNuevo = new frmNuevoCliente();
+				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
 				frmNuevo.show();
 			}
 		});
-		btnAgregarPedido.setBounds(420, 289, 89, 23);
-		getContentPane().add(btnAgregarPedido);
+		btnAgregarEquipo.setBounds(420, 289, 89, 23);
+		getContentPane().add(btnAgregarEquipo);
 		
 		JButton btnCerrar = new JButton("Cerrar");
 		btnCerrar.addActionListener(new ActionListener() {

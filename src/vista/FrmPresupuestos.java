@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class frmPresupuestos extends JFrame {
+public class FrmPresupuestos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -28,7 +28,7 @@ public class frmPresupuestos extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frmPresupuestos frame = new frmPresupuestos();
+					FrmPresupuestos frame = new FrmPresupuestos();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +40,7 @@ public class frmPresupuestos extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public frmPresupuestos() {
+	public FrmPresupuestos() {
 		setTitle("Visualizando Presupuestos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 570, 269);

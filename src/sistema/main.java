@@ -1,10 +1,20 @@
 package sistema;
 
+import java.awt.EventQueue;
+import vista.FrmMain;
+
 public class main {
 
 	public static void main(String[] args) {
-		// TODO Esbozo de método generado automáticamente
-
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

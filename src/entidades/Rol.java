@@ -1,14 +1,20 @@
 package entidades;
 
+import java.util.Date;
+
 public class Rol {
 	
 	private int idRol; 
 	private String nombreRol;
+	private Date fechaAlta;
+	private Date fechaBaja;
 	
 	public Rol() {
 		
 	this.idRol = 0;
 	this.nombreRol ="";
+	this.fechaAlta = new Date();
+	this.fechaBaja = null;
 	
 	}
 
@@ -27,6 +33,24 @@ public class Rol {
 	public void setNombreRol(String nombreRol) {
 		this.nombreRol = nombreRol;
 	}
+
+	public Date getFechaAlta() {
+		return fechaAlta;
+	}
+
+	public void setFechaAlta(Date fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
+
+	public Date getFechaBaja() {
+		return fechaBaja;
+	}
+
+	public void setFechaBaja(Date fechaBaja) {
+		this.fechaBaja = fechaBaja;
+	}
+	
+	
 	
 
 }

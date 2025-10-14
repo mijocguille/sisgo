@@ -1,19 +1,18 @@
 package vista;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JSeparator;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class frmNuevoProyecto extends JFrame {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+public class FrmModificarProyecto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -21,6 +20,7 @@ public class frmNuevoProyecto extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTextField txtNumeroProyecto;
 
 	/**
 	 * Launch the application.
@@ -29,7 +29,7 @@ public class frmNuevoProyecto extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frmNuevoProyecto frame = new frmNuevoProyecto();
+					FrmNuevoProyecto frame = new FrmNuevoProyecto();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,58 +41,58 @@ public class frmNuevoProyecto extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public frmNuevoProyecto() {
-		setTitle("Crear Proyecto");
+	public FrmModificarProyecto() {
+		setTitle("Modificar Proyecto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 542, 186);
+		setBounds(100, 100, 542, 216);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNombreProyecto = new JLabel("Nombre del Proyecto");
-		lblNombreProyecto.setBounds(10, 11, 129, 14);
+		lblNombreProyecto.setBounds(10, 39, 129, 14);
 		contentPane.add(lblNombreProyecto);
 		
 		JLabel lblFechaInicio = new JLabel("Inicio");
-		lblFechaInicio.setBounds(10, 50, 46, 14);
+		lblFechaInicio.setBounds(10, 78, 46, 14);
 		contentPane.add(lblFechaInicio);
 		
 		JLabel lblFechaFin = new JLabel("Fin ");
-		lblFechaFin.setBounds(232, 50, 46, 14);
+		lblFechaFin.setBounds(232, 78, 46, 14);
 		contentPane.add(lblFechaFin);
 		
 		textField = new JTextField();
-		textField.setBounds(149, 8, 372, 20);
+		textField.setBounds(149, 36, 372, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(66, 47, 86, 20);
+		textField_1.setBounds(66, 75, 86, 20);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(288, 47, 86, 20);
+		textField_2.setBounds(288, 75, 86, 20);
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 		
 		JLabel lblPedidoAsociado = new JLabel("Pedido Asociado");
-		lblPedidoAsociado.setBounds(10, 86, 130, 14);
+		lblPedidoAsociado.setBounds(10, 114, 130, 14);
 		contentPane.add(lblPedidoAsociado);
 		
 		textField_3 = new JTextField();
 		textField_3.setEditable(false);
-		textField_3.setBounds(150, 83, 241, 20);
+		textField_3.setBounds(150, 111, 241, 20);
 		contentPane.add(textField_3);
 		textField_3.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
-		btnSeleccionar.setBounds(401, 82, 115, 23);
+		btnSeleccionar.setBounds(401, 110, 115, 23);
 		contentPane.add(btnSeleccionar);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(0, 111, 521, 14);
+		separator.setBounds(0, 139, 521, 14);
 		contentPane.add(separator);
 		
 		JButton btnCancelar = new JButton("Cancelar");
@@ -101,12 +101,23 @@ public class frmNuevoProyecto extends JFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(432, 116, 89, 23);
+		btnCancelar.setBounds(432, 144, 89, 23);
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar ");
-		btnAceptar.setBounds(333, 116, 89, 23);
+		btnAceptar.setBounds(333, 144, 89, 23);
 		contentPane.add(btnAceptar);
+		
+		JLabel lblNumeroProyecto = new JLabel("Número de Proyecto");
+		lblNumeroProyecto.setBounds(10, 11, 129, 14);
+		contentPane.add(lblNumeroProyecto);
+		
+		txtNumeroProyecto = new JTextField();
+		txtNumeroProyecto.setEditable(false);
+		txtNumeroProyecto.setBounds(149, 5, 86, 20);
+		contentPane.add(txtNumeroProyecto);
+		txtNumeroProyecto.setColumns(10);
 
 	}
+
 }

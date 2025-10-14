@@ -15,32 +15,16 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class frmLogin {
+public class FrmLogin {
 
 	private JFrame frmLogin;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasenia;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frmLogin window = new frmLogin();
-					window.frmLogin.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
-	public frmLogin() {
+	public FrmLogin() {
 		initialize();
 	}
 

@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
-public class frmNuevoPedido extends JFrame {
+public class FrmNuevoPedido extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -27,7 +27,7 @@ public class frmNuevoPedido extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frmNuevoPedido frame = new frmNuevoPedido();
+					FrmNuevoPedido frame = new FrmNuevoPedido();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +39,7 @@ public class frmNuevoPedido extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public frmNuevoPedido() {
+	public FrmNuevoPedido() {
 		setTitle("Nuevo Pedido");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 548);

@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class frmNuevoCliente extends JFrame {
+public class FrmNuevoCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,7 +31,7 @@ public class frmNuevoCliente extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frmNuevoCliente frame = new frmNuevoCliente();
+					FrmNuevoCliente frame = new FrmNuevoCliente();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +43,7 @@ public class frmNuevoCliente extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public frmNuevoCliente() {
+	public FrmNuevoCliente() {
 		setTitle("Nuevo Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 210);

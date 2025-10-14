@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -11,31 +10,15 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class frmClientes extends JFrame {
+public class FrmClientes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frmClientes frame = new frmClientes();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public frmClientes() {
+	public FrmClientes() {
 		setTitle("Listado de Clientes");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
@@ -94,7 +77,7 @@ public class frmClientes extends JFrame {
 		JButton btnAgregarCliente = new JButton("Alta");
 		btnAgregarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmNuevoCliente frmNuevo = new frmNuevoCliente();
+				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
 				frmNuevo.show();
 			}
 		});

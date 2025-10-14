@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JToolBar;
 
-public class frmMain {
+public class FrmMain {
 
 	private JFrame frmMain;
 
@@ -25,7 +25,7 @@ public class frmMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frmMain window = new frmMain();
+					FrmMain window = new FrmMain();
 					window.frmMain.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +37,7 @@ public class frmMain {
 	/**
 	 * Create the application.
 	 */
-	public frmMain() {
+	public FrmMain() {
 		initialize();
 	}
 
@@ -92,7 +92,7 @@ public class frmMain {
 		});
 		btnClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmClientes wndClientes = new frmClientes();
+				FrmClientes wndClientes = new FrmClientes();
 				wndClientes.show();
 				
 			}
