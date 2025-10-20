@@ -8,7 +8,7 @@ public class Presupuesto {
 	private int numeroPresupuesto;
 	private Date fechaPresupuesto;
 	private int diasValidez;
-	private int importePresupuestado;
+	private double importePresupuestado;
 	private int idUsuario;
 	
 	public Presupuesto () {
@@ -53,11 +53,11 @@ public class Presupuesto {
 		this.diasValidez = diasValidez;
 	}
 
-	public int getImportePresupuestado() {
+	public double getImportePresupuestado() {
 		return importePresupuestado;
 	}
 
-	public void setImportePresupuestado(int importePresupuestado) {
+	public void setImportePresupuestado(double importePresupuestado) {
 		this.importePresupuestado = importePresupuestado;
 	}
 
