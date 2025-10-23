@@ -27,7 +27,7 @@ public class TablaAccion {
 			
 			if(rs != null) {
 				objAccion = new Accion();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objAccion.setIdAccion(rs.getInt("idAccion"));
 			    	objAccion.setNombreAccion(rs.getString("nombreAccion"));
 			    }

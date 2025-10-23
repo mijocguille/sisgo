@@ -3,6 +3,7 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import operaciones.InsumoProyecto;
@@ -30,7 +31,7 @@ public class TablaInsumo {
 			
 			if(rs != null) {
 				objInsumo = new Insumo();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objInsumo.setIdInsumo(rs.getInt("idInsumo"));
 			    	objInsumo.setDescripcionInsumo(rs.getString("descripcionInsumo"));
 			    	objInsumo.setCantidadStock(rs.getInt("cantidadStock"));
@@ -88,16 +89,15 @@ public class TablaInsumo {
 			String query = "insert into insumo (descripcionInsumo, cantidadStock, fechaAlta, idUsuario) ";
 			query += "values('"+ objInsumo.getDescripcionInsumo() +"'," + objInsumo.getCantidadStock() +",now(),"+ objInsumo.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idInsumo) from Insumo";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idInsumo = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(idInsumo) from Insumo";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idInsumo = rs.getInt(1);
+			    }
+			} 
 			
 			return idInsumo;
 		} catch(SQLException e) {
@@ -110,18 +110,15 @@ public class TablaInsumo {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update insumo ";
 			query += "set cantidadStock = "+ objInsumo.getCantidadStock() +", ";
 			query += "descripcionInsumo = '"+ objInsumo.getDescripcionInsumo() +"' ";
 			query += "where idInsumo = " + objInsumo.getIdInsumo();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarInsumo." + e.getMessage()); 
 			return false;
@@ -132,17 +129,17 @@ public class TablaInsumo {
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objInsumo.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update insumo ";
-			query += "set fechaBaja = '"+ objInsumo.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idInsumo = " + objInsumo.getIdInsumo();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaInsumo." + e.getMessage()); 
 			return false;

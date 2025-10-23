@@ -29,7 +29,7 @@ public class TablaProyecto {
 			
 			if(rs != null) {
 				objProyecto = new Proyecto();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objProyecto.setNumeroProyecto(rs.getInt("numeroProyecto"));
 			    	objProyecto.setFechaCreacion(rs.getDate("fechaCreacion"));
 			    	objProyecto.setNombreProyecto(rs.getString("nombreProyecto"));
@@ -88,16 +88,15 @@ public class TablaProyecto {
 			query += "values('"+ objProyecto.getFechaCreacion() +"','" + objProyecto.getNombreProyecto() +"','"+ objProyecto.getFechaEstimadaInicio()+"',";
 			query += "'"+ objProyecto.getFechaFin()+"',"+ objProyecto.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(numeroProyecto) from Proyecto";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	numeroProyecto = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(numeroProyecto) from Proyecto";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	numeroProyecto = rs.getInt(1);
+			    }
+			} 
 			
 			return numeroProyecto;
 		} catch(SQLException e) {
@@ -109,8 +108,7 @@ public class TablaProyecto {
 	public boolean modificarProyecto(Proyecto objProyecto) {
 		
 		try {
-			
-			boolean resultado = false;
+		
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update proyecto ";
 			query += "set nombreProyecto = '"+ objProyecto.getNombreProyecto() +"', ";
@@ -118,11 +116,9 @@ public class TablaProyecto {
 			query += "fechaFin = '"+ objProyecto.getFechaFin() +"' ";
 			query += "where numeroProyecto = " + objProyecto.getNumeroProyecto();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarProyecto." + e.getMessage()); 
 			return false;
@@ -133,15 +129,12 @@ public class TablaProyecto {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from proyecto where numeroProyecto = " + numeroProyecto;
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
-			
-			return resultado;
+		    st.execute(query);
+		    	
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar eliminarProyecto." + e.getMessage()); 
 			return false;

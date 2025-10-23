@@ -14,6 +14,32 @@ public class TablaInsumoProyecto {
 		
 		this.db = objDb;
 	}
+	
+	public InsumoProyecto obtenerInsumoProyecto(int numeroProyecto, int idInsumo) {
+		
+		try {
+			
+			InsumoProyecto objEP = null;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idInsumo, numeroProyecto ";
+			query += "from insumo_proyecto where numeroProyecto = " + numeroProyecto + " and idInsumo = " + idInsumo;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				objEP = new InsumoProyecto();
+			    if(rs.next()) {
+			    	objEP.setNumeroProyecto(rs.getInt("numeroProyecto"));
+			    	objEP.setIdInsumo(rs.getInt("idInsumo"));
+			    }
+			    rs.close();
+			}
+			return objEP;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerInsumoProyecto." + e.getMessage()); 
+			return null;
+		}
+		
+	}
 
 	public ArrayList<InsumoProyecto> obtenerInsumosProyecto(int numeroProyecto) {
 		
@@ -46,15 +72,12 @@ public class TablaInsumoProyecto {
 	public boolean agregarInsumoProyecto(InsumoProyecto objIP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into insumo_proyecto (idInsumo, numeroProyecto, cantidad) ";
 			query += "values("+ objIP.getIdInsumo() +"," + objIP.getNumeroProyecto() +","+ objIP.getCantidad()+")";
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar agregarInsumoProyecto." + e.getMessage()); 
@@ -65,15 +88,12 @@ public class TablaInsumoProyecto {
 	public boolean quitarInsumoProyecto(InsumoProyecto objIP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from insumo_proyecto where idInsumo = " + objIP.getIdInsumo() + " and numeroProyecto = " + objIP.getNumeroProyecto();
 		
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar quitarInsumoProyecto." + e.getMessage()); 

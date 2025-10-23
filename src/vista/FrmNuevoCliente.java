@@ -23,27 +23,11 @@ public class FrmNuevoCliente extends JFrame {
 	private JSeparator separator;
 	private JButton btnCancelar;
 	private JButton btnAceptar;
+	private ClienteNuevoListener listener;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmNuevoCliente frame = new FrmNuevoCliente();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public FrmNuevoCliente() {
+	
+	public FrmNuevoCliente(ClienteNuevoListener pListener) {
+		listener = pListener;
 		setTitle("Nuevo Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 210);
@@ -102,6 +86,17 @@ public class FrmNuevoCliente extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(e -> {
+	            if (listener != null) {
+	                listener.onClienteCreado(
+	                    txtRazonSocial.getText(),
+	                    txtCuit.getText(),
+	                    txtDireccion.getText(),
+	                    txtTelefono.getText()
+	                );
+	            }
+	            dispose();
+	        });
 		btnAceptar.setBounds(236, 139, 89, 23);
 		contentPane.add(btnAceptar);
 

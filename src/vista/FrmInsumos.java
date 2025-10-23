@@ -75,8 +75,8 @@ public class FrmInsumos extends JFrame {
 		JButton btnAgregarInsumo = new JButton("Alta");
 		btnAgregarInsumo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
+				frmNuevo.show();*/
 			}
 		});
 		btnAgregarInsumo.setBounds(420, 289, 89, 23);

@@ -3,6 +3,7 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -23,17 +24,17 @@ public class TablaCliente {
 			
 			Cliente objCliente = null;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select idCliente, razonSocial, cuit, domicilio, telefono, fechaAlta, fechaBaja, idUsuario ";
+			String query = "select idCliente, razonSocial, cuit, direccion, telefono, fechaAlta, fechaBaja, idUsuario ";
 			query += "from cliente where idCliente = " + idCliente;
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {
 				objCliente = new Cliente();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objCliente.setIdCliente(rs.getInt("idCliente"));
 			    	objCliente.setRazonSocial(rs.getString("razonSocial"));
 			    	objCliente.setCuit(rs.getString("cuit"));
-			    	objCliente.setDomicilio(rs.getString("domicilio"));
+			    	objCliente.setDireccion(rs.getString("direccion"));
 			    	objCliente.setTelefono(rs.getString("telefono"));
 			    	objCliente.setFechaAlta(rs.getDate("fechaAlta"));
 			    	objCliente.setFechaBaja(rs.getDate("fechaBaja"));
@@ -55,7 +56,7 @@ public class TablaCliente {
 			
 			ArrayList<Cliente> colClientees = new ArrayList<Cliente>();
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select idCliente, razonSocial, cuit, domicilio, telefono, fechaAlta, fechaBaja, idUsuario ";
+			String query = "select idCliente, razonSocial, cuit, direccion, telefono, fechaAlta, fechaBaja, idUsuario ";
 			query += "from cliente ";
 			ResultSet rs = st.executeQuery(query);
 			
@@ -65,7 +66,7 @@ public class TablaCliente {
 			    	objCliente.setIdCliente(rs.getInt("idCliente"));
 			    	objCliente.setRazonSocial(rs.getString("razonSocial"));
 			    	objCliente.setCuit(rs.getString("cuit"));
-			    	objCliente.setDomicilio(rs.getString("domicilio"));
+			    	objCliente.setDireccion(rs.getString("direccion"));
 			    	objCliente.setTelefono(rs.getString("telefono"));
 			    	objCliente.setFechaAlta(rs.getDate("fechaAlta"));
 			    	objCliente.setFechaBaja(rs.getDate("fechaBaja"));
@@ -88,20 +89,19 @@ public class TablaCliente {
 			
 			int idCliente = 0;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "insert into Cliente (razonSocial, cuit, domicilio, telefono, fechaAlta, idUsuario) ";
-			query += "values('"+ objCliente.getRazonSocial() +"','" + objCliente.getCuit() +"','"+ objCliente.getDomicilio()+"',";
+			String query = "insert into cliente (razonSocial, cuit, direccion, telefono, fechaAlta, idUsuario) ";
+			query += "values('"+ objCliente.getRazonSocial() +"','" + objCliente.getCuit() +"','"+ objCliente.getDireccion()+"',";
 			query += "'"+ objCliente.getTelefono()+"',now(),"+ objCliente.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idCliente) from cliente";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idCliente = rs.getInt(1);
-				    }
-				}
-		    } 
+			st.execute(query);
+	    	query = "select max(idCliente) from cliente";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idCliente = rs.getInt(1);
+			    }
+			} 
 			
 			return idCliente;
 		} catch(SQLException e) {
@@ -114,20 +114,17 @@ public class TablaCliente {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update cliente ";
 			query += "set razonSocial = '"+ objCliente.getRazonSocial() +"', ";
 			query += "cuit = '"+ objCliente.getCuit() +"', ";
-			query += "domicilio = '"+ objCliente.getDomicilio() +"', ";
+			query += "direccion = '"+ objCliente.getDireccion() +"', ";
 			query += "telefono = '"+ objCliente.getTelefono() +"' ";
 			query += "where idCliente = " + objCliente.getIdCliente();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarCliente." + e.getMessage()); 
 			return false;
@@ -138,17 +135,17 @@ public class TablaCliente {
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objCliente.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update cliente ";
-			query += "set fechaBaja = '"+ objCliente.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idCliente = " + objCliente.getIdCliente();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaCliente." + e.getMessage()); 
 			return false;

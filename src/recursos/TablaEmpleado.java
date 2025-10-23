@@ -3,6 +3,7 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class TablaEmpleado {
 			
 			if(rs != null) {
 				objEmpleado = new Empleado();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objEmpleado.setIdEmpleado(rs.getInt("idEmpleado"));
 			    	objEmpleado.setLegajo(rs.getInt("legajo"));
 			    	objEmpleado.setNombre(rs.getString("nombre"));
@@ -90,16 +91,15 @@ public class TablaEmpleado {
 			query += "values("+ objEmpleado.getLegajo() +",'" + objEmpleado.getNombre() +"','"+ objEmpleado.getApellido()+"',";
 			query += "now(),"+ objEmpleado.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idEmpleado) from empleado";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idEmpleado = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(idEmpleado) from empleado";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idEmpleado = rs.getInt(1);
+			    }
+			} 
 			
 			return idEmpleado;
 		} catch(SQLException e) {
@@ -112,7 +112,6 @@ public class TablaEmpleado {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update Empleado ";
 			query += "set legajo = "+ objEmpleado.getLegajo() +", ";
@@ -120,11 +119,9 @@ public class TablaEmpleado {
 			query += "apellido = '"+ objEmpleado.getApellido() +"' ";
 			query += "where idEmpleado = " + objEmpleado.getIdEmpleado();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarEmpleado." + e.getMessage()); 
 			return false;
@@ -135,17 +132,17 @@ public class TablaEmpleado {
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objEmpleado.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update empleado ";
-			query += "set fechaBaja = '"+ objEmpleado.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idEmpleado = " + objEmpleado.getIdEmpleado();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaEmpleado." + e.getMessage()); 
 			return false;

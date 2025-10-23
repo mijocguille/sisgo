@@ -3,6 +3,7 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -28,7 +29,7 @@ public class TablaRol {
 			
 			if(rs != null) {
 				objRol = new Rol();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objRol.setIdRol(rs.getInt("idRol"));
 			    	objRol.setNombreRol(rs.getString("nombreRol"));
 			    	objRol.setFechaAlta(rs.getDate("fechaAlta"));
@@ -81,16 +82,15 @@ public class TablaRol {
 			String query = "insert into rol (nombreRol, fechaAlta) ";
 			query += "values('"+ nombreRol +"',now())";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idRol) from rol";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idRol = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(idRol) from rol";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idRol = rs.getInt(1);
+			    }
+			} 
 			
 			return idRol;
 		} catch(SQLException e) {
@@ -102,18 +102,15 @@ public class TablaRol {
 	public boolean modificarRol(Rol objRol) {
 		
 		try {
-			
-			boolean resultado = false;
+		
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update rol ";
 			query += "set nombreRol = '"+ objRol.getNombreRol() +"' ";
 			query += "where idRol = " + objRol.getIdRol();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarRol." + e.getMessage()); 
 			return false;
@@ -124,17 +121,17 @@ public class TablaRol {
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objRol.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update rol ";
-			query += "set fechaBaja = '"+ objRol.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idRol = " + objRol.getIdRol();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaRol." + e.getMessage()); 
 			return false;

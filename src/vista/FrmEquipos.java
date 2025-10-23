@@ -75,8 +75,8 @@ public class FrmEquipos extends JFrame {
 		JButton btnAgregarEquipo = new JButton("Alta");
 		btnAgregarEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
+				frmNuevo.show();*/
 			}
 		});
 		btnAgregarEquipo.setBounds(420, 289, 89, 23);

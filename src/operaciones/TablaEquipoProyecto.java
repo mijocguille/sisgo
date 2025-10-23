@@ -16,6 +16,32 @@ public class TablaEquipoProyecto {
 		this.db = objDb;
 	}
 
+
+	public EquipoProyecto obtenerEquipoProyecto(int numeroProyecto, int idEquipo) {
+		
+		try {
+			
+			EquipoProyecto objEP = null;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idEquipo, numeroProyecto ";
+			query += "from equipo_proyecto where numeroProyecto = " + numeroProyecto + " and idEquipo = " + idEquipo;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				objEP = new EquipoProyecto();
+			    if(rs.next()) {
+			    	objEP.setNumeroProyecto(rs.getInt("numeroProyecto"));
+			    	objEP.setIdEquipo(rs.getInt("idEquipo"));
+			    }
+			    rs.close();
+			}
+			return objEP;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerEquipoProyecto." + e.getMessage()); 
+			return null;
+		}
+		
+	}
 	
 	public ArrayList<EquipoProyecto> obtenerEquiposProyecto(int numeroProyecto) {
 		
@@ -48,15 +74,12 @@ public class TablaEquipoProyecto {
 	public boolean agregarEquipoProyecto(EquipoProyecto objEP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into equipo_proyecto (idEquipo, numeroProyecto, cantidad) ";
 			query += "values("+ objEP.getIdEquipo() +"," + objEP.getNumeroProyecto() +","+ objEP.getCantidad()+")";
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar agregarEquipoProyecto." + e.getMessage()); 
@@ -67,15 +90,12 @@ public class TablaEquipoProyecto {
 	public boolean quitarEquipoProyecto(EquipoProyecto objEP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from equipo_proyecto where idEquipo = " + objEP.getIdEquipo() + " and numeroProyecto = " + objEP.getNumeroProyecto();
 		
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query); 
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar quitarEquipoProyecto." + e.getMessage()); 

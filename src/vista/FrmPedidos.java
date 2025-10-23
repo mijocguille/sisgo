@@ -18,21 +18,6 @@ public class FrmPedidos extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable tblPedidos;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmClientes frame = new FrmClientes();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -94,8 +79,8 @@ public class FrmPedidos extends JFrame {
 		JButton btnAgregarPedido = new JButton("Alta");
 		btnAgregarPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
+				frmNuevo.show();*/
 			}
 		});
 		btnAgregarPedido.setBounds(420, 289, 89, 23);

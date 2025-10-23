@@ -3,22 +3,32 @@ package vista;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+
+import entidades.Cliente;
+import entidades.ControladorCliente;
+import sistema.BaseDatos;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class FrmClientes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-
+	private ControladorCliente ctrlCliente;
+	
 	/**
 	 * Create the frame.
 	 */
-	public FrmClientes() {
+	public FrmClientes(BaseDatos db) {
+		
+		super();
+		ctrlCliente = new ControladorCliente(db);
+		
 		setTitle("Listado de Clientes");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
@@ -30,58 +40,87 @@ public class FrmClientes extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"#", "Raz\u00F3n Social", "Cuit", "Direcci\u00F3n ", "Tel\u00E9fono"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		cargarClientes();
 		
 		JButton btnBajaCliente = new JButton("Baja");
+		btnBajaCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea dar de baja al cliente?",new ConfirmacionListener() {
+					    @Override
+					    public void onConfirmar(boolean resultado) {
+					        if(resultado) {
+					        	Cliente objCli = ctrlCliente.getTblCliente().obtenerCliente(idSeleccionado);
+					        	objCli.setFechaBaja(new Date());
+						        if(ctrlCliente.darBajaCliente(objCli)){
+						        	cargarClientes();
+						        } 
+					        }
+					    }
+					});
+					frmConfirmacion.setAlwaysOnTop(true);
+					frmConfirmacion.setVisible(true);
+				}
+			}
+		});
 		btnBajaCliente.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaCliente);
 		
 		JButton btnModificarCliente = new JButton("Editar");
+		btnModificarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					Cliente objCli = ctrlCliente.getTblCliente().obtenerCliente(idSeleccionado);
+					FrmModificarCliente frmEdit = new FrmModificarCliente(objCli, new ClienteModificadoListener() {
+					    @Override
+					    public void onClienteModificado(int idCliente, String razonSocial, String cuit, String direccion, String telefono) {
+					        Cliente objCli = new Cliente();
+					        objCli.setIdCliente(idCliente);
+					        objCli.setRazonSocial(razonSocial);
+					        objCli.setCuit(cuit);
+					        objCli.setDireccion(direccion);
+					        objCli.setTelefono(telefono);
+					        
+					        if(ctrlCliente.modificarCliente(objCli)){
+					        	cargarClientes();
+					        }
+					    }
+					});
+					frmEdit.setAlwaysOnTop(true);
+					frmEdit.setVisible(true);
+				}
+			}
+		});
 		btnModificarCliente.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarCliente);
 		
 		JButton btnAgregarCliente = new JButton("Alta");
 		btnAgregarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				FrmNuevoCliente frmNuevo = new FrmNuevoCliente(new ClienteNuevoListener() {
+				    @Override
+				    public void onClienteCreado(String razonSocial, String cuit, String direccion, String telefono) {
+				        Cliente objCli = new Cliente();
+				        objCli.setRazonSocial(razonSocial);
+				        objCli.setCuit(cuit);
+				        objCli.setDireccion(direccion);
+				        objCli.setTelefono(telefono);
+				        objCli.setIdUsuario(FrmMain.idUsuarioLogueado);
+				        int idCliente = ctrlCliente.crearCliente(objCli);
+				        if(idCliente > 0) {
+				        	cargarClientes();
+				        }
+				    }
+				});
+				frmNuevo.setAlwaysOnTop(true);
+				frmNuevo.setVisible(true);
 			}
 		});
-		btnAgregarCliente.setBounds(420, 289, 89, 23);
+		btnAgregarCliente.setBounds(420, 	289, 89, 23);
 		getContentPane().add(btnAgregarCliente);
 		
 		JButton btnCerrar = new JButton("Cerrar");
@@ -95,6 +134,12 @@ public class FrmClientes extends JFrame {
 		getContentPane().add(btnCerrar);
 		table.getColumnModel().getColumn(1).setPreferredWidth(245);
 		table.getColumnModel().getColumn(3).setPreferredWidth(152);
+	}
+	
+	private void cargarClientes() {
+		table.removeAll();
+		table.setModel(ctrlCliente.listarClientes());	
+			
 	}
 	
 	

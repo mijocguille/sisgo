@@ -76,8 +76,8 @@ public class FrmRoles extends JFrame {
 		JButton btnAgregarRol = new JButton("Alta");
 		btnAgregarRol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
+				frmNuevo.show();*/
 			}
 		});
 		btnAgregarRol.setBounds(266, 289, 89, 23);

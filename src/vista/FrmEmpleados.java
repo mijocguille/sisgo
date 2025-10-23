@@ -1,27 +1,31 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+
+import recursos.ControladorEmpleado;
+import sistema.BaseDatos;
 
 public class FrmEmpleados extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblEmpleados;
+	private ControladorEmpleado ctrlEmpleado;
+	private SeleccionListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmEmpleados() {
+	public FrmEmpleados(BaseDatos db, boolean esSeleccion, SeleccionListener pListener) {
+		super();
+		listener = pListener;
+		ctrlEmpleado = new ControladorEmpleado(db);
 		setTitle("Listado de Empleados");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
@@ -33,40 +37,13 @@ public class FrmEmpleados extends JFrame {
 		tblEmpleados = new JTable();
 		scrollPane.setViewportView(tblEmpleados);
 		tblEmpleados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblEmpleados.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"#", "Legajo", "Nombre y Apellido", "Fecha Alta", "Fecha Baja"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		cargarEmpleados();
 		tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(80);
 		tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(317);
 		
 		JButton btnBajaEmpleado = new JButton("Baja");
 		btnBajaEmpleado.setBounds(618, 289, 89, 23);
+		
 		getContentPane().add(btnBajaEmpleado);
 		
 		JButton btnModificarEmpleado = new JButton("Editar");
@@ -76,8 +53,9 @@ public class FrmEmpleados extends JFrame {
 		JButton btnAgregarEmpleado = new JButton("Alta");
 		btnAgregarEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado();
+				frmNuevo.setAlwaysOnTop(true);
+				frmNuevo.setVisible(true);
 			}
 		});
 		btnAgregarEmpleado.setBounds(420, 289, 89, 23);
@@ -94,8 +72,33 @@ public class FrmEmpleados extends JFrame {
 		getContentPane().add(btnCerrar);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.setVisible(false);
 		btnSeleccionar.setBounds(10, 289, 89, 23);
+		btnSeleccionar.addActionListener(new ActionListener() {
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccion = Integer.parseInt(tblEmpleados.getModel().getValueAt(tblEmpleados.getSelectedRow(),0).toString());
+				if(idSeleccion > 0) {
+					listener.onSeleccion(idSeleccion);
+					dispose();
+				}
+			}
+		});
 		getContentPane().add(btnSeleccionar);
+		
+		if(esSeleccion) {
+			btnBajaEmpleado.setVisible(false);
+			btnAgregarEmpleado.setVisible(false);
+			btnModificarEmpleado.setVisible(false);
+			btnSeleccionar.setVisible(true);
+		}
+		
 	}
 
+	private void cargarEmpleados() {
+		tblEmpleados.removeAll();
+		tblEmpleados.setModel(ctrlEmpleado.listarEmpleados());	
+			
+	}
 }

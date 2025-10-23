@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,18 +11,24 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import operaciones.ControladorEquipoProyecto;
+import sistema.BaseDatos;
+
 public class FrmAgregarEquipoProyecto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtEquipo;
 	private JTextField txtCantidad;
+	private ControladorEquipoProyecto ctrlEquipoProyecto;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmAgregarEquipoProyecto() {
+	public FrmAgregarEquipoProyecto(BaseDatos db) {
+		super();
+		ctrlEquipoProyecto = new ControladorEquipoProyecto(db);
 		setTitle("Agregar Equipo a Proyecto NN");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 512, 140);

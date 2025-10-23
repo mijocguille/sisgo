@@ -1,29 +1,35 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import operaciones.ControladorPedido;
+import operaciones.ControladorProyecto;
+import operaciones.Pedido;
+import operaciones.Proyecto;
+import sistema.BaseDatos;
 
 public class FrmProyectos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblProyectos;
+	private ControladorProyecto ctrlProyecto;
+	private ControladorPedido ctrlPedido;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmProyectos() {
+	public FrmProyectos(BaseDatos db) {
+		super();
+		ctrlProyecto = new ControladorProyecto(db);
+		ctrlPedido = new ControladorPedido(db);
 		setTitle("Listado de Proyectos");
-		setBounds(100, 100, 736, 412);
+		setBounds(100, 100, 736, 437);
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -33,56 +39,87 @@ public class FrmProyectos extends JFrame {
 		tblProyectos = new JTable();
 		scrollPane.setViewportView(tblProyectos);
 		tblProyectos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblProyectos.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-			new String[] {
-				"#", "Fecha Creaci\u00F3n", "Nombre Proyecto", "Fecha Est. Inicio", "Fecha Fin", "Pedido Asociado"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class, Object.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		tblProyectos.getColumnModel().getColumn(1).setPreferredWidth(89);
-		tblProyectos.getColumnModel().getColumn(2).setPreferredWidth(198);
-		tblProyectos.getColumnModel().getColumn(3).setPreferredWidth(91);
-		tblProyectos.getColumnModel().getColumn(5).setPreferredWidth(94);
+		cargarProyectos();
 		
 		JButton btnEliminarProyecto = new JButton("Eliminar");
-		btnEliminarProyecto.setBounds(618, 289, 89, 23);
+		btnEliminarProyecto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {	
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea eliminar el proyecto?",new ConfirmacionListener() {
+					    @Override
+					    public void onConfirmar(boolean resultado) {
+					        if(resultado) {
+					        	ctrlProyecto.bajaProyecto(idSeleccionado);
+					        	cargarProyectos();
+					        }
+					    }
+					});
+					frmConfirmacion.setAlwaysOnTop(true);
+					frmConfirmacion.setVisible(true);
+				}
+			}
+		});
+		btnEliminarProyecto.setBounds(621, 330, 89, 23);
 		getContentPane().add(btnEliminarProyecto);
 		
 		JButton btnModificarProyecto = new JButton("Editar");
-		btnModificarProyecto.setBounds(519, 289, 89, 23);
+		btnModificarProyecto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					Proyecto objProyecto = ctrlProyecto.getTblProyecto().obtenerProyecto(idSeleccionado);
+					FrmModificarProyecto frmEdit = new FrmModificarProyecto(objProyecto, new ProyectoModificadoListener() {
+					    @Override
+					    public void onProyectoModificado(int numeroProyecto, String nombreProyecto, Date fechaEstimadaInicio, Date fechaFin, int numeroPedido) {
+					    	Pedido objPed = ctrlProyecto.getTblPedido().obtenerPedido(numeroPedido);
+					    	objPed.setNumeroProyecto(numeroProyecto);
+					    	if(ctrlPedido.modificarPedido(objPed))
+					    	{
+						        Proyecto objProy = new Proyecto();
+						        objProy.setNumeroProyecto(numeroProyecto);
+						        objProy.setNombreProyecto(nombreProyecto);
+						        objProy.setFechaEstimadaInicio(fechaEstimadaInicio);
+						        objProy.setFechaFin(fechaFin);
+						        if(ctrlProyecto.modificaProyecto(objProy)){
+						        	cargarProyectos();
+						        }
+					        }
+					    }
+					});
+					frmEdit.setAlwaysOnTop(true);
+					frmEdit.setVisible(true);
+				}
+			}
+		});
+		btnModificarProyecto.setBounds(522, 330, 89, 23);
 		getContentPane().add(btnModificarProyecto);
 		
 		JButton btnAgregarProyecto = new JButton("Crear");
 		btnAgregarProyecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				
+				FrmNuevoProyecto frmNuevo = new FrmNuevoProyecto(new ProyectoNuevoListener() {
+				    @Override
+				    public void onProyectoCreado(String nombreProyecto, Date fechaEstimadaInicio, Date fechaFin, int numeroPedido) {
+				    	Proyecto objProy = new Proyecto();
+				        objProy.setNombreProyecto(nombreProyecto);
+				        objProy.setFechaEstimadaInicio(fechaEstimadaInicio);
+				        objProy.setFechaFin(fechaFin);
+				        objProy.setIdUsuario(FrmMain.idUsuarioLogueado);
+				        int numeroProyecto = ctrlProyecto.crearProyecto(objProy);
+				    	Pedido objPed = ctrlProyecto.getTblPedido().obtenerPedido(numeroPedido);
+				    	objPed.setNumeroProyecto(numeroProyecto);
+				    	ctrlPedido.modificarPedido(objPed);
+				    	cargarProyectos();   
+				    }
+				});
+				frmNuevo.setAlwaysOnTop(true);
+				frmNuevo.setVisible(true);
 			}
 		});
-		btnAgregarProyecto.setBounds(420, 289, 89, 23);
+		btnAgregarProyecto.setBounds(423, 330, 89, 23);
 		getContentPane().add(btnAgregarProyecto);
 		
 		JButton btnCerrar = new JButton("Cerrar");
@@ -92,8 +129,25 @@ public class FrmProyectos extends JFrame {
 			}
 		});
 
-		btnCerrar.setBounds(618, 337, 89, 23);
+		btnCerrar.setBounds(621, 364, 89, 23);
 		getContentPane().add(btnCerrar);
+		
+		JButton btnEmpleadosProyecto = new JButton("Empleados Asignados");
+		btnEmpleadosProyecto.setBounds(10, 289, 178, 23);
+		getContentPane().add(btnEmpleadosProyecto);
+		
+		JButton btnEquiposAsignados = new JButton("Equipos Asignados");
+		btnEquiposAsignados.setBounds(386, 289, 178, 23);
+		getContentPane().add(btnEquiposAsignados);
+		
+		JButton btnInsumosProyecto = new JButton("Insumos Asignados");
+		btnInsumosProyecto.setBounds(198, 289, 178, 23);
+		getContentPane().add(btnInsumosProyecto);
 	}
-
+	
+	private void cargarProyectos() {
+		tblProyectos.removeAll();
+		tblProyectos.setModel(ctrlProyecto.listarProyectos());	
+			
+	}
 }

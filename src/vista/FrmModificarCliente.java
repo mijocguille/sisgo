@@ -12,6 +12,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import entidades.Cliente;
+
 public class FrmModificarCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -24,28 +26,14 @@ public class FrmModificarCliente extends JFrame {
 	private JButton btnCancelar;
 	private JButton btnAceptar;
 	private JLabel lblIdCliente;
-	private JTextField txIdCliente;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmNuevoCliente frame = new FrmNuevoCliente();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextField txtIdCliente;
+	private ClienteModificadoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarCliente() {
+	public FrmModificarCliente(Cliente objCliente, ClienteModificadoListener pListener) {
+		listener = pListener;
 		setTitle("Modificar Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 284);
@@ -53,6 +41,10 @@ public class FrmModificarCliente extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		lblIdCliente = new JLabel("Id Cliente");
+		lblIdCliente.setBounds(10, 22, 46, 14);
+		contentPane.add(lblIdCliente);
 		
 		JLabel lblRazonSocial = new JLabel("Razón Social ");
 		lblRazonSocial.setBounds(10, 51, 78, 14);
@@ -70,22 +62,33 @@ public class FrmModificarCliente extends JFrame {
 		lblTelefono.setBounds(10, 141, 78, 14);
 		contentPane.add(lblTelefono);
 		
+		txtIdCliente = new JTextField();
+		txtIdCliente.setText(String.valueOf(objCliente.getIdCliente()));
+		txtIdCliente.setEditable(false);
+		txtIdCliente.setBounds(98, 19, 86, 20);
+		contentPane.add(txtIdCliente);
+		txtIdCliente.setColumns(10);
+		
 		txtRazonSocial = new JTextField();
+		txtRazonSocial.setText(objCliente.getRazonSocial());
 		txtRazonSocial.setBounds(98, 51, 326, 20);
 		contentPane.add(txtRazonSocial);
 		txtRazonSocial.setColumns(10);
 		
 		txtCuit = new JTextField();
+		txtCuit.setText(objCliente.getCuit());
 		txtCuit.setBounds(98, 78, 326, 20);
 		contentPane.add(txtCuit);
 		txtCuit.setColumns(10);
 		
 		txtTelefono = new JTextField();
+		txtTelefono.setText(objCliente.getTelefono());
 		txtTelefono.setBounds(98, 138, 326, 20);
 		contentPane.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
 		txtDireccion = new JTextField();
+		txtDireccion.setText(objCliente.getDireccion());
 		txtDireccion.setBounds(98, 108, 326, 20);
 		contentPane.add(txtDireccion);
 		txtDireccion.setColumns(10);
@@ -104,18 +107,22 @@ public class FrmModificarCliente extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(e -> {
+            if (listener != null) {
+                listener.onClienteModificado(
+                	Integer.valueOf(txtIdCliente.getText()),
+                    txtRazonSocial.getText(),
+                    txtCuit.getText(),
+                    txtDireccion.getText(),
+                    txtTelefono.getText()
+                );
+            }
+            dispose();
+        });
 		btnAceptar.setBounds(240, 185, 89, 23);
 		contentPane.add(btnAceptar);
 		
-		lblIdCliente = new JLabel("Id Cliente");
-		lblIdCliente.setBounds(10, 22, 46, 14);
-		contentPane.add(lblIdCliente);
 		
-		txIdCliente = new JTextField();
-		txIdCliente.setEditable(false);
-		txIdCliente.setBounds(98, 19, 86, 20);
-		contentPane.add(txIdCliente);
-		txIdCliente.setColumns(10);
 
 	}
 

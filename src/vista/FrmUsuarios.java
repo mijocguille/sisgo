@@ -75,8 +75,8 @@ public class FrmUsuarios extends JFrame {
 		JButton btnAgregarUsuario = new JButton("Alta");
 		btnAgregarUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();
+				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
+				frmNuevo.show();*/
 			}
 		});
 		btnAgregarUsuario.setBounds(420, 289, 89, 23);

@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,18 +11,27 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import operaciones.ControladorEmpleadoProyecto;
+import recursos.Empleado;
+import sistema.BaseDatos;
+
 public class FrmAgregarEmpleadoProyecto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtEmpleado;
-
+	private EmpleadoProyectoNuevoListener listener;
+	private ControladorEmpleadoProyecto ctrlControladorEmpleadoProyecto;
+	private int idEmpleado;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmAgregarEmpleadoProyecto() {
-		setTitle("Agregar Empleado a Proyecto NN");
+	public FrmAgregarEmpleadoProyecto(int numeroProyecto, BaseDatos db, EmpleadoProyectoNuevoListener pListener) {
+		super();
+		listener = pListener;
+		ctrlControladorEmpleadoProyecto = new ControladorEmpleadoProyecto(db);
+		setTitle("Agregar Empleado a Proyecto " + String.valueOf(numeroProyecto));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 512, 114);
 		contentPane = new JPanel();
@@ -42,6 +50,21 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 		txtEmpleado.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrmEmpleados frmSeleccion = new FrmEmpleados(db,true, new SeleccionListener() {
+					
+					@Override
+					public void onSeleccion(int id) {
+						Empleado e = ctrlControladorEmpleadoProyecto.getTblEmpleado().obtenerEmpleado(id);
+						txtEmpleado.setText(e.getNombreCompleto());
+						idEmpleado = id;
+					}
+				});				
+				frmSeleccion.setAlwaysOnTop(true);
+				frmSeleccion.setVisible(true);
+			}
+		});
 		btnSeleccionar.setBounds(385, 7, 102, 23);
 		contentPane.add(btnSeleccionar);
 		
@@ -59,6 +82,12 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listener.onEmpleadoACrear(idEmpleado);
+				dispose();
+			}
+		});
 		btnAceptar.setBounds(312, 46, 89, 23);
 		contentPane.add(btnAceptar);
 

@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 import sistema.BaseDatos;
 
@@ -30,7 +29,7 @@ public class TablaPedido {
 			
 			if(rs != null) {
 				objPedido = new Pedido();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objPedido.setNumeroPedido(rs.getInt("numeroPedido"));
 			    	objPedido.setFechaPedido(rs.getDate("fechaPedido"));
 			    	objPedido.setNumeroProyecto(rs.getInt("numeroProyecto"));
@@ -92,16 +91,15 @@ public class TablaPedido {
 			query += "values('"+ objPedido.getFechaPedido() +"'," + objPedido.getIdCliente() +","+ objPedido.getIdUsuario()+",";
 			query += "'"+ objPedido.getDetallePedido()+"','"+ objPedido.getCaracteristicasPedido() + "')";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(numeroPedido) from pedido";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	numeroPedido = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(numeroPedido) from pedido";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	numeroPedido = rs.getInt(1);
+			    }
+			} 
 			
 			return numeroPedido;
 		} catch(SQLException e) {
@@ -114,7 +112,6 @@ public class TablaPedido {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update pedido ";
 			query += "set idCliente = "+ objPedido.getIdCliente() +", ";
@@ -123,14 +120,43 @@ public class TablaPedido {
 			query += "caracteristicasPedido = '"+ objPedido.getCaracteristicasPedido() +"' ";
 			query += "where numeroPedido = " + objPedido.getNumeroPedido();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarPedido." + e.getMessage()); 
 			return false;
+		}
+	}
+	
+	public Pedido obtenerPedidoAsociado(int numeroProyecto) {
+		
+		try {
+			
+			Pedido objPedido = null;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select numeroPedido, fechaPedido, numeroProyecto, idCliente, idUsuario, detallePedido, caracteristicasPedido ";
+			query += "from pedido where numeroProyecto = " + numeroProyecto;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				objPedido = new Pedido();
+			    if(rs.next()) {
+			    	objPedido.setNumeroPedido(rs.getInt("numeroPedido"));
+			    	objPedido.setFechaPedido(rs.getDate("fechaPedido"));
+			    	objPedido.setNumeroProyecto(rs.getInt("numeroProyecto"));
+			    	objPedido.setIdCliente(rs.getInt("idCliente"));
+			    	objPedido.setIdUsuario(rs.getInt("idUsuario"));
+			    	objPedido.setDetallePedido(rs.getString("detallePedido"));
+			    	objPedido.setCaracteristicasPedido(rs.getString("caracteristicasPedido"));
+			    	
+			    }
+			    rs.close();
+			}
+			return objPedido;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerPedido." + e.getMessage()); 
+			return null; 
 		}
 	}
 
@@ -138,15 +164,12 @@ public class TablaPedido {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from pedido where numeroPedido = " + numeroPedido;
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
-			
-			return resultado;
+		    st.execute(query);
+
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar anularPedido." + e.getMessage()); 
 			return false;

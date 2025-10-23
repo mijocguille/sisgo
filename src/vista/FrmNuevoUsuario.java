@@ -33,8 +33,8 @@ public class FrmNuevoUsuario extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FrmNuevoCliente frame = new FrmNuevoCliente();
-					frame.setVisible(true);
+					/*FrmNuevoCliente frame = new FrmNuevoCliente();
+					frame.setVisible(true);*/
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

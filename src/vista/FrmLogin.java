@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FrmLogin {
+public class FrmLogin extends JFrame{
 
 	private JFrame frmLogin;
 	private JTextField txtUsuario;
@@ -25,6 +25,7 @@ public class FrmLogin {
 	 * Create the application.
 	 */
 	public FrmLogin() {
+		super();
 		initialize();
 	}
 
@@ -32,14 +33,14 @@ public class FrmLogin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmLogin = new JFrame();
-		frmLogin.setResizable(false);
-		frmLogin.setTitle("Login");
-		frmLogin.setBounds(100, 100, 450, 170);
-		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+		this.setResizable(false);
+		this.setTitle("Login");
+		this.setBounds(100, 100, 450, 170);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
-		frmLogin.getContentPane().add(panel, BorderLayout.CENTER);
+		this.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
 		JButton btnAceptar = new JButton("Aceptar");
@@ -50,7 +51,7 @@ public class FrmLogin {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmLogin.dispose();
+				dispose();
 			}
 		});
 		btnCancelar.setBounds(335, 100, 89, 23);
@@ -72,6 +73,6 @@ public class FrmLogin {
 		txtContrasenia = new JPasswordField();
 		txtContrasenia.setBounds(158, 67, 250, 20);
 		panel.add(txtContrasenia);
-		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frmLogin.getContentPane(), panel, btnAceptar, btnCancelar, txtUsuario, lblUsuario, lblContrasenia, txtContrasenia}));
+		this.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frmLogin.getContentPane(), panel, btnAceptar, btnCancelar, txtUsuario, lblUsuario, lblContrasenia, txtContrasenia}));
 	}
 }

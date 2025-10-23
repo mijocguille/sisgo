@@ -21,27 +21,13 @@ public class FrmNuevoProyecto extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmNuevoProyecto frame = new FrmNuevoProyecto();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private ProyectoNuevoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoProyecto() {
+	public FrmNuevoProyecto(ProyectoNuevoListener pListener) {
+		super();
 		setTitle("Crear Proyecto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 542, 186);

@@ -1,11 +1,18 @@
 package recursos;
 
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import sistema.BaseDatos;
 
 public class ControladorEmpleado {
 	
-	public ControladorEmpleado() {
-		
+	private TablaEmpleado tblEmpleado;
+	
+	public ControladorEmpleado(BaseDatos db) {
+		tblEmpleado = new TablaEmpleado(db);
 	}
 	
 	public Empleado seleccionarEmpleado() {
@@ -14,32 +21,49 @@ public class ControladorEmpleado {
 	    return new Empleado ();
 	}
 	
-	public Array listarEmpleados() {
+	public TableModel listarEmpleados() {
 		
-		Array colEmpleados = null;
-		
-		return colEmpleados;
-	}
+		DefaultTableModel model = new DefaultTableModel();
+		String[] encabezados = {"#", "Legajo", "Nombre y Apellido", "Fecha Alta", "Fecha Baja"};
+		model.setColumnIdentifiers(encabezados);
 	
-	public Empleado darAltaEmpleado() {
-		return new Empleado();
-	}
-	
-    private boolean validarInformacionEmpleado() {
-    	return true;
-    }
-    
-    private Empleado cargarInformacionEmpleado() {
-    	return new Empleado();
-    }
-    
-    public boolean bajaEmpleado(int idEmpleado) {
-    	return true;
-    }
-    
-    public boolean modificaEmpleado(int idEmpleado) {
-    	return true;
-    }
+		ArrayList<Empleado> colEmpleados = tblEmpleado.obtenerEmpleados(); 
 
+		for(Empleado e : colEmpleados) {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
+			String fechaAlta = formatter.format(e.getFechaAlta());
+			String fechaBaja = formatter.format(e.getFechaBaja());
+			
+			String[] row = {String.valueOf(e.getIdEmpleado()),String.valueOf(e.getLegajo()),e.getNombreCompleto(),fechaAlta,fechaBaja};
+			model.addRow(row);
+		}	
+		
+		return model;
+	}
+	
+	public int darAltaEmpleado(Empleado objE) {
+		int idEmpleado = 0;
+		if(this.validarInformacionEmpleado(objE)) {
+			idEmpleado = tblEmpleado.altaEmpleado(objE);
+		}		
+		return idEmpleado; 
+	}
+	
+    private boolean validarInformacionEmpleado(Empleado objE) {
+    	return true;
+    }
+   
+    
+    public boolean bajaEmpleado(Empleado objE) {
+    	return tblEmpleado.bajaEmpleado(objE);
+    }
+    
+    public boolean modificaEmpleado(Empleado objE) {
+    	boolean resultado = false;
+    	if(this.validarInformacionEmpleado(objE)) {
+			resultado = tblEmpleado.modificarEmpleado(objE);
+		}		
+    	return resultado;
+    }
 
 }

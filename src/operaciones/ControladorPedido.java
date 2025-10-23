@@ -2,11 +2,16 @@ package operaciones;
 
 import java.lang.reflect.Array;
 
+import sistema.BaseDatos;
+
 
 public class ControladorPedido {
 	
-	public ControladorPedido() {
-		
+	private TablaPedido tblPedido;
+	
+	
+	public ControladorPedido(BaseDatos db) {
+		tblPedido  = new TablaPedido(db);
 	}
 	
 	public Pedido seleccionarPedido() {
@@ -27,19 +32,20 @@ public class ControladorPedido {
 		return new Pedido();
 	}
 	
-    private boolean validarInformacion() {
+    private boolean validarInformacion(Pedido objP) {
     	return true;
     }
     
-    private Pedido cargarInformacion() {
-    	return new Pedido();
-    }
     
     public boolean anularPedido(int numeroPedido) {
     	return true;
     }
     
-    public boolean modificarPedido(int numeroPedido) {
-    	return true;
+    public boolean modificarPedido(Pedido objP) {
+    	boolean resultado = false;
+    	if(this.validarInformacion(objP)) {
+    		resultado = tblPedido.modificarPedido(objP);
+    	}
+    	return resultado;
     }
 }

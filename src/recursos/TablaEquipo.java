@@ -3,6 +3,7 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -29,7 +30,7 @@ public class TablaEquipo {
 			
 			if(rs != null) {
 				objEquipo = new Equipo();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objEquipo.setIdEquipo(rs.getInt("idEquipo"));
 			    	objEquipo.setDescripcionEquipo(rs.getString("descripcionEquipo"));
 			    	objEquipo.setCantidadEquipos(rs.getInt("cantidadEquipos"));
@@ -87,16 +88,15 @@ public class TablaEquipo {
 			String query = "insert into Equipo (descripcionEquipo, cantidadEquipos, fechaAlta, idUsuario) ";
 			query += "values('"+ objEquipo.getDescripcionEquipo() +"'," + objEquipo.getCantidadEquipos() +", now(),"+ objEquipo.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idEquipo) from equipo";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idEquipo = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(idEquipo) from equipo";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idEquipo = rs.getInt(1);
+			    }
+			} 
 			
 			return idEquipo;
 		} catch(SQLException e) {
@@ -116,11 +116,9 @@ public class TablaEquipo {
 			query += "descripcionEquipo = '"+ objEquipo.getDescripcionEquipo() +"' ";
 			query += "where idEquipo = " + objEquipo.getIdEquipo();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarEquipo." + e.getMessage()); 
 			return false;
@@ -131,17 +129,17 @@ public class TablaEquipo {
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objEquipo.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update equipo ";
-			query += "set fechaBaja = '"+ objEquipo.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idEquipo = " + objEquipo.getIdEquipo();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaEquipo." + e.getMessage()); 
 			return false;

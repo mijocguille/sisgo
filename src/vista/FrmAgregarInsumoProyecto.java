@@ -21,6 +21,7 @@ public class FrmAgregarInsumoProyecto extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmAgregarInsumoProyecto() {
+		super();
 		setTitle("Agregar Insumo a Proyecto NN");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 512, 140);

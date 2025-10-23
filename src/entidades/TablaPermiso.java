@@ -29,7 +29,7 @@ public class TablaPermiso {
 			
 			if(rs != null) {
 				objPermiso = new Permiso();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objPermiso.setIdAccion(rs.getInt("idAccion"));
 			    	objPermiso.setIdRol(rs.getInt("idRol"));
 			    }

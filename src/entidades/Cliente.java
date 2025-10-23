@@ -6,7 +6,7 @@ public class Cliente {
 	private int idCliente ;
 	private String razonSocial;
 	private String cuit;
-	private String domicilio;
+	private String direccion;
 	private String telefono;
 	private Date fechaAlta;
 	private Date fechaBaja;
@@ -16,7 +16,7 @@ public class Cliente {
 		this.idCliente = 0;
 		this.razonSocial = "";
 		this.cuit = "";
-		this.domicilio = "";
+		this.direccion = "";
 		this.telefono = "";
 		this.fechaAlta = new Date();
 		this.fechaBaja = null;
@@ -56,12 +56,12 @@ public class Cliente {
 		this.cuit = cuit;
 	}
 
-	public String getDomicilio() {
-		return domicilio;
+	public String getDireccion() {
+		return direccion;
 	}
 
-	public void setDomicilio(String domicilio) {
-		this.domicilio = domicilio;
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 
 	public String getTelefono() {

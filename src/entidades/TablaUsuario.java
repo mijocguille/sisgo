@@ -3,6 +3,7 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -29,7 +30,7 @@ private BaseDatos db;
 			
 			if(rs != null) {
 				objUsuario = new Usuario();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objUsuario.setIdUsuario(rs.getInt("idUsuario"));
 			    	objUsuario.setNombreUsuario(rs.getString("nombreUsuario"));
 			    	objUsuario.setClaveUsuario(rs.getString("claveUsuario"));
@@ -87,16 +88,15 @@ private BaseDatos db;
 			String query = "insert into usuario (nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta) ";
 			query += "values('"+ objUsuario.getNombreUsuario() +"','" + objUsuario.getClaveUsuario() +"','"+ objUsuario.getDescripcionUsuario()+"',now())";
 			
-		    if (st.execute(query)) {
-		    	query = "select max(idUsuario) from usuario";
-		    	ResultSet rs = st.executeQuery(query);
-				
-				if(rs != null) {
-				    if (rs.next()) {
-				    	idUsuario = rs.getInt(1);
-				    }
-				}
-		    } 
+		    st.execute(query);
+	    	query = "select max(idUsuario) from usuario";
+	    	ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+			    if (rs.next()) {
+			    	idUsuario = rs.getInt(1);
+			    }
+			}
 			
 			return idUsuario;
 		} catch(SQLException e) {
@@ -109,7 +109,6 @@ private BaseDatos db;
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update usuario ";
 			query += "set nombreUsuario = '"+ objUsuario.getNombreUsuario() +"', ";
@@ -117,11 +116,9 @@ private BaseDatos db;
 			query += "descripcionUsuario = '"+ objUsuario.getDescripcionUsuario() +"' ";
 			query += "where idUsuario = " + objUsuario.getIdUsuario();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
-			
-			return resultado;
+		    st.execute(query);
+		
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarUsuario." + e.getMessage()); 
 			return false;
@@ -132,17 +129,17 @@ private BaseDatos db;
 		
 		try {
 			
-			boolean resultado = false;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaBaja = formatter.format(objUsuario.getFechaBaja());
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update usuario ";
-			query += "set fechaBaja = '"+ objUsuario.getFechaBaja() +"' ";
+			query += "set fechaBaja = '"+ fechaBaja +"' ";
 			query += "where idUsuario = " + objUsuario.getIdUsuario();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar bajaUsuario." + e.getMessage()); 
 			return false;

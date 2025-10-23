@@ -14,6 +14,32 @@ public class TablaEmpleadoProyecto {
 		
 		this.db = objDb;
 	}
+	
+	public EmpleadoProyecto obtenerEmpleadoProyecto(int numeroProyecto, int idEmpleado) {
+		
+		try {
+			
+			EmpleadoProyecto objEP = null;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idEmpleado, numeroProyecto ";
+			query += "from empleado_proyecto where numeroProyecto = " + numeroProyecto + " and idEmpleado = " + idEmpleado;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				objEP = new EmpleadoProyecto();
+			    if(rs.next()) {
+			    	objEP.setNumeroProyecto(rs.getInt("numeroProyecto"));
+			    	objEP.setIdEmpleado(rs.getInt("idEmpleado"));
+			    }
+			    rs.close();
+			}
+			return objEP;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerEmpleadoProyecto." + e.getMessage()); 
+			return null;
+		}
+		
+	}
 
 	public ArrayList<EmpleadoProyecto> obtenerEmpleadosProyecto(int numeroProyecto) {
 		
@@ -45,15 +71,12 @@ public class TablaEmpleadoProyecto {
 	public boolean agregarEmpleadoProyecto(EmpleadoProyecto objEP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into empleado_proyecto (idEmpleado, numeroProyecto) ";
 			query += "values("+ objEP.getIdEmpleado() +"," + objEP.getNumeroProyecto() +")";
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar agregarEmpleadoProyecto." + e.getMessage()); 
@@ -64,15 +87,12 @@ public class TablaEmpleadoProyecto {
 	public boolean quitarEmpleadoProyecto(EmpleadoProyecto objEP) {
 		
 		try {
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from empleado_proyecto where idEmpleado = " + objEP.getIdEmpleado() + " and numeroProyecto = " + objEP.getNumeroProyecto();
 		
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
 			
-			return resultado;
+			return true;
 			
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar quitarEmpleadoProyecto." + e.getMessage()); 

@@ -6,7 +6,20 @@ import java.util.ArrayList;
 import entidades.Accion;
 import entidades.Permiso;
 import entidades.TablaAccion;
+import entidades.TablaCliente;
 import entidades.TablaPermiso;
+import entidades.TablaRol;
+import entidades.TablaUsuario;
+import operaciones.TablaEmpleadoProyecto;
+import operaciones.TablaEquipoProyecto;
+import operaciones.TablaInsumoProyecto;
+import operaciones.TablaPedido;
+import operaciones.TablaPresupuesto;
+import operaciones.TablaProyecto;
+import recursos.TablaEmpleado;
+import recursos.TablaEquipo;
+import recursos.TablaInsumo;
+import vista.FrmMain;
 
 public class main {
 
@@ -14,16 +27,8 @@ public class main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					BaseDatos db = new BaseDatos();
-					TablaAccion tablaAccion = new TablaAccion(db);
-					TablaPermiso tablaPermiso = new TablaPermiso(db);
-					
-					ArrayList<Permiso> col = tablaPermiso.obtenerPermisos(1);
-					
-					col.forEach(permiso -> System.out.println(tablaAccion.obtenerAccion(permiso.getIdAccion()).getNombreAccion()));
-					
-
-					
+					FrmMain frmMain = new FrmMain();
+					frmMain.setVisible(true);			
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

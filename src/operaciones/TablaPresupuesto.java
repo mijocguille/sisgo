@@ -30,7 +30,7 @@ public class TablaPresupuesto {
 			
 			if(rs != null) {
 				objPresupuesto = new Presupuesto();
-			    while(rs.next()) {
+			    if(rs.next()) {
 			    	objPresupuesto.setNumeroProyecto(rs.getInt("numeroProyecto"));
 			    	objPresupuesto.setNumeroPresupuesto(rs.getInt("numeroPresupuesto"));
 			    	objPresupuesto.setFechaPresupuesto(rs.getDate("fechaPresupuesto"));
@@ -104,18 +104,15 @@ public class TablaPresupuesto {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update presupuesto";
 			query += "set diasValidez= "+ objPresupuesto.getDiasValidez() +", ";
 			query += "importePresupuestado = '"+ objPresupuesto.getImportePresupuestado() +" ";
 			query += "where numeroProyecto = " + objPresupuesto.getNumeroProyecto() + " and numeroPresupuesto = " + objPresupuesto.getNumeroPresupuesto();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+			st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar modificarPresupuesto." + e.getMessage()); 
 			return false;
@@ -126,15 +123,12 @@ public class TablaPresupuesto {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "delete from presupuesto where numeroProyecto = "+ objPresupuesto.getNumeroProyecto() + " and numeroPresupuesto = " + objPresupuesto.getNumeroPresupuesto();
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar eliminarPrespuesto." + e.getMessage()); 
 			return false;

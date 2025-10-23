@@ -1,17 +1,20 @@
 package operaciones;
 
-import java.lang.reflect.Array;
+import javax.swing.table.TableModel;
+
+import sistema.BaseDatos;
 
 public class ControladorEquipoProyecto {
 	
-	public ControladorEquipoProyecto() {
-		
+	private TablaEquipoProyecto tblEquipoProyecto;
+	
+	public ControladorEquipoProyecto(BaseDatos db) {
+		tblEquipoProyecto = new TablaEquipoProyecto(db);
 	}
 
-	public Array listarEquipos(int numeroProyecto) {
+	public TableModel listarEquipos(int numeroProyecto) {
 		
-		Array colEquipos = null;
-		return colEquipos;
+		return null;
 	}
 	
 	public boolean agregarEquipoProyecto(int numeroProyecto) {
