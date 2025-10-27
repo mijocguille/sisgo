@@ -128,11 +128,11 @@ CREATE TABLE IF NOT EXISTS `insumo_proyecto` (
 CREATE TABLE IF NOT EXISTS `pedido` (
   `numeroPedido` int(11) NOT NULL AUTO_INCREMENT,
   `fechaPedido` date NOT NULL,
-  `numeroProyecto` int(11) NOT NULL,
+  `numeroProyecto` int(11) NULL,
   `idCliente` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
   `detallePedido` varchar(1000) NOT NULL,
-  `caracteristicasConstruccion` varchar(1000) NOT NULL,
+  `caracteristicasPedido` varchar(1000) NOT NULL,
   PRIMARY KEY (`numeroPedido`),
   KEY `FK_PEDIDO_CLIENTE` (`idCliente`),
   KEY `FK_PEDIDO_PROYECTO` (`numeroProyecto`),

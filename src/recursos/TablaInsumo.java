@@ -3,10 +3,8 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import operaciones.InsumoProyecto;
 import sistema.BaseDatos;
 
 public class TablaInsumo {
@@ -125,17 +123,13 @@ public class TablaInsumo {
 		}
 	}
 
-	public boolean bajaInsumo(Insumo objInsumo) {
+	public boolean bajaInsumo(int idInsumo) {
 		
 		try {
-			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objInsumo.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update insumo ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idInsumo = " + objInsumo.getIdInsumo();
+			query += "set fechaBaja = now() ";
+			query += "where idInsumo = " + idInsumo;
 			
 		    st.execute(query);
 			

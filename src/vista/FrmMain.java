@@ -150,7 +150,7 @@ public class FrmMain extends JFrame {
 	public static FrmClientes crearWndClientes() {
 		
 		if(wndClientes == null) {
-			wndClientes = new FrmClientes(db);
+			wndClientes = new FrmClientes(db,false,null);
 		}
 		return wndClientes;
 	}
@@ -158,7 +158,7 @@ public class FrmMain extends JFrame {
 	public static FrmPedidos crearWndPedidos() {
 		
 		if(wndPedidos == null) {
-			wndPedidos = new FrmPedidos();
+			wndPedidos = new FrmPedidos(db,false,null);
 		}
 		return wndPedidos;
 	}
@@ -166,7 +166,7 @@ public class FrmMain extends JFrame {
 	public static FrmInsumos crearWndInsumos() {
 
 		if(wndInsumos == null) {
-			wndInsumos = new FrmInsumos();
+			wndInsumos = new FrmInsumos(db,false,null);
 		}
 		return wndInsumos;
 	}
@@ -182,7 +182,7 @@ public class FrmMain extends JFrame {
 	public static FrmEquipos crearWndEquipos() {
 		
 		if(wndEquipos == null) {
-			wndEquipos = new FrmEquipos();
+			wndEquipos = new FrmEquipos(db,false,null);
 		}
 		return wndEquipos;
 	}

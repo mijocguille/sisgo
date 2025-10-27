@@ -13,6 +13,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import sistema.BaseDatos;
+
 public class FrmEquipos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -21,7 +23,8 @@ public class FrmEquipos extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FrmEquipos() {
+	public FrmEquipos(BaseDatos db, boolean esSeleccion, SeleccionListener pListener) {
+		super();
 		setTitle("Listado de Equipos");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);

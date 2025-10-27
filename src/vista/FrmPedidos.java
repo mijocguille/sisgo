@@ -1,28 +1,33 @@
 package vista;
 
-import java.awt.EventQueue;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import operaciones.ControladorPedido;
+import operaciones.Pedido;
+import sistema.BaseDatos;
 
 public class FrmPedidos extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private JTable tblPedidos;
-
+	private ControladorPedido ctrlPedidos;
+	private SeleccionListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmPedidos() {
+	public FrmPedidos(BaseDatos db, boolean esSeleccion, SeleccionListener pListener) {
+		super();
+		
+		ctrlPedidos = new ControladorPedido(db);
+		
+		
 		setTitle("Listado de Pedidos");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
@@ -34,53 +39,86 @@ public class FrmPedidos extends JFrame {
 		tblPedidos = new JTable();
 		scrollPane.setViewportView(tblPedidos);
 		tblPedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblPedidos.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"#", "Fecha Pedido", "Detalle de Pedido", "Caracter\u00EDsticas", "Proyecto Asignado"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		cargarPedidos();
 		tblPedidos.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tblPedidos.getColumnModel().getColumn(2).setPreferredWidth(185);
 		tblPedidos.getColumnModel().getColumn(3).setPreferredWidth(152);
 		tblPedidos.getColumnModel().getColumn(4).setPreferredWidth(110);
 		
 		JButton btnAnularPedido = new JButton("Anular");
+		btnAnularPedido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblPedidos.getModel().getValueAt(tblPedidos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea anular el Pedido?",new ConfirmacionListener() {
+					    @Override
+					    public void onConfirmar(boolean resultado) {
+					        if(resultado) {
+					            if(ctrlPedidos.anularPedido(idSeleccionado)){
+						        	cargarPedidos();
+						        } 
+					        }
+					    }
+					});
+					frmConfirmacion.setAlwaysOnTop(true);
+					frmConfirmacion.setVisible(true);
+				}
+			}
+		});
 		btnAnularPedido.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnAnularPedido);
 		
 		JButton btnModificarPedido = new JButton("Editar");
+		btnModificarPedido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblPedidos.getModel().getValueAt(tblPedidos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					Pedido objPed = ctrlPedidos.getTblPedido().obtenerPedido(idSeleccionado);
+					FrmModificarPedido frmEdit = new FrmModificarPedido(db, objPed, new PedidoModificadoListener() {
+						
+					    @Override
+					    public void onPedidoModificado(int numeroPedido, int idCliente, String detallePedido, String caracteristicasPedido) {
+					        Pedido objPedido = new Pedido();
+					        
+					        objPedido.setNumeroPedido(numeroPedido);
+					        objPedido.setIdCliente(idCliente);
+					        objPedido.setDetallePedido(detallePedido);
+					        objPedido.setCaracteristicasPedido(caracteristicasPedido);
+					        
+					        if(ctrlPedidos.modificarPedido(objPed)){
+					        	cargarPedidos();
+					        }
+					    }
+					});
+					frmEdit.setAlwaysOnTop(true);
+					frmEdit.setVisible(true);
+				}
+			}
+		});
 		btnModificarPedido.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarPedido);
 		
 		JButton btnAgregarPedido = new JButton("Alta");
 		btnAgregarPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();*/
+				FrmNuevoPedido frmNuevo = new FrmNuevoPedido(db, new PedidoNuevoListener() {
+				    @Override
+				    public void onPedidoCreado(int idCliente, String detallePedido, String caracteristicasPedido) {
+				        Pedido objPed = new Pedido();
+				        objPed.setIdCliente(idCliente);
+				        objPed.setDetallePedido(detallePedido);
+				        objPed.setCaracteristicasPedido(caracteristicasPedido);
+				        objPed.setIdUsuario(FrmMain.idUsuarioLogueado);
+				        int numeroPedido = ctrlPedidos.crearPedido(objPed);
+				        if(numeroPedido > 0) {
+				        	cargarPedidos();
+				        }
+				    }
+				});
+				frmNuevo.setAlwaysOnTop(true);
+				frmNuevo.setVisible(true);
 			}
 		});
 		btnAgregarPedido.setBounds(420, 289, 89, 23);
@@ -97,7 +135,30 @@ public class FrmPedidos extends JFrame {
 		getContentPane().add(btnCerrar);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccion = Integer.parseInt(tblPedidos.getModel().getValueAt(tblPedidos.getSelectedRow(),0).toString());
+				if(idSeleccion > 0) {
+					listener.onSeleccion(idSeleccion);
+					dispose();
+				}
+			}
+		});
+		btnSeleccionar.setVisible(false);
 		btnSeleccionar.setBounds(10, 289, 89, 23);
 		getContentPane().add(btnSeleccionar);
+		
+		if(esSeleccion) {
+			btnSeleccionar.setVisible(true);
+			btnAgregarPedido.setVisible(false);
+			btnModificarPedido.setVisible(false);
+			btnAnularPedido.setVisible(false);
+		}
+			
+	}
+	
+	private void cargarPedidos() {
+		tblPedidos.removeAll();
+		tblPedidos.setModel(ctrlPedidos.listarPedidos());				
 	}
 }

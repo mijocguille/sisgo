@@ -88,7 +88,7 @@ public class TablaPedido {
 			int numeroPedido = 0;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into pedido (fechaPedido, idCliente, idUsuario, detallePedido, caracteristicasPedido) ";
-			query += "values('"+ objPedido.getFechaPedido() +"'," + objPedido.getIdCliente() +","+ objPedido.getIdUsuario()+",";
+			query += "values(now()," + objPedido.getIdCliente() +","+ objPedido.getIdUsuario()+",";
 			query += "'"+ objPedido.getDetallePedido()+"','"+ objPedido.getCaracteristicasPedido() + "')";
 			
 		    st.execute(query);

@@ -1,10 +1,10 @@
 package vista;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import recursos.Insumo;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -19,27 +19,15 @@ public class FrmModificarInsumo extends JFrame {
 	private JTextField txtIdInsumo;
 	private JTextField txtDescripcion;
 	private JTextField txtStock;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmModificarInsumo frame = new FrmModificarInsumo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private InsumoModificadoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarInsumo() {
+	public FrmModificarInsumo(Insumo objInsumo, InsumoModificadoListener pListener) {
+		super();
+		listener = pListener;
+		
 		setTitle("Modificar Insumo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 168);
@@ -69,9 +57,6 @@ public class FrmModificarInsumo extends JFrame {
 		btnCancelar.setBounds(335, 99, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(236, 99, 89, 23);
-		contentPane.add(btnAceptar);
 		
 		txtIdInsumo = new JTextField();
 		txtIdInsumo.setEditable(false);
@@ -92,6 +77,26 @@ public class FrmModificarInsumo extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 86, 414, 2);
 		contentPane.add(separator);
-
+		
+		txtIdInsumo.setText(String.valueOf(objInsumo.getIdInsumo()));
+		txtDescripcion.setText(objInsumo.getDescripcionInsumo());
+		txtStock.setText(String.valueOf(objInsumo.getCantidadStock()));
+		
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onInsumoModificado(objInsumo.getIdInsumo(), txtDescripcion.getText(), Integer.parseInt(txtStock.getText()));
+				}
+				dispose();
+				
+			}
+		});
+		btnAceptar.setBounds(236, 99, 89, 23);
+		contentPane.add(btnAceptar);
+		
 	}
 }

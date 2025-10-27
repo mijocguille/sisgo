@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +10,12 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import entidades.Cliente;
+import operaciones.ControladorPedido;
+import operaciones.Pedido;
+import sistema.BaseDatos;
+
 import javax.swing.JTextArea;
 
 public class FrmModificarPedido extends JFrame {
@@ -19,12 +24,21 @@ public class FrmModificarPedido extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtCliente;
 	private JTextField txtNumeroPedido;
+	private ControladorPedido ctrlPedido;
+	private PedidoModificadoListener listener;
+	private int idCliente;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarPedido() {
+	public FrmModificarPedido(BaseDatos db, Pedido objPedido, PedidoModificadoListener pListener) {
+		super();
+		ctrlPedido = new ControladorPedido(db);
+		listener = pListener;
+		
+		Cliente objCli = ctrlPedido.getTblCliente().obtenerCliente(objPedido.getIdCliente());
+		
 		setTitle("Modificar Pedido");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 512, 405);
@@ -39,11 +53,13 @@ public class FrmModificarPedido extends JFrame {
 		
 		txtCliente = new JTextField();
 		txtCliente.setEditable(false);
+		txtCliente.setText(objCli.getRazonSocial());
 		txtCliente.setBounds(66, 36, 309, 20);
 		contentPane.add(txtCliente);
 		txtCliente.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		
 		btnSeleccionar.setBounds(385, 35, 102, 23);
 		contentPane.add(btnSeleccionar);
 		
@@ -60,15 +76,13 @@ public class FrmModificarPedido extends JFrame {
 		btnCancelar.setBounds(398, 337, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(299, 337, 89, 23);
-		contentPane.add(btnAceptar);
-		
 		JTextArea txtDetalle = new JTextArea();
 		txtDetalle.setBounds(66, 83, 421, 93);
+		txtDetalle.setText(objPedido.getDetallePedido());
 		contentPane.add(txtDetalle);
 		
 		JTextArea txtCaracteristicas = new JTextArea();
+		txtCaracteristicas.setText(objPedido.getCaracteristicasPedido());
 		txtCaracteristicas.setBounds(66, 212, 420, 106);
 		contentPane.add(txtCaracteristicas);
 		
@@ -85,10 +99,30 @@ public class FrmModificarPedido extends JFrame {
 		contentPane.add(lblNumeroPedido);
 		
 		txtNumeroPedido = new JTextField();
+		txtNumeroPedido.setText(String.valueOf(objPedido.getNumeroPedido()));
 		txtNumeroPedido.setEditable(false);
 		txtNumeroPedido.setBounds(115, 8, 86, 20);
 		contentPane.add(txtNumeroPedido);
 		txtNumeroPedido.setColumns(10);
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 if (listener != null) {
+		                listener.onPedidoModificado(
+		                		objPedido.getNumeroPedido(),
+		                		idCliente,
+		                		txtDetalle.getText(),
+		                		txtCaracteristicas.getText()
+		                		);
+		            }
+		            dispose();	
+			}
+		});
+		btnAceptar.setBounds(299, 337, 89, 23);
+		contentPane.add(btnAceptar);
 
 	}
 }

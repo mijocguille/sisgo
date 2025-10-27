@@ -20,14 +20,16 @@ public class FrmClientes extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private ControladorCliente ctrlCliente;
+	private SeleccionListener listener;
 	
 	/**
 	 * Create the frame.
 	 */
-	public FrmClientes(BaseDatos db) {
+	public FrmClientes(BaseDatos db, boolean esSeleccion, SeleccionListener pListener) {
 		
 		super();
 		ctrlCliente = new ControladorCliente(db);
+		listener = pListener;
 		
 		setTitle("Listado de Clientes");
 		setBounds(100, 100, 736, 412);
@@ -132,8 +134,29 @@ public class FrmClientes extends JFrame {
 
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
+		
+		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.setVisible(false);
+		btnSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccion = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				if(idSeleccion > 0) {
+					listener.onSeleccion(idSeleccion);
+					dispose();
+				}
+			}
+		});
+		btnSeleccionar.setBounds(10, 289, 114, 23);
+		getContentPane().add(btnSeleccionar);
 		table.getColumnModel().getColumn(1).setPreferredWidth(245);
 		table.getColumnModel().getColumn(3).setPreferredWidth(152);
+		
+		if(esSeleccion) {
+			btnSeleccionar.setVisible(true);
+			btnModificarCliente.setVisible(false);
+			btnBajaCliente.setVisible(false);
+		}
+		
 	}
 	
 	private void cargarClientes() {
@@ -141,6 +164,4 @@ public class FrmClientes extends JFrame {
 		table.setModel(ctrlCliente.listarClientes());	
 			
 	}
-	
-	
 }

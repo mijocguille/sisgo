@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,27 +17,16 @@ public class FrmNuevoInsumo extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtDescripcion;
 	private JTextField txtStock;
+	private InsumoNuevoListener listener;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmModificarInsumo frame = new FrmModificarInsumo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoInsumo() {
+	public FrmNuevoInsumo(InsumoNuevoListener pListener) {
+		super();
+		listener = pListener;
+		
 		setTitle("Nuevo Insumo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 148);
@@ -64,10 +52,6 @@ public class FrmNuevoInsumo extends JFrame {
 		btnCancelar.setBounds(335, 77, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(236, 77, 89, 23);
-		contentPane.add(btnAceptar);
-		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(90, 11, 334, 20);
 		contentPane.add(txtDescripcion);
@@ -81,7 +65,21 @@ public class FrmNuevoInsumo extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 64, 414, 2);
 		contentPane.add(separator);
-
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onInsumoCreado(txtDescripcion.getText(), Integer.parseInt(txtStock.getText()));
+				}
+				dispose();
+			}
+		});
+		btnAceptar.setBounds(236, 77, 89, 23);
+		contentPane.add(btnAceptar);
+		
 	}
 
 }
