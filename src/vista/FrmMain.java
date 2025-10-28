@@ -208,7 +208,7 @@ public class FrmMain extends JFrame {
 	public static FrmRoles crearWndRoles() {
 	
 		if(wndRoles == null) {
-			wndRoles = new FrmRoles();
+			wndRoles = new FrmRoles(db);
 		}
 		
 		return wndRoles;

@@ -32,7 +32,10 @@ public class ControladorEmpleado {
 		for(Empleado e : colEmpleados) {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
 			String fechaAlta = formatter.format(e.getFechaAlta());
-			String fechaBaja = formatter.format(e.getFechaBaja());
+			String fechaBaja = "";
+			if(e.getFechaBaja() != null) {
+				fechaBaja = formatter.format(e.getFechaBaja());	
+			}
 			
 			String[] row = {String.valueOf(e.getIdEmpleado()),String.valueOf(e.getLegajo()),e.getNombreCompleto(),fechaAlta,fechaBaja};
 			model.addRow(row);

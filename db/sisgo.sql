@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 -- Volcando estructura para tabla sisgo.empleado
 CREATE TABLE IF NOT EXISTS `empleado` (
   `idEmpleado` int(11) NOT NULL AUTO_INCREMENT,
-  `legajo` tinyint(4) NOT NULL,
+  `legajo` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL,
   `apellido` varchar(20) NOT NULL,
   `fechaAlta` date NOT NULL,

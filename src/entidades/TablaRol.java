@@ -3,7 +3,6 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -73,14 +72,14 @@ public class TablaRol {
 		
 	}
 	
-	public int altaRol(String nombreRol) {
+	public int altaRol(Rol objRol) {
 		
 		try {
 			
 			int idRol = 0;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into rol (nombreRol, fechaAlta) ";
-			query += "values('"+ nombreRol +"',now())";
+			query += "values('"+ objRol.getNombreRol() +"',now())";
 			
 		    st.execute(query);
 	    	query = "select max(idRol) from rol";
@@ -117,17 +116,14 @@ public class TablaRol {
 		}
 	}
 
-	public boolean bajaRol(Rol objRol) {
+	public boolean bajaRol(int idRol) {
 		
 		try {
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objRol.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update rol ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idRol = " + objRol.getIdRol();
+			query += "set fechaBaja = now() ";
+			query += "where idRol = " + idRol;
 			
 			st.execute(query);
 			

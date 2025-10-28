@@ -1,10 +1,12 @@
 package vista;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entidades.Rol;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -18,27 +20,15 @@ public class FrmModificarRol extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtIdRol;
 	private JTextField txtNombreRol;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmModificarRol frame = new FrmModificarRol();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private RolModificadoListener listener;
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarRol() {
+	public FrmModificarRol(Rol objRol, RolModificadoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Modificando Rol");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 357, 154);
@@ -48,12 +38,14 @@ public class FrmModificarRol extends JFrame {
 		contentPane.setLayout(null);
 		
 		txtIdRol = new JTextField();
+		txtIdRol.setText(String.valueOf(objRol.getIdRol()));
 		txtIdRol.setEditable(false);
 		txtIdRol.setBounds(66, 11, 86, 20);
 		contentPane.add(txtIdRol);
 		txtIdRol.setColumns(10);
 		
 		txtNombreRol = new JTextField();
+		txtNombreRol.setText(objRol.getNombreRol());
 		txtNombreRol.setBounds(66, 42, 260, 20);
 		contentPane.add(txtNombreRol);
 		txtNombreRol.setColumns(10);
@@ -67,6 +59,16 @@ public class FrmModificarRol extends JFrame {
 		contentPane.add(lblNombreRol);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onRolModificado(objRol.getIdRol(), txtNombreRol.getText());
+				}
+				dispose();
+			}
+		});
 		btnAceptar.setBounds(143, 86, 89, 23);
 		contentPane.add(btnAceptar);
 		
