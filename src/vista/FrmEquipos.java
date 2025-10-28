@@ -1,30 +1,31 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
+import recursos.ControladorEquipo;
+import recursos.Equipo;
 import sistema.BaseDatos;
 
 public class FrmEquipos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblEquipos;
+	private SeleccionListener listener;
+	private ControladorEquipo ctrlEquipo;
 
 	/**
 	 * Create the frame.
 	 */
 	public FrmEquipos(BaseDatos db, boolean esSeleccion, SeleccionListener pListener) {
 		super();
+		ctrlEquipo = new ControladorEquipo(db);
+		listener = pListener;
 		setTitle("Listado de Equipos");
 		setBounds(100, 100, 736, 412);
 		getContentPane().setLayout(null);
@@ -35,51 +36,78 @@ public class FrmEquipos extends JFrame {
 		
 		tblEquipos = new JTable();
 		scrollPane.setViewportView(tblEquipos);
-		tblEquipos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tblEquipos.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		cargarEquipos();
 		tblEquipos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
 		JButton btnBajaEquipo = new JButton("Baja");
+		btnBajaEquipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblEquipos.getModel().getValueAt(tblEquipos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea dar de baja al equipo?",new ConfirmacionListener() {
+					    @Override
+					    public void onConfirmar(boolean resultado) {
+					        if(resultado) {
+						        if(ctrlEquipo.darBajaEquipo(idSeleccionado)){
+						        	cargarEquipos();
+						        } 
+					        }
+					    }
+					});
+					frmConfirmacion.setAlwaysOnTop(true);
+					frmConfirmacion.setVisible(true);
+				}
+			}
+		});
 		btnBajaEquipo.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaEquipo);
 		
 		JButton btnModificarEquipo = new JButton("Editar");
+		btnModificarEquipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblEquipos.getModel().getValueAt(tblEquipos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					Equipo objEquipo = ctrlEquipo.getTblEquipos().obtenerEquipo(idSeleccionado);
+					FrmModificarEquipo frmEdit = new FrmModificarEquipo(objEquipo, new EquipoModificadoListener() {
+					    @Override
+					    public void onEquipoModificado(int idEquipo, String descripcionEquipo, int cantidad) {
+					    	Equipo objEq = new Equipo();
+					    	objEq.setIdEquipo(idEquipo);
+					    	objEq.setDescripcionEquipo(descripcionEquipo);
+					    	objEq.setCantidadEquipos(cantidad);
+					        if(ctrlEquipo.modificarEquipo(objEq)){
+					        	cargarEquipos();
+					        }
+					    }
+					});
+					frmEdit.setAlwaysOnTop(true);
+					frmEdit.setVisible(true);
+				}
+			}
+		});
 		btnModificarEquipo.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarEquipo);
 		
 		JButton btnAgregarEquipo = new JButton("Alta");
 		btnAgregarEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*FrmNuevoCliente frmNuevo = new FrmNuevoCliente();
-				frmNuevo.show();*/
+				FrmNuevoEquipo frmNuevo = new FrmNuevoEquipo(new EquipoNuevoListener() {
+				    @Override
+				    public void onEquipoCreado(String descripcionEquipo, int cantidad) {
+				    	Equipo objEq = new Equipo();
+				    	objEq.setDescripcionEquipo(descripcionEquipo);
+				    	objEq.setCantidadEquipos(cantidad);
+				    	objEq.setIdUsuario(FrmMain.idUsuarioLogueado);
+				        int idEquipo = ctrlEquipo.darAltaEquipo(objEq);
+				        if(idEquipo > 0) {
+				        	cargarEquipos();
+				        }
+				    }
+				});
+				frmNuevo.setAlwaysOnTop(true);
+				frmNuevo.setVisible(true);
 			}
 		});
 		btnAgregarEquipo.setBounds(420, 289, 89, 23);
@@ -96,7 +124,32 @@ public class FrmEquipos extends JFrame {
 		getContentPane().add(btnCerrar);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.setVisible(false);
+		btnSeleccionar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccion = Integer.parseInt(tblEquipos.getModel().getValueAt(tblEquipos.getSelectedRow(),0).toString());
+				if(idSeleccion > 0) {
+					listener.onSeleccion(idSeleccion);
+					dispose();
+				}
+			}
+		});
 		btnSeleccionar.setBounds(10, 289, 89, 23);
 		getContentPane().add(btnSeleccionar);
+		
+		if(esSeleccion) {
+			btnSeleccionar.setVisible(true);
+			btnAgregarEquipo.setVisible(false);
+			btnModificarEquipo.setVisible(false);
+			btnBajaEquipo.setVisible(false);
+		}
 	}
+	
+	private void cargarEquipos() {
+		tblEquipos.removeAll();
+		tblEquipos.setModel(ctrlEquipo.listarEquipos());
+	}
+	
 }

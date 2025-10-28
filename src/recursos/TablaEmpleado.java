@@ -128,17 +128,14 @@ public class TablaEmpleado {
 		}
 	}
 
-	public boolean bajaEmpleado(Empleado objEmpleado) {
+	public boolean bajaEmpleado(int idEmpleado) {
 		
 		try {
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objEmpleado.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update empleado ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idEmpleado = " + objEmpleado.getIdEmpleado();
+			query += "set fechaBaja = now() ";
+			query += "where idEmpleado = " + idEmpleado;
 			
 		    st.execute(query);
 			

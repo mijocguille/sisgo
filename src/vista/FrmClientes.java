@@ -12,7 +12,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class FrmClientes extends JFrame {
@@ -47,16 +46,13 @@ public class FrmClientes extends JFrame {
 		JButton btnBajaCliente = new JButton("Baja");
 		btnBajaCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				int idSeleccionado = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
 				if( idSeleccionado > 0)	{
 					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea dar de baja al cliente?",new ConfirmacionListener() {
 					    @Override
 					    public void onConfirmar(boolean resultado) {
 					        if(resultado) {
-					        	Cliente objCli = ctrlCliente.getTblCliente().obtenerCliente(idSeleccionado);
-					        	objCli.setFechaBaja(new Date());
-						        if(ctrlCliente.darBajaCliente(objCli)){
+						        if(ctrlCliente.darBajaCliente(idSeleccionado)){
 						        	cargarClientes();
 						        } 
 					        }

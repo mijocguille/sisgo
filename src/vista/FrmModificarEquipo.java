@@ -11,18 +11,23 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import recursos.Equipo;
+
 public class FrmModificarEquipo extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtIdEquipo;
 	private JTextField txtDescripcion;
 	private JTextField txtCantidad;
+	private EquipoModificadoListener listener;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarEquipo() {
+	public FrmModificarEquipo(Equipo objEquipo, EquipoModificadoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Modificar Equipo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 168);
@@ -52,22 +57,21 @@ public class FrmModificarEquipo extends JFrame {
 		btnCancelar.setBounds(335, 99, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(236, 99, 89, 23);
-		contentPane.add(btnAceptar);
-		
 		txtIdEquipo = new JTextField();
+		txtIdEquipo.setText(String.valueOf(objEquipo.getIdEquipo()));
 		txtIdEquipo.setEditable(false);
 		txtIdEquipo.setBounds(90, 8, 86, 20);
 		contentPane.add(txtIdEquipo);
 		txtIdEquipo.setColumns(10);
 		
 		txtDescripcion = new JTextField();
+		txtDescripcion.setText(objEquipo.getDescripcionEquipo());
 		txtDescripcion.setBounds(90, 33, 334, 20);
 		contentPane.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
 		
 		txtCantidad = new JTextField();
+		txtCantidad.setText(String.valueOf(objEquipo.getCantidadEquipos()));
 		txtCantidad.setBounds(90, 58, 86, 20);
 		contentPane.add(txtCantidad);
 		txtCantidad.setColumns(10);
@@ -76,5 +80,20 @@ public class FrmModificarEquipo extends JFrame {
 		separator.setBounds(10, 86, 414, 2);
 		contentPane.add(separator);
 
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener!=null) {
+					listener.onEquipoModificado(objEquipo.getIdEquipo(), txtDescripcion.getText(), Integer.parseInt(txtCantidad.getText()));
+				}
+				dispose();
+				
+			}
+		});
+		btnAceptar.setBounds(236, 99, 89, 23);
+		contentPane.add(btnAceptar);
+		
 	}
 }

@@ -3,7 +3,6 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -109,7 +108,6 @@ public class TablaEquipo {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update equipo ";
 			query += "set cantidadEquipos = "+ objEquipo.getCantidadEquipos() +", ";
@@ -125,17 +123,14 @@ public class TablaEquipo {
 		}
 	}
 
-	public boolean bajaEquipo(Equipo objEquipo) {
+	public boolean bajaEquipo(int idEquipo) {
 		
 		try {
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objEquipo.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update equipo ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idEquipo = " + objEquipo.getIdEquipo();
+			query += "set fechaBaja = now() ";
+			query += "where idEquipo = " + idEquipo;
 			
 			st.execute(query);
 			

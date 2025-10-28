@@ -1,10 +1,11 @@
 package vista;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import recursos.Empleado;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
@@ -20,27 +21,14 @@ public class FrmModificarEmpleado extends JFrame {
 	private JTextField txtLegajo;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmModificarEmpleado frame = new FrmModificarEmpleado();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private EmpleadoModificadoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarEmpleado() {
+	public FrmModificarEmpleado(Empleado objEmpleado, EmpleadoModificadoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Modificar Empleado");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 238);
@@ -50,6 +38,7 @@ public class FrmModificarEmpleado extends JFrame {
 		contentPane.setLayout(null);
 		
 		txtId = new JTextField();
+		txtId.setText(String.valueOf(objEmpleado.getIdEmpleado()));
 		txtId.setEditable(false);
 		txtId.setBounds(95, 8, 86, 20);
 		contentPane.add(txtId);
@@ -64,6 +53,7 @@ public class FrmModificarEmpleado extends JFrame {
 		contentPane.add(lblLegajo);
 		
 		JLabel lblNombre = new JLabel("Nombre");
+		
 		lblNombre.setBounds(10, 81, 46, 14);
 		contentPane.add(lblNombre);
 		
@@ -72,16 +62,19 @@ public class FrmModificarEmpleado extends JFrame {
 		contentPane.add(lblApellido);
 		
 		txtLegajo = new JTextField();
+		txtLegajo.setText(String.valueOf(objEmpleado.getLegajo()));
 		txtLegajo.setBounds(95, 43, 86, 20);
 		contentPane.add(txtLegajo);
 		txtLegajo.setColumns(10);
 		
 		txtNombre = new JTextField();
+		txtNombre.setText(objEmpleado.getNombre());
 		txtNombre.setBounds(95, 78, 329, 20);
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		txtApellido = new JTextField();
+		txtApellido.setText(objEmpleado.getApellido());
 		txtApellido.setBounds(95, 115, 329, 20);
 		contentPane.add(txtApellido);
 		txtApellido.setColumns(10);
@@ -100,6 +93,21 @@ public class FrmModificarEmpleado extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onEmpleadoModificado(
+							objEmpleado.getIdEmpleado(), 
+							Integer.parseInt(txtLegajo.getText()), 
+							txtNombre.getText(), 
+							txtApellido.getText());
+				}
+				dispose();
+				
+			}
+		});
 		btnAceptar.setBounds(236, 166, 89, 23);
 		contentPane.add(btnAceptar);
 

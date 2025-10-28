@@ -59,7 +59,23 @@ public class FrmModificarPedido extends JFrame {
 		txtCliente.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
-		
+		btnSeleccionar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FrmClientes frmSeleccionar = new FrmClientes(db, true, new SeleccionListener() {
+					
+					@Override
+					public void onSeleccion(int id) {
+						idCliente = id;
+						Cliente objCli = ctrlPedido.getTblCliente().obtenerCliente(id);
+						txtCliente.setText(objCli.getRazonSocial());
+					}
+				});
+				frmSeleccionar.setAlwaysOnTop(true);
+				frmSeleccionar.setVisible(true);
+			}
+		});
 		btnSeleccionar.setBounds(385, 35, 102, 23);
 		contentPane.add(btnSeleccionar);
 		

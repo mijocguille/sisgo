@@ -87,7 +87,7 @@ public class FrmPedidos extends JFrame {
 					        objPedido.setDetallePedido(detallePedido);
 					        objPedido.setCaracteristicasPedido(caracteristicasPedido);
 					        
-					        if(ctrlPedidos.modificarPedido(objPed)){
+					        if(ctrlPedidos.modificarPedido(objPedido)){
 					        	cargarPedidos();
 					        }
 					    }

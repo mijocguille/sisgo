@@ -11,15 +11,15 @@ public class ControladorEmpleado {
 	
 	private TablaEmpleado tblEmpleado;
 	
+	public TablaEmpleado getTblEmpleado() {
+		return tblEmpleado;
+	}
+
+
 	public ControladorEmpleado(BaseDatos db) {
 		tblEmpleado = new TablaEmpleado(db);
 	}
 	
-	public Empleado seleccionarEmpleado() {
-		
-		
-	    return new Empleado ();
-	}
 	
 	public TableModel listarEmpleados() {
 		
@@ -54,8 +54,8 @@ public class ControladorEmpleado {
     }
    
     
-    public boolean bajaEmpleado(Empleado objE) {
-    	return tblEmpleado.bajaEmpleado(objE);
+    public boolean bajaEmpleado(int idEmpleado) {
+    	return tblEmpleado.bajaEmpleado(idEmpleado);
     }
     
     public boolean modificaEmpleado(Empleado objE) {

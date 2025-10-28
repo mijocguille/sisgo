@@ -3,7 +3,6 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -131,17 +130,14 @@ public class TablaCliente {
 		}
 	}
 
-	public boolean bajaCliente(Cliente objCliente) {
+	public boolean bajaCliente(int idCliente) {
 		
 		try {
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objCliente.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update cliente ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idCliente = " + objCliente.getIdCliente();
+			query += "set fechaBaja = now() ";
+			query += "where idCliente = " + idCliente;
 			
 			st.execute(query);
 			

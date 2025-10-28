@@ -1,6 +1,5 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,27 +19,14 @@ public class FrmNuevoEmpleado extends JFrame {
 	private JTextField txtLegajo;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrmModificarEmpleado frame = new FrmModificarEmpleado();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private EmpleadoNuevoListener listener;
+	
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoEmpleado() {
+	public FrmNuevoEmpleado(EmpleadoNuevoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Nuevo Empleado");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 207);
@@ -90,6 +76,16 @@ public class FrmNuevoEmpleado extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onEmpleadoCreado(Integer.parseInt(txtLegajo.getText()), txtNombre.getText(), txtApellido.getText());
+				}
+				dispose();				
+			}
+		});
 		btnAceptar.setBounds(236, 134, 89, 23);
 		contentPane.add(btnAceptar);
 

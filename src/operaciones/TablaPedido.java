@@ -115,7 +115,9 @@ public class TablaPedido {
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update pedido ";
 			query += "set idCliente = "+ objPedido.getIdCliente() +", ";
-			query += "numeroProyecto = "+ objPedido.getNumeroProyecto() +", ";
+			if(objPedido.getNumeroProyecto() > 0) {
+				query += "numeroProyecto = "+ objPedido.getNumeroProyecto() +", ";
+			}
 			query += "detallePedido = '"+ objPedido.getDetallePedido() +"', ";
 			query += "caracteristicasPedido = '"+ objPedido.getCaracteristicasPedido() +"' ";
 			query += "where numeroPedido = " + objPedido.getNumeroPedido();

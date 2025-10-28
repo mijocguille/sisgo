@@ -1,44 +1,70 @@
 package recursos;
 
-import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import sistema.BaseDatos;
 
 public class ControladorEquipo {
-	public ControladorEquipo() {
+	private TablaEquipo tblEquipos;
+	
+	public TablaEquipo getTblEquipos() {
+		return tblEquipos;
+	}
+
+	public ControladorEquipo(BaseDatos db) {
+		tblEquipos = new TablaEquipo(db);
+	}
+	
+	public TableModel listarEquipos() {
+		
+		DefaultTableModel model = new DefaultTableModel();
+		String[] encabezados = {"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"};
+		model.setColumnIdentifiers(encabezados);
+	
+		ArrayList<Equipo> colEquipos = tblEquipos.obtenerEquipos(); 
+
+		for(Equipo eq : colEquipos) {	
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			String fechaAlta = formatter.format(eq.getFechaAlta());
+			String fechaBaja = "";
+			if(eq.getFechaBaja() != null) {
+				fechaBaja = formatter.format(eq.getFechaBaja());	
+			}
+			
+			String[] row = {String.valueOf(eq.getIdEquipo()),eq.getDescripcionEquipo(), String.valueOf(eq.getCantidadEquipos()),fechaAlta, fechaBaja};
+			model.addRow(row);
+		}	
+		
+		return model;
 		
 	}
 	
-	public Equipo seleccionarEquipo() {
-		
-		
-	    return new Equipo ();
+	
+	public int darAltaEquipo(Equipo objEquipo) {
+		int idEquipo = 0;
+		if(this.validarInformacionEquipo(objEquipo)) {
+			idEquipo = tblEquipos.altaEquipo(objEquipo);
+		}		
+		return idEquipo; 
 	}
 	
-	public Array listarEquipos() {
-		
-		Array colEquipos = null;
-		
-		return colEquipos;
-	}
-	
-	
-	public Equipo darAltaEquipo() {
-		return new Equipo();
-	}
-	
-    private boolean validarInformacionEquipo() {
+    private boolean validarInformacionEquipo(Equipo objEquipo) {
     	return true;
-    }
-    
-    private Equipo cargarInformacionEquipo() {
-    	return new Equipo();
-    }
+    } 
+   
     
     public boolean darBajaEquipo(int idEquipo) {
-    	return true;
+    	return tblEquipos.bajaEquipo(idEquipo);
     }
     
-    public boolean modificarEquipo(int idEquipo) {
-    	return true;
+    public boolean modificarEquipo(Equipo objEquipo) {
+    	boolean resultado = false;
+    	if(this.validarInformacionEquipo(objEquipo)) {
+			resultado = tblEquipos.modificarEquipo(objEquipo);
+		}		
+    	return resultado;
     }
 
 

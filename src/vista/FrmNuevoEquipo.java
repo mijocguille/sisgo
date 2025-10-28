@@ -2,7 +2,6 @@ package vista;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,11 +16,14 @@ public class FrmNuevoEquipo extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtDescripcion;
 	private JTextField txtCantidad;
+	private EquipoNuevoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoEquipo() {
+	public FrmNuevoEquipo(EquipoNuevoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Nuevo Equipo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 146);
@@ -47,9 +49,6 @@ public class FrmNuevoEquipo extends JFrame {
 		btnCancelar.setBounds(335, 77, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(236, 77, 89, 23);
-		contentPane.add(btnAceptar);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(90, 11, 334, 20);
@@ -64,7 +63,21 @@ public class FrmNuevoEquipo extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 64, 414, 2);
 		contentPane.add(separator);
-
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener!=null) {
+					listener.onEquipoCreado(txtDescripcion.getText(), Integer.parseInt(txtCantidad.getText()));
+				}
+				dispose();
+			}
+		});
+		btnAceptar.setBounds(236, 77, 89, 23);
+		contentPane.add(btnAceptar);
+		
 	}
 
 }

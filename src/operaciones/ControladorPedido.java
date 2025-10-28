@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import entidades.Cliente;
 import entidades.TablaCliente;
 import sistema.BaseDatos;
 
@@ -40,7 +41,7 @@ public class ControladorPedido {
 	public TableModel listarPedidos() {
 		
 		DefaultTableModel model = new DefaultTableModel();
-		String[] encabezados = {"#", "Fecha Pedido", "Detalle de Pedido", "Caracter\u00EDsticas", "Proyecto Asignado"};
+		String[] encabezados = {"#", "Fecha Pedido", "Cliente", "Detalle de Pedido", "Caracter\u00EDsticas", "Proyecto Asignado"};
 		model.setColumnIdentifiers(encabezados);
 	
 		ArrayList<Pedido> colPedidos = tblPedido.obtenerPedidos(); 
@@ -54,7 +55,9 @@ public class ControladorPedido {
 				proyectoAsociado = proy.getNombreProyecto();
 			}
 			
-			String[] row = {String.valueOf(p.getNumeroPedido()),fechaPedido,p.getDetallePedido(),p.getCaracteristicasPedido(),proyectoAsociado};
+			Cliente objCli = tblCliente.obtenerCliente(p.getIdCliente());
+			
+			String[] row = {String.valueOf(p.getNumeroPedido()),fechaPedido,objCli.getRazonSocial(), p.getDetallePedido(),p.getCaracteristicasPedido(),proyectoAsociado};
 			model.addRow(row);
 		}	
 		

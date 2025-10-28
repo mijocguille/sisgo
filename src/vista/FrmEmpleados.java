@@ -10,6 +10,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import recursos.ControladorEmpleado;
+import recursos.Empleado;
 import sistema.BaseDatos;
 
 public class FrmEmpleados extends JFrame {
@@ -42,18 +43,76 @@ public class FrmEmpleados extends JFrame {
 		tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(317);
 		
 		JButton btnBajaEmpleado = new JButton("Baja");
+		btnBajaEmpleado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblEmpleados.getModel().getValueAt(tblEmpleados.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea dar de baja al empleado?",new ConfirmacionListener() {
+					    @Override
+					    public void onConfirmar(boolean resultado) {
+					        if(resultado) {
+						        if(ctrlEmpleado.bajaEmpleado(idSeleccionado)){
+						        	cargarEmpleados();
+						        } 
+					        }
+					    }
+					});
+					frmConfirmacion.setAlwaysOnTop(true);
+					frmConfirmacion.setVisible(true);
+				}
+			}
+		});
 		btnBajaEmpleado.setBounds(618, 289, 89, 23);
 		
 		getContentPane().add(btnBajaEmpleado);
 		
 		JButton btnModificarEmpleado = new JButton("Editar");
+		btnModificarEmpleado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int idSeleccionado = Integer.parseInt(tblEmpleados.getModel().getValueAt(tblEmpleados.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					Empleado objEmpleado = ctrlEmpleado.getTblEmpleado().obtenerEmpleado(idSeleccionado);
+					FrmModificarEmpleado frmEdit = new FrmModificarEmpleado(objEmpleado, new EmpleadoModificadoListener() {
+					    @Override
+					    public void onEmpleadoModificado(int idEmpleado, int legajo, String nombre, String apellido) {
+					        Empleado objEmp = new Empleado();
+					        objEmp.setIdEmpleado(idEmpleado);
+					        objEmp.setLegajo(legajo);
+					        objEmp.setNombre(nombre);
+					        objEmp.setApellido(apellido);
+					        
+					        if(ctrlEmpleado.modificaEmpleado(objEmp)){
+					        	cargarEmpleados();
+					        }
+					    }
+					});
+					frmEdit.setAlwaysOnTop(true);
+					frmEdit.setVisible(true);
+				}
+			}
+		});		
 		btnModificarEmpleado.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarEmpleado);
 		
 		JButton btnAgregarEmpleado = new JButton("Alta");
 		btnAgregarEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado();
+				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado(new EmpleadoNuevoListener() {
+				    @Override
+				    public void onEmpleadoCreado(int legajo, String nombre, String apellido) {
+				        Empleado objEmp = new Empleado();
+				        objEmp.setLegajo(legajo);
+				        objEmp.setNombre(nombre);
+				        objEmp.setApellido(apellido);
+				        objEmp.setIdUsuario(FrmMain.idUsuarioLogueado);
+				        int idEmpleado = ctrlEmpleado.darAltaEmpleado(objEmp);
+				        if(idEmpleado > 0) {
+				        	cargarEmpleados();
+				        }
+				    }
+				});
 				frmNuevo.setAlwaysOnTop(true);
 				frmNuevo.setVisible(true);
 			}

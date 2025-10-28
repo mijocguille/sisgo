@@ -36,7 +36,6 @@ public class ControladorCliente {
 				fechaBaja = formatter.format(c.getFechaBaja());	
 			}
 			
-			
 			String[] row = {String.valueOf(c.getIdCliente()),c.getRazonSocial(),c.getCuit(),c.getDireccion(),c.getTelefono(),fechaAlta,fechaBaja};
 			model.addRow(row);
 		}	
@@ -56,8 +55,8 @@ public class ControladorCliente {
     	return true;
     }
     
-    public boolean darBajaCliente(Cliente objCliente) {
-    	return tblCliente.bajaCliente(objCliente);
+    public boolean darBajaCliente(int idCliente) {
+    	return tblCliente.bajaCliente(idCliente);
     }
     
     public boolean modificarCliente(Cliente objCliente) {
