@@ -8,6 +8,7 @@ public class Usuario {
 	private String nombreUsuario;
 	private String claveUsuario;
 	private String descripcionUsuario;
+	private int idRol;
 	private Date fechaAlta;
 	private Date fechaBaja;
 	
@@ -17,9 +18,19 @@ public class Usuario {
 		this.nombreUsuario = "";
 		this.claveUsuario = "";
 		this.descripcionUsuario = "";
+		this.idRol = 0;
 		this.fechaAlta = new Date();
 		this.fechaBaja = null;
 		
+	}
+	
+
+	public int getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(int idRol) {
+		this.idRol = idRol;
 	}
 
 	public int getIdUsuario() {

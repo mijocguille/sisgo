@@ -1,8 +1,8 @@
 package vista;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,38 +14,35 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import entidades.ControladorRol;
+import entidades.Rol;
+import sistema.BaseDatos;
+import javax.swing.DefaultComboBoxModel;
+
 public class FrmNuevoUsuario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtRazonSocial;
-	private JTextField txtCuit;
+	private JTextField txtUsuario;
+	private JTextField txtDescripcionUsuario;
 	private JSeparator separator;
 	private JButton btnCancelar;
 	private JButton btnAceptar;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JPasswordField txtContrasenia;
+	private JPasswordField txtConfirmarContrasenia;
+	private JComboBox<Rol> cboRoles;
+	private UsuarioNuevoListener listener;
+	private ControladorRol ctrlRol;
+	private FrmMensaje frmMsg;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					/*FrmNuevoCliente frame = new FrmNuevoCliente();
-					frame.setVisible(true);*/
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoUsuario() {
+	public FrmNuevoUsuario(BaseDatos db, UsuarioNuevoListener pListener) {
+		super();
+		listener = pListener;
+		ctrlRol = new ControladorRol(db);
 		setTitle("Nuevo Usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 242);
@@ -54,13 +51,13 @@ public class FrmNuevoUsuario extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblRazonSocial = new JLabel("Razón Social ");
-		lblRazonSocial.setBounds(10, 11, 78, 14);
-		contentPane.add(lblRazonSocial);
+		JLabel lblUsuario = new JLabel("Usuario");
+		lblUsuario.setBounds(10, 11, 78, 14);
+		contentPane.add(lblUsuario);
 		
-		JLabel lblCuit = new JLabel("CUIT");
-		lblCuit.setBounds(10, 41, 78, 14);
-		contentPane.add(lblCuit);
+		JLabel lblDescripcion = new JLabel("Descripción");
+		lblDescripcion.setBounds(10, 41, 78, 14);
+		contentPane.add(lblDescripcion);
 		
 		JLabel lblContrasenia = new JLabel("Contraseña");
 		lblContrasenia.setBounds(10, 71, 78, 14);
@@ -70,15 +67,15 @@ public class FrmNuevoUsuario extends JFrame {
 		lblConfirmarContrasenia.setBounds(10, 101, 78, 14);
 		contentPane.add(lblConfirmarContrasenia);
 		
-		txtRazonSocial = new JTextField();
-		txtRazonSocial.setBounds(98, 11, 326, 20);
-		contentPane.add(txtRazonSocial);
-		txtRazonSocial.setColumns(10);
+		txtUsuario = new JTextField();
+		txtUsuario.setBounds(98, 11, 326, 20);
+		contentPane.add(txtUsuario);
+		txtUsuario.setColumns(10);
 		
-		txtCuit = new JTextField();
-		txtCuit.setBounds(98, 38, 326, 20);
-		contentPane.add(txtCuit);
-		txtCuit.setColumns(10);
+		txtDescripcionUsuario = new JTextField();
+		txtDescripcionUsuario.setBounds(98, 38, 326, 20);
+		contentPane.add(txtDescripcionUsuario);
+		txtDescripcionUsuario.setColumns(10);
 		
 		separator = new JSeparator();
 		separator.setBounds(10, 158, 414, 2);
@@ -93,26 +90,71 @@ public class FrmNuevoUsuario extends JFrame {
 		btnCancelar.setBounds(335, 171, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(240, 171, 89, 23);
-		contentPane.add(btnAceptar);
+		txtContrasenia = new JPasswordField();
+		txtContrasenia.setBounds(98, 68, 326, 20);
+		contentPane.add(txtContrasenia);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(98, 68, 326, 20);
-		contentPane.add(passwordField);
-		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(98, 98, 326, 20);
-		contentPane.add(passwordField_1);
+		txtConfirmarContrasenia = new JPasswordField();
+		txtConfirmarContrasenia.setBounds(98, 98, 326, 20);
+		contentPane.add(txtConfirmarContrasenia);
 		
 		JLabel lblRol = new JLabel("Rol");
 		lblRol.setBounds(10, 133, 46, 14);
 		contentPane.add(lblRol);
 		
-		JComboBox cboRoles = new JComboBox();
+		cboRoles = new JComboBox<Rol>();
+		cargarCombo();
 		cboRoles.setBounds(98, 129, 217, 22);
 		contentPane.add(cboRoles);
+		
+		btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						int idRol = cboRoles.getSelectedIndex();
+						listener.onUsuarioCreado(txtUsuario.getText(), txtDescripcionUsuario.getText(), txtContrasenia.getPassword().toString(), idRol);
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
+			}
+		});
+		btnAceptar.setBounds(240, 171, 89, 23);
+		contentPane.add(btnAceptar);
+		
+	}
+	
+	private void cargarCombo() {
+		cboRoles.removeAll();
+		cboRoles.setModel(ctrlRol.cargarComboRoles());
+	}
+	
+	private boolean validarInformacionVentana() {
 
+		boolean valido = true;
+		String textoMensaje = "";
+		if(txtUsuario.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre de usuario";
+			valido = false;
+		} else if (txtDescripcionUsuario.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar una descripción para el usuario";
+			valido = false;
+		} else if(txtContrasenia.getPassword().toString() != txtConfirmarContrasenia.getPassword().toString()) {
+			textoMensaje = "Las contraseñas no coinciden";
+			valido = false;
+		} else if (cboRoles.getSelectedItem() == null) {
+			textoMensaje = "Debe seleccionar un rol para el usuario";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 
 }

@@ -199,7 +199,7 @@ public class FrmMain extends JFrame {
 	public static FrmUsuarios crearWndUsuarios() {
 		
 		if(wndUsuarios == null) {
-			wndUsuarios = new FrmUsuarios();
+			wndUsuarios = new FrmUsuarios(db);
 		}
 		
 		return wndUsuarios;

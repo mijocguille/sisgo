@@ -3,6 +3,8 @@ package entidades;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import sistema.BaseDatos;
@@ -40,6 +42,18 @@ public class ControladorRol {
 		}	
 		
 		return model;
+		
+	}
+	
+	public DefaultComboBoxModel cargarComboRoles() {
+		ArrayList<Rol> colRoles = tblRol.obtenerRoles(); 
+		String[] items = new String[colRoles.size()];
+		int i=0;
+		for(Rol r : colRoles) {	
+			items[i] = r.getNombreRol();
+			i++;	
+		}	
+		return new DefaultComboBoxModel(items);
 		
 	}
 	

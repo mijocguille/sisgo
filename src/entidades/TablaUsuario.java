@@ -3,7 +3,6 @@ package entidades;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
@@ -24,7 +23,7 @@ private BaseDatos db;
 			
 			Usuario objUsuario = null;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja ";
+			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja, idRol ";
 			query += "from usuario where idUsuario = " + idUsuario;
 			ResultSet rs = st.executeQuery(query);
 			
@@ -37,6 +36,7 @@ private BaseDatos db;
 			    	objUsuario.setDescripcionUsuario(rs.getString("descripcionUsuario"));
 			    	objUsuario.setFechaAlta(rs.getDate("fechaAlta"));
 			    	objUsuario.setFechaBaja(rs.getDate("fechaBaja"));
+			    	objUsuario.setIdRol(rs.getInt("idRol"));
 			    }
 			    rs.close();
 			}
@@ -54,7 +54,7 @@ private BaseDatos db;
 			
 			ArrayList<Usuario> colUsuarios = new ArrayList<Usuario>();
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja ";
+			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja, idRol ";
 			query += "from usuario ";
 			ResultSet rs = st.executeQuery(query);
 			
@@ -67,6 +67,7 @@ private BaseDatos db;
 			    	objUsuario.setDescripcionUsuario(rs.getString("descripcionUsuario"));
 			    	objUsuario.setFechaAlta(rs.getDate("fechaAlta"));
 			    	objUsuario.setFechaBaja(rs.getDate("fechaBaja"));
+			    	objUsuario.setIdRol(rs.getInt("idRol"));
 			    	colUsuarios.add(objUsuario);
 			    }
 			    rs.close();
@@ -85,8 +86,9 @@ private BaseDatos db;
 			
 			int idUsuario = 0;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "insert into usuario (nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta) ";
-			query += "values('"+ objUsuario.getNombreUsuario() +"','" + objUsuario.getClaveUsuario() +"','"+ objUsuario.getDescripcionUsuario()+"',now())";
+			String query = "insert into usuario (nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, idRol) ";
+			query += "values('"+ objUsuario.getNombreUsuario() +"','" + objUsuario.getClaveUsuario();
+			query += "','"+ objUsuario.getDescripcionUsuario()+"',now(), "+ String.valueOf(objUsuario.getIdRol()) +")";
 			
 		    st.execute(query);
 	    	query = "select max(idUsuario) from usuario";
@@ -112,8 +114,12 @@ private BaseDatos db;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update usuario ";
 			query += "set nombreUsuario = '"+ objUsuario.getNombreUsuario() +"', ";
-			query += "claveUsuario = '"+ objUsuario.getClaveUsuario() +"', ";
+			if(objUsuario.getClaveUsuario().length() > 0)
+			{
+				query += "claveUsuario = '"+ objUsuario.getClaveUsuario() +"', ";
+			}
 			query += "descripcionUsuario = '"+ objUsuario.getDescripcionUsuario() +"' ";
+			query += "idRol = "+ String.valueOf(objUsuario.getIdRol()) +" ";
 			query += "where idUsuario = " + objUsuario.getIdUsuario();
 			
 		    st.execute(query);
@@ -125,17 +131,14 @@ private BaseDatos db;
 		}
 	}
 
-	public boolean bajaUsuario(Usuario objUsuario) {
+	public boolean bajaUsuario(int idUsuario) {
 		
 		try {
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String fechaBaja = formatter.format(objUsuario.getFechaBaja());
-			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "update usuario ";
-			query += "set fechaBaja = '"+ fechaBaja +"' ";
-			query += "where idUsuario = " + objUsuario.getIdUsuario();
+			query += "set fechaBaja = now() ";
+			query += "where idUsuario = " + idUsuario;
 			
 			st.execute(query);
 			
@@ -151,7 +154,7 @@ private BaseDatos db;
 		try {
 			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja ";
+			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja, idRol ";
 			query += "from usuario where nombreUsuario = '" + nombreUsuario + "' and claveUsuario = '" + claveUsuario + "' ";
 			ResultSet rs = st.executeQuery(query);
 			
