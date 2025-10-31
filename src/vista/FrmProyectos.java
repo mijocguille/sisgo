@@ -100,7 +100,7 @@ public class FrmProyectos extends JFrame {
 		btnAgregarProyecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				FrmNuevoProyecto frmNuevo = new FrmNuevoProyecto(new ProyectoNuevoListener() {
+				FrmNuevoProyecto frmNuevo = new FrmNuevoProyecto(db, new ProyectoNuevoListener() {
 				    @Override
 				    public void onProyectoCreado(String nombreProyecto, Date fechaEstimadaInicio, Date fechaFin, int numeroPedido) {
 				    	Proyecto objProy = new Proyecto();
@@ -133,16 +133,68 @@ public class FrmProyectos extends JFrame {
 		getContentPane().add(btnCerrar);
 		
 		JButton btnEmpleadosProyecto = new JButton("Empleados Asignados");
+		btnEmpleadosProyecto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{	
+					FrmEmpleadosProyecto frmEmpleados = new FrmEmpleadosProyecto(db, idSeleccionado);
+					frmEmpleados.setAlwaysOnTop(true);
+					frmEmpleados.setVisible(true);
+				}
+			}
+		});
 		btnEmpleadosProyecto.setBounds(10, 289, 178, 23);
 		getContentPane().add(btnEmpleadosProyecto);
 		
 		JButton btnEquiposAsignados = new JButton("Equipos Asignados");
+		btnEquiposAsignados.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{	
+					FrmEquiposProyecto frmEquipos = new FrmEquiposProyecto(db, idSeleccionado);
+					frmEquipos.setAlwaysOnTop(true);
+					frmEquipos.setVisible(true);
+				}
+			}
+		});
 		btnEquiposAsignados.setBounds(386, 289, 178, 23);
 		getContentPane().add(btnEquiposAsignados);
 		
 		JButton btnInsumosProyecto = new JButton("Insumos Asignados");
+		btnInsumosProyecto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{	
+					FrmInsumosProyecto frmInsumos = new FrmInsumosProyecto(db, idSeleccionado);
+					frmInsumos.setAlwaysOnTop(true);
+					frmInsumos.setVisible(true);
+				}
+			}
+		});
 		btnInsumosProyecto.setBounds(198, 289, 178, 23);
 		getContentPane().add(btnInsumosProyecto);
+		
+		JButton btnPresupuestos = new JButton("Presupuestos");
+		btnPresupuestos.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{	
+					FrmPresupuestos frmPresupuestos = new FrmPresupuestos(db, idSeleccionado);
+					frmPresupuestos.setAlwaysOnTop(true);
+					frmPresupuestos.setVisible(true);
+				}
+			}
+		});
+		btnPresupuestos.setBounds(10, 364, 178, 23);
+		getContentPane().add(btnPresupuestos);
 	}
 	
 	private void cargarProyectos() {

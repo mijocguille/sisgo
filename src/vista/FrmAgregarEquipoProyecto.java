@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import operaciones.ControladorEquipoProyecto;
+import recursos.Equipo;
 import sistema.BaseDatos;
 
 public class FrmAgregarEquipoProyecto extends JFrame {
@@ -21,14 +22,17 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 	private JTextField txtEquipo;
 	private JTextField txtCantidad;
 	private ControladorEquipoProyecto ctrlEquipoProyecto;
+	private EquipoProyectoNuevoListener listener;
+	private int idEquipo;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmAgregarEquipoProyecto(BaseDatos db) {
+	public FrmAgregarEquipoProyecto(int numeroProyecto, BaseDatos db, EquipoProyectoNuevoListener pListener) {
 		super();
 		ctrlEquipoProyecto = new ControladorEquipoProyecto(db);
+		listener = pListener;
 		setTitle("Agregar Equipo a Proyecto NN");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 512, 140);
@@ -57,6 +61,21 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 		txtCantidad.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrmEquipos frmSeleccion = new FrmEquipos(db,true, new SeleccionListener() {
+					
+					@Override
+					public void onSeleccion(int id) {
+						Equipo e = ctrlEquipoProyecto.getTblEquipo().obtenerEquipo(id);
+						txtEquipo.setText(e.getDescripcionEquipo());
+						idEquipo = id;
+					}
+				});				
+				frmSeleccion.setAlwaysOnTop(true);
+				frmSeleccion.setVisible(true);
+			}
+		});
 		btnSeleccionar.setBounds(385, 7, 102, 23);
 		contentPane.add(btnSeleccionar);
 		
@@ -74,6 +93,12 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listener.onEquipoProyectoCreado(idEquipo, Integer.parseInt(txtCantidad.getText()));
+				dispose();
+			}
+		});
 		btnAceptar.setBounds(302, 71, 89, 23);
 		contentPane.add(btnAceptar);
 

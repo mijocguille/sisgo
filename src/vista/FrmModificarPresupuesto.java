@@ -11,18 +11,23 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import operaciones.Presupuesto;
+
 public class FrmModificarPresupuesto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtNumeroProyecto;
-	private JTextField txtNombreRol;
-	private JTextField textField;
+	private JTextField txtNumeroPresupuesto;
+	private JTextField txtImportePresupuestado;
+	private JTextField txtDiasValidez;
+	private PresupuestoModificadoListener listener;
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmModificarPresupuesto() {
+	public FrmModificarPresupuesto(Presupuesto objPresupuesto, PresupuestoModificadoListener pListener) {
+		super();
+		listener = pListener;
 		setTitle("Modificando Presupuesto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 357, 154);
@@ -31,16 +36,18 @@ public class FrmModificarPresupuesto extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		txtNumeroProyecto = new JTextField();
-		txtNumeroProyecto.setEditable(false);
-		txtNumeroProyecto.setBounds(245, 11, 86, 20);
-		contentPane.add(txtNumeroProyecto);
-		txtNumeroProyecto.setColumns(10);
+		txtNumeroPresupuesto = new JTextField();
+		txtNumeroPresupuesto.setText(String.valueOf(objPresupuesto.getNumeroPresupuesto()));
+		txtNumeroPresupuesto.setEditable(false);
+		txtNumeroPresupuesto.setBounds(245, 11, 86, 20);
+		contentPane.add(txtNumeroPresupuesto);
+		txtNumeroPresupuesto.setColumns(10);
 		
-		txtNombreRol = new JTextField();
-		txtNombreRol.setBounds(196, 39, 135, 20);
-		contentPane.add(txtNombreRol);
-		txtNombreRol.setColumns(10);
+		txtImportePresupuestado = new JTextField();
+		txtImportePresupuestado.setText(String.valueOf(objPresupuesto.getImportePresupuestado()));
+		txtImportePresupuestado.setBounds(196, 39, 135, 20);
+		contentPane.add(txtImportePresupuestado);
+		txtImportePresupuestado.setColumns(10);
 		
 		JLabel lblNumeroPresupuesto = new JLabel("Número de Presupuesto");
 		lblNumeroPresupuesto.setBounds(10, 14, 121, 14);
@@ -50,9 +57,6 @@ public class FrmModificarPresupuesto extends JFrame {
 		lblImporte.setBounds(148, 42, 46, 14);
 		contentPane.add(lblImporte);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(143, 86, 89, 23);
-		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
@@ -71,10 +75,25 @@ public class FrmModificarPresupuesto extends JFrame {
 		lblDiasValidez.setBounds(10, 42, 66, 14);
 		contentPane.add(lblDiasValidez);
 		
-		textField = new JTextField();
-		textField.setBounds(90, 39, 53, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtDiasValidez = new JTextField();
+		txtDiasValidez.setText(String.valueOf(objPresupuesto.getDiasValidez()));
+		txtDiasValidez.setBounds(90, 39, 53, 20);
+		contentPane.add(txtDiasValidez);
+		txtDiasValidez.setColumns(10);
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(listener != null) {
+					listener.onPresupuestoModificado(objPresupuesto.getNumeroPresupuesto(), Integer.parseInt(txtDiasValidez.getText()), Double.parseDouble(txtImportePresupuestado.getText()));
+				}
+				dispose();
+			}
+		});
+		btnAceptar.setBounds(143, 86, 89, 23);
+		contentPane.add(btnAceptar);
 
 	}
 

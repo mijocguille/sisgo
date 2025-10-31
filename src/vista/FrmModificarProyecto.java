@@ -3,9 +3,6 @@ package vista;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -108,12 +105,11 @@ public class FrmModificarProyecto extends JFrame {
 		
 		JButton btnAceptar = new JButton("Aceptar ");
 		btnAceptar.addActionListener(e -> {
+			try {
             if (listener != null) {
-            	DateTimeFormatter formatterLocal = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate localDate = LocalDate.parse(txtFechaInicio.getText(), formatterLocal);
-                Date fechaInicioL = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                localDate = LocalDate.parse(txtFechaFin.getText(), formatterLocal);
-                Date fechaFinL = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            	SimpleDateFormat formatterLocal = new SimpleDateFormat("dd/MM/yyyy");
+                Date fechaInicioL = formatterLocal.parse(txtFechaInicio.getText());
+                Date fechaFinL = formatterLocal.parse(txtFechaFin.getText());
                 listener.onProyectoModificado(
                 	Integer.parseInt(txtNumeroProyecto.getText()),
                     txtNombreProyecto.getText(),
@@ -123,6 +119,9 @@ public class FrmModificarProyecto extends JFrame {
                 );
             }
             dispose();
+			} catch (Exception objE) {
+				System.out.println(objE.getMessage());
+			}
         });
 		btnAceptar.setBounds(333, 144, 89, 23);
 		contentPane.add(btnAceptar);

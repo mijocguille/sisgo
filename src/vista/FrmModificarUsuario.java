@@ -117,7 +117,7 @@ public class FrmModificarUsuario extends JFrame {
 		contentPane.add(lblRol);
 		
 		cboRoles = new JComboBox<Rol>();
-		//cboRoles.setModel(ctrlRol.cargarComboRoles());
+		cboRoles.setModel(ctrlRol.cargarComboRoles());
 		cboRoles.setBounds(98, 169, 217, 22);
 		contentPane.add(cboRoles);
 		

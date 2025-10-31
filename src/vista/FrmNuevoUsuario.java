@@ -2,7 +2,6 @@ package vista;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 import entidades.ControladorRol;
 import entidades.Rol;
 import sistema.BaseDatos;
-import javax.swing.DefaultComboBoxModel;
 
 public class FrmNuevoUsuario extends JFrame {
 

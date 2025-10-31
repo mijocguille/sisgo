@@ -150,24 +150,31 @@ private BaseDatos db;
 	
 	}
 	
-	public boolean validarUsuario(String nombreUsuario, String claveUsuario) {
+	public Usuario validarUsuario(String nombreUsuario, String claveUsuario) {
 		try {
-			boolean resultado = false;
+			Usuario objUsuario = null;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja, idRol ";
 			query += "from usuario where nombreUsuario = '" + nombreUsuario + "' and claveUsuario = '" + claveUsuario + "' ";
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {
+				objUsuario = new Usuario();
 			    if(rs.next()) {
-			    	resultado = true;
+			    	objUsuario.setIdUsuario(rs.getInt("idUsuario"));
+			    	objUsuario.setNombreUsuario(rs.getString("nombreUsuario"));
+			    	objUsuario.setClaveUsuario(rs.getString("claveUsuario"));
+			    	objUsuario.setDescripcionUsuario(rs.getString("descripcionUsuario"));
+			    	objUsuario.setFechaAlta(rs.getDate("fechaAlta"));
+			    	objUsuario.setFechaBaja(rs.getDate("fechaBaja"));
+			    	objUsuario.setIdRol(rs.getInt("idRol"));
 			    }
 			    rs.close();
 			}
-			return resultado;
+			return objUsuario;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar validarUsuario." + e.getMessage()); 
-			return false;
+			return null;
 		}
 	}
 

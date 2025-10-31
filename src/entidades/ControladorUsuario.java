@@ -70,8 +70,14 @@ public class ControladorUsuario {
     	return resultado;
     }
     
-    public boolean login() {
-    	return true;
+    public int login(String usuario, String contrasenia) {
+    	String claveCifrada = this.cifrar(contrasenia);
+    	Usuario objUsuario = tblUsuario.validarUsuario(usuario, claveCifrada);
+    	int idUsuario = 0;
+    	if(objUsuario != null) {
+    		idUsuario = objUsuario.getIdUsuario();
+    	}
+    	return idUsuario;
     }
     
     public boolean logout() {

@@ -27,7 +27,11 @@ public class FrmMain extends JFrame {
 	 * Create the application.
 	 */
 	public FrmMain() {	
-		super();				
+		super();
+		FrmLogin frmLogin = new FrmLogin(db);
+		frmLogin.setModal(true);
+		frmLogin.setAlwaysOnTop(true);
+		frmLogin.setVisible(true);
 		initialize();
 	}
 

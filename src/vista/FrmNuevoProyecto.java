@@ -1,33 +1,42 @@
 package vista;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import operaciones.ControladorPedido;
+import operaciones.Pedido;
+import sistema.BaseDatos;
+
 import javax.swing.JLabel;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 
 public class FrmNuevoProyecto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField txtNombreProyecto;
+	private JTextField txtFechaInicio;
+	private JTextField txtFechaFin;
+	private JTextField txtPedidoAsociado;
 	private ProyectoNuevoListener listener;
+	private ControladorPedido ctrlPedido;
+	private int numeroPedido; 
 
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoProyecto(ProyectoNuevoListener pListener) {
+	public FrmNuevoProyecto(BaseDatos db, ProyectoNuevoListener pListener) {
 		super();
+		ctrlPedido = new ControladorPedido(db);
+		listener = pListener;
 		setTitle("Crear Proyecto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 542, 186);
@@ -48,32 +57,47 @@ public class FrmNuevoProyecto extends JFrame {
 		lblFechaFin.setBounds(232, 50, 46, 14);
 		contentPane.add(lblFechaFin);
 		
-		textField = new JTextField();
-		textField.setBounds(149, 8, 372, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtNombreProyecto = new JTextField();
+		txtNombreProyecto.setBounds(149, 8, 372, 20);
+		contentPane.add(txtNombreProyecto);
+		txtNombreProyecto.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(66, 47, 86, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		txtFechaInicio = new JTextField();
+		txtFechaInicio.setBounds(66, 47, 86, 20);
+		contentPane.add(txtFechaInicio);
+		txtFechaInicio.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(288, 47, 86, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		txtFechaFin = new JTextField();
+		txtFechaFin.setBounds(288, 47, 86, 20);
+		contentPane.add(txtFechaFin);
+		txtFechaFin.setColumns(10);
 		
 		JLabel lblPedidoAsociado = new JLabel("Pedido Asociado");
 		lblPedidoAsociado.setBounds(10, 86, 130, 14);
 		contentPane.add(lblPedidoAsociado);
 		
-		textField_3 = new JTextField();
-		textField_3.setEditable(false);
-		textField_3.setBounds(150, 83, 241, 20);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
+		txtPedidoAsociado = new JTextField();
+		txtPedidoAsociado.setEditable(false);
+		txtPedidoAsociado.setBounds(150, 83, 241, 20);
+		contentPane.add(txtPedidoAsociado);
+		txtPedidoAsociado.setColumns(10);
 		
 		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrmPedidos frmSeleccion = new FrmPedidos(db,true, new SeleccionListener() {
+					
+					@Override
+					public void onSeleccion(int id) {
+						Pedido p = ctrlPedido.getTblPedido().obtenerPedido(id);
+						txtPedidoAsociado.setText(String.valueOf(p.getNumeroPedido()));
+						numeroPedido = id;
+					}
+				});				
+				frmSeleccion.setAlwaysOnTop(true);
+				frmSeleccion.setVisible(true);
+			}
+		});
 		btnSeleccionar.setBounds(401, 82, 115, 23);
 		contentPane.add(btnSeleccionar);
 		
@@ -90,7 +114,25 @@ public class FrmNuevoProyecto extends JFrame {
 		btnCancelar.setBounds(432, 116, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JButton btnAceptar = new JButton("Aceptar ");
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(listener != null) {
+						SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+					    Date fechaInicio = formatter.parse(txtFechaInicio.getText());
+						Date fechaFin = formatter.parse(txtFechaFin.getText());
+						
+						listener.onProyectoCreado(txtNombreProyecto.getText(), fechaInicio, fechaFin, numeroPedido);
+					}					
+					dispose();
+				} catch (Exception objE) {
+					System.out.println(objE.getMessage());
+				}
+			}
+		});
 		btnAceptar.setBounds(333, 116, 89, 23);
 		contentPane.add(btnAceptar);
 
