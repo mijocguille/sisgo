@@ -1,20 +1,18 @@
 package vista;
 
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-
 import entidades.ControladorUsuario;
 import sistema.BaseDatos;
 
 import java.awt.Component;
+
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -57,11 +55,11 @@ public class FrmLogin extends JDialog{
 		txtUsuario.setColumns(10);
 		
 		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setBounds(52, 39, 65, 14);
+		lblUsuario.setBounds(52, 39, 96, 14);
 		panel.add(lblUsuario);
 		
 		JLabel lblContrasenia = new JLabel("Contraseña");
-		lblContrasenia.setBounds(52, 72, 65, 14);
+		lblContrasenia.setBounds(52, 72, 96, 14);
 		panel.add(lblContrasenia);
 		
 		txtContrasenia = new JPasswordField();
@@ -93,6 +91,8 @@ public class FrmLogin extends JDialog{
 		
 		
 		this.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{this.getContentPane(), panel, btnAceptar, btnCancelar, txtUsuario, lblUsuario, lblContrasenia, txtContrasenia}));
+		this.setLocationRelativeTo(null); 
+
 		
 	}
 

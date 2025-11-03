@@ -1,13 +1,12 @@
 package entidades;
 
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import sistema.BaseDatos;
+import sistema.Util;
 
 
 public class ControladorRol {
@@ -30,13 +29,8 @@ public class ControladorRol {
 		ArrayList<Rol> colRoles = tblRol.obtenerRoles(); 
 
 		for(Rol r : colRoles) {	
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaAlta = formatter.format(r.getFechaAlta());
-			String fechaBaja = "";
-			if(r.getFechaBaja() != null) {
-				fechaBaja = formatter.format(r.getFechaBaja());	
-			}
-			
+			String fechaAlta = Util.obtenerFechaFormateada(r.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(r.getFechaBaja());
 			String[] row = {String.valueOf(r.getIdRol()),r.getNombreRol(), fechaAlta, fechaBaja};
 			model.addRow(row);
 		}	

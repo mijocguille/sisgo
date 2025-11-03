@@ -45,6 +45,6 @@ public class FrmConfirmacion extends JFrame {
 		lblTexto.setVerticalAlignment(SwingConstants.TOP);
 		lblTexto.setBounds(10, 11, 414, 39);
 		getContentPane().add(lblTexto);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

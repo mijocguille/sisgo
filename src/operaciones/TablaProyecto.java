@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class TablaProyecto {
 
@@ -61,10 +62,10 @@ public class TablaProyecto {
 			    while(rs.next()) {
 			    	Proyecto objProyecto = new Proyecto();
 			    	objProyecto.setNumeroProyecto(rs.getInt("numeroProyecto"));
-			    	objProyecto.setFechaCreacion(rs.getDate("fechaCreacion"));
+			    	objProyecto.setFechaCreacion(Util.transformarFecha(rs.getDate("fechaCreacion")));
 			    	objProyecto.setNombreProyecto(rs.getString("nombreProyecto"));
-			    	objProyecto.setFechaEstimadaInicio(rs.getDate("fechaEstimadaInicio"));
-			    	objProyecto.setFechaFin(rs.getDate("fechaFin"));
+			    	objProyecto.setFechaEstimadaInicio(Util.transformarFecha(rs.getDate("fechaEstimadaInicio")));
+			    	objProyecto.setFechaFin(Util.transformarFecha(rs.getDate("fechaFin")));
 			    	objProyecto.setIdUsuario(rs.getInt("idUsuario"));
 			    	colProyectos.add(objProyecto);
 			    }
@@ -83,10 +84,14 @@ public class TablaProyecto {
 		try {
 			
 			int numeroProyecto = 0;
+			String fechaInicio = Util.obtenerFechaSQL(objProyecto.getFechaEstimadaInicio());
+			String fechaFin = Util.obtenerFechaSQL(objProyecto.getFechaFin());
+			
+			
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into proyecto (fechaCreacion, nombreProyecto, fechaEstimadaInicio, fechaFin, idUsuario) ";
-			query += "values('"+ objProyecto.getFechaCreacion() +"','" + objProyecto.getNombreProyecto() +"','"+ objProyecto.getFechaEstimadaInicio()+"',";
-			query += "'"+ objProyecto.getFechaFin()+"',"+ objProyecto.getIdUsuario() + ")";
+			query += "values(now(),'" + objProyecto.getNombreProyecto() +"','"+ fechaInicio +"',";
+			query += "'"+ fechaFin +"',"+ objProyecto.getIdUsuario() + ")";
 			
 		    st.execute(query);
 	    	query = "select max(numeroProyecto) from Proyecto";

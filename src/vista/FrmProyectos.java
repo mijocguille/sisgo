@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+
 import operaciones.ControladorPedido;
 import operaciones.ControladorProyecto;
 import operaciones.Pedido;
@@ -20,6 +21,13 @@ public class FrmProyectos extends JFrame {
 	private JTable tblProyectos;
 	private ControladorProyecto ctrlProyecto;
 	private ControladorPedido ctrlPedido;
+	private JButton btnAgregarProyecto;
+	private JButton btnModificarProyecto;
+	private JButton btnEliminarProyecto;
+	private JButton btnPresupuestos;
+	private JButton btnEmpleadosProyecto;
+	private JButton btnEquiposAsignados;
+	private JButton btnInsumosProyecto;
 
 	/**
 	 * Create the frame.
@@ -41,7 +49,7 @@ public class FrmProyectos extends JFrame {
 		tblProyectos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		cargarProyectos();
 		
-		JButton btnEliminarProyecto = new JButton("Eliminar");
+		btnEliminarProyecto = new JButton("Eliminar");
 		btnEliminarProyecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
@@ -63,7 +71,7 @@ public class FrmProyectos extends JFrame {
 		btnEliminarProyecto.setBounds(621, 330, 89, 23);
 		getContentPane().add(btnEliminarProyecto);
 		
-		JButton btnModificarProyecto = new JButton("Editar");
+		btnModificarProyecto = new JButton("Editar");
 		btnModificarProyecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -96,7 +104,7 @@ public class FrmProyectos extends JFrame {
 		btnModificarProyecto.setBounds(522, 330, 89, 23);
 		getContentPane().add(btnModificarProyecto);
 		
-		JButton btnAgregarProyecto = new JButton("Crear");
+		btnAgregarProyecto = new JButton("Crear");
 		btnAgregarProyecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -132,7 +140,7 @@ public class FrmProyectos extends JFrame {
 		btnCerrar.setBounds(621, 364, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		JButton btnEmpleadosProyecto = new JButton("Empleados Asignados");
+		btnEmpleadosProyecto = new JButton("Proyectos Asignados");
 		btnEmpleadosProyecto.addActionListener(new ActionListener() {
 			
 			@Override
@@ -148,7 +156,7 @@ public class FrmProyectos extends JFrame {
 		btnEmpleadosProyecto.setBounds(10, 289, 178, 23);
 		getContentPane().add(btnEmpleadosProyecto);
 		
-		JButton btnEquiposAsignados = new JButton("Equipos Asignados");
+		btnEquiposAsignados = new JButton("Equipos Asignados");
 		btnEquiposAsignados.addActionListener(new ActionListener() {
 			
 			@Override
@@ -164,7 +172,7 @@ public class FrmProyectos extends JFrame {
 		btnEquiposAsignados.setBounds(386, 289, 178, 23);
 		getContentPane().add(btnEquiposAsignados);
 		
-		JButton btnInsumosProyecto = new JButton("Insumos Asignados");
+		btnInsumosProyecto = new JButton("Insumos Asignados");
 		btnInsumosProyecto.addActionListener(new ActionListener() {
 			
 			@Override
@@ -180,7 +188,7 @@ public class FrmProyectos extends JFrame {
 		btnInsumosProyecto.setBounds(198, 289, 178, 23);
 		getContentPane().add(btnInsumosProyecto);
 		
-		JButton btnPresupuestos = new JButton("Presupuestos");
+		btnPresupuestos = new JButton("Presupuestos");
 		btnPresupuestos.addActionListener(new ActionListener() {
 			
 			@Override
@@ -195,11 +203,41 @@ public class FrmProyectos extends JFrame {
 		});
 		btnPresupuestos.setBounds(10, 364, 178, 23);
 		getContentPane().add(btnPresupuestos);
+		this.setLocationRelativeTo(null); 
+		gestionarBotones();
+		tblProyectos.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	int idSeleccionado = Integer.parseInt(tblProyectos.getModel().getValueAt(tblProyectos.getSelectedRow(),0).toString());
+				if( idSeleccionado > 0)	{
+					btnModificarProyecto.setEnabled(true);
+					btnEliminarProyecto.setEnabled(true);
+					btnEmpleadosProyecto.setEnabled(true);
+					btnEquiposAsignados.setEnabled(true);
+					btnInsumosProyecto.setEnabled(true);
+					btnPresupuestos.setEnabled(true);
+				}
+		    }
+		});
 	}
 	
 	private void cargarProyectos() {
 		tblProyectos.removeAll();
-		tblProyectos.setModel(ctrlProyecto.listarProyectos());	
-			
+		tblProyectos.setModel(ctrlProyecto.listarProyectos());		
 	}
+	
+
+	private void gestionarBotones() {
+		if(tblProyectos.getModel().getRowCount() == 0) {
+			btnEmpleadosProyecto.setEnabled(false);
+			btnEquiposAsignados.setEnabled(false);
+			btnInsumosProyecto.setEnabled(false);
+			btnPresupuestos.setEnabled(false);
+			btnModificarProyecto.setEnabled(false);
+			btnEliminarProyecto.setEnabled(false);		
+		} else {
+			tblProyectos.setRowSelectionInterval(0, 0);
+		}
+	}
+
 }

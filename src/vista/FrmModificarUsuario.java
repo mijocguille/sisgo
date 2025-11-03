@@ -140,7 +140,7 @@ public class FrmModificarUsuario extends JFrame {
 		});
 		btnAceptar.setBounds(240, 211, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 	
 	private boolean validarInformacionVentana() {

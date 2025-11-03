@@ -34,6 +34,6 @@ public class FrmMensaje extends JDialog {
 		lblTexto.setVerticalAlignment(SwingConstants.TOP);
 		lblTexto.setBounds(10, 11, 414, 39);
 		getContentPane().add(lblTexto);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

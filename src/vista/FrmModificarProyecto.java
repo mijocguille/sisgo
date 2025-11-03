@@ -2,7 +2,6 @@ package vista;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -14,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import operaciones.Proyecto;
+import sistema.Util;
 
 public class FrmModificarProyecto extends JFrame {
 
@@ -60,8 +60,7 @@ public class FrmModificarProyecto extends JFrame {
 		contentPane.add(txtNombreProyecto);
 		txtNombreProyecto.setColumns(10);
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
-		String fechaInicio = formatter.format(objProyecto.getFechaEstimadaInicio());
+		String fechaInicio = Util.obtenerFechaFormateada(objProyecto.getFechaEstimadaInicio());
 		
 		txtFechaInicio = new JTextField();
 		txtFechaInicio.setText(fechaInicio);
@@ -69,7 +68,7 @@ public class FrmModificarProyecto extends JFrame {
 		contentPane.add(txtFechaInicio);
 		txtFechaInicio.setColumns(10);
 		
-		String fechaFin = formatter.format(objProyecto.getFechaFin());
+		String fechaFin = Util.obtenerFechaFormateada(objProyecto.getFechaFin());
 		txtFechaFin = new JTextField();
 		txtFechaFin.setText(fechaFin);
 		txtFechaFin.setBounds(288, 75, 86, 20);
@@ -105,11 +104,9 @@ public class FrmModificarProyecto extends JFrame {
 		
 		JButton btnAceptar = new JButton("Aceptar ");
 		btnAceptar.addActionListener(e -> {
-			try {
             if (listener != null) {
-            	SimpleDateFormat formatterLocal = new SimpleDateFormat("dd/MM/yyyy");
-                Date fechaInicioL = formatterLocal.parse(txtFechaInicio.getText());
-                Date fechaFinL = formatterLocal.parse(txtFechaFin.getText());
+                Date fechaInicioL = Util.obtenerFechaDate(txtFechaInicio.getText());
+                Date fechaFinL = Util.obtenerFechaDate(txtFechaFin.getText());
                 listener.onProyectoModificado(
                 	Integer.parseInt(txtNumeroProyecto.getText()),
                     txtNombreProyecto.getText(),
@@ -119,9 +116,6 @@ public class FrmModificarProyecto extends JFrame {
                 );
             }
             dispose();
-			} catch (Exception objE) {
-				System.out.println(objE.getMessage());
-			}
         });
 		btnAceptar.setBounds(333, 144, 89, 23);
 		contentPane.add(btnAceptar);
@@ -136,7 +130,7 @@ public class FrmModificarProyecto extends JFrame {
 		txtNumeroProyecto.setBounds(149, 5, 86, 20);
 		contentPane.add(txtNumeroProyecto);
 		txtNumeroProyecto.setColumns(10);
-
+		this.setLocationRelativeTo(null); 
 	}
 
 }

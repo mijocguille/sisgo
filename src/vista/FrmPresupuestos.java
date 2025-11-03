@@ -25,6 +25,9 @@ public class FrmPresupuestos extends JDialog {
 	private JTable tblPresupuestos;
 	private JLabel lblNewLabel;
 	private ControladorPresupuesto ctrlPresupuesto;
+	private JButton btnNuevo;
+	private JButton btnEditar;
+	private JButton btnEliminar;
 
 	/**
 	 * Create the frame.
@@ -56,7 +59,7 @@ public class FrmPresupuestos extends JDialog {
 		lblNewLabel.setBounds(10, 11, 194, 14);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -80,7 +83,7 @@ public class FrmPresupuestos extends JDialog {
 		btnEliminar.setBounds(459, 150, 89, 23);
 		contentPane.add(btnEliminar);
 		
-		JButton btnEditar = new JButton("Editar");
+		btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int numeroPresupuesto = Integer.parseInt(tblPresupuestos.getModel().getValueAt(tblPresupuestos.getSelectedRow(),0).toString());
@@ -107,7 +110,7 @@ public class FrmPresupuestos extends JDialog {
 		btnEditar.setBounds(360, 150, 89, 23);
 		contentPane.add(btnEditar);
 		
-		JButton btnNuevo = new JButton("Nuevo");
+		btnNuevo = new JButton("Nuevo");
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoPresupuesto frmNuevo = new FrmNuevoPresupuesto(new PresupuestoNuevoListener() {
@@ -138,11 +141,22 @@ public class FrmPresupuestos extends JDialog {
 		});
 		btnCerrar.setBounds(459, 203, 89, 23);
 		contentPane.add(btnCerrar);
-
+		this.setLocationRelativeTo(null); 
+		gestionarBotones();
 	}
 	
 	private void cargarPresupuestos(int numeroProyecto) {
 		tblPresupuestos.removeAll();
 		tblPresupuestos.setModel(ctrlPresupuesto.listarPresupuestos(numeroProyecto));
 	}
+	
+	private void gestionarBotones() {
+		if(tblPresupuestos.getModel().getRowCount() == 0) {
+			btnEliminar.setEnabled(false);
+			btnEditar.setEnabled(false);		
+		} else {
+			tblPresupuestos.setRowSelectionInterval(0, 0);
+		}
+	}
+
 }

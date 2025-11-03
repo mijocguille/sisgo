@@ -1,11 +1,11 @@
 package recursos;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class ControladorEmpleado {
 	
@@ -30,13 +30,8 @@ public class ControladorEmpleado {
 		ArrayList<Empleado> colEmpleados = tblEmpleado.obtenerEmpleados(); 
 
 		for(Empleado e : colEmpleados) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
-			String fechaAlta = formatter.format(e.getFechaAlta());
-			String fechaBaja = "";
-			if(e.getFechaBaja() != null) {
-				fechaBaja = formatter.format(e.getFechaBaja());	
-			}
-			
+			String fechaAlta = Util.obtenerFechaFormateada(e.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(e.getFechaBaja());			
 			String[] row = {String.valueOf(e.getIdEmpleado()),String.valueOf(e.getLegajo()),e.getNombreCompleto(),fechaAlta,fechaBaja};
 			model.addRow(row);
 		}	

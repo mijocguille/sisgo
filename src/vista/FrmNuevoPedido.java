@@ -133,6 +133,6 @@ public class FrmNuevoPedido extends JFrame {
 		});
 		btnCancelar.setBounds(339, 475, 89, 23);
 		contentPane.add(btnCancelar);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

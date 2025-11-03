@@ -1,12 +1,12 @@
 package operaciones;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class ControladorPresupuesto {
 
@@ -31,10 +31,7 @@ public class ControladorPresupuesto {
 		ArrayList<Presupuesto> colPresupuestos = tblPresupuesto.obtenerPresupuestos(numeroProyecto); 
 
 		for(Presupuesto p : colPresupuestos) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaPresupuesto = formatter.format(p.getFechaPresupuesto());
-	
-			
+			String fechaPresupuesto = Util.obtenerFechaFormateada(p.getFechaPresupuesto());	
 			String[] row = {String.valueOf(p.getNumeroPresupuesto()),fechaPresupuesto,String.valueOf(p.getDiasValidez()),"$" + String.valueOf(p.getImportePresupuestado())};
 			model.addRow(row);
 		}	

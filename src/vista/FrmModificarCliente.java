@@ -120,7 +120,7 @@ public class FrmModificarCliente extends JFrame {
         });
 		btnAceptar.setBounds(240, 185, 89, 23);
 		contentPane.add(btnAceptar);
-		
+		this.setLocationRelativeTo(null); 
 		
 
 	}

@@ -97,7 +97,7 @@ public class FrmNuevoCliente extends JFrame {
 	        });
 		btnAceptar.setBounds(236, 139, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 
 }

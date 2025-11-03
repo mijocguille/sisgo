@@ -1,10 +1,10 @@
 package recursos;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class ControladorEquipo {
 	private TablaEquipo tblEquipos;
@@ -25,14 +25,9 @@ public class ControladorEquipo {
 	
 		ArrayList<Equipo> colEquipos = tblEquipos.obtenerEquipos(); 
 
-		for(Equipo eq : colEquipos) {	
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaAlta = formatter.format(eq.getFechaAlta());
-			String fechaBaja = "";
-			if(eq.getFechaBaja() != null) {
-				fechaBaja = formatter.format(eq.getFechaBaja());	
-			}
-			
+		for(Equipo eq : colEquipos) {				
+			String fechaAlta = Util.obtenerFechaFormateada(eq.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(eq.getFechaBaja());				
 			String[] row = {String.valueOf(eq.getIdEquipo()),eq.getDescripcionEquipo(), String.valueOf(eq.getCantidadEquipos()),fechaAlta, fechaBaja};
 			model.addRow(row);
 		}	

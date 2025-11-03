@@ -67,6 +67,6 @@ public class FrmNuevoRol extends JFrame {
 		});
 		btnAceptar.setBounds(140, 55, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

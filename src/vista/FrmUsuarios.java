@@ -12,12 +12,16 @@ import javax.swing.ListSelectionModel;
 import entidades.ControladorUsuario;
 import entidades.Usuario;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmUsuarios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tblUsuarios;
 	private ControladorUsuario ctrlUsuario;
+	private JButton btnAgregarUsuario;
+	private JButton btnModificarUsuario;
+	private JButton btnBajaUsuario;
 
 	/**
 	 * Create the frame.
@@ -39,7 +43,7 @@ public class FrmUsuarios extends JFrame {
 		cargarUsuarios();
 		tblUsuarios.getColumnModel().getColumn(2).setPreferredWidth(322);
 		
-		JButton btnBajaUsuario = new JButton("Baja");
+		btnBajaUsuario = new JButton("Baja");
 		btnBajaUsuario.addActionListener(new ActionListener() {
 			
 			@Override
@@ -64,7 +68,7 @@ public class FrmUsuarios extends JFrame {
 		btnBajaUsuario.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaUsuario);
 		
-		JButton btnModificarUsuario = new JButton("Editar");
+		btnModificarUsuario = new JButton("Editar");
 		btnModificarUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -96,7 +100,7 @@ public class FrmUsuarios extends JFrame {
 		btnModificarUsuario.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarUsuario);
 		
-		JButton btnAgregarUsuario = new JButton("Alta");
+		btnAgregarUsuario = new JButton("Alta");
 		btnAgregarUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoUsuario frmNuevo = new FrmNuevoUsuario(db, new UsuarioNuevoListener() {
@@ -130,6 +134,14 @@ public class FrmUsuarios extends JFrame {
 
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
+		this.setLocationRelativeTo(null); 
+		gestionarBotones();
+		tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 	}
 	
 	private void cargarUsuarios() {
@@ -137,4 +149,28 @@ public class FrmUsuarios extends JFrame {
 		tblUsuarios.setModel(ctrlUsuario.listarUsuarios());
 	};
 	
+	private void gestionarBotones() {
+		if(tblUsuarios.getModel().getRowCount() == 0) {
+			btnModificarUsuario.setEnabled(false);
+			btnBajaUsuario.setEnabled(false);		
+		} else {
+			tblUsuarios.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
+	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblUsuarios.getModel().getValueAt(tblUsuarios.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Usuario obj = ctrlUsuario.getTblUsuario().obtenerUsuario(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaUsuario.setEnabled(true);
+			} else {
+				btnBajaUsuario.setEnabled(false);
+			}
+		}
+	}
+	
 }
+

@@ -12,6 +12,7 @@ import javax.swing.ListSelectionModel;
 import recursos.ControladorEmpleado;
 import recursos.Empleado;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmEmpleados extends JFrame {
 
@@ -19,6 +20,10 @@ public class FrmEmpleados extends JFrame {
 	private JTable tblEmpleados;
 	private ControladorEmpleado ctrlEmpleado;
 	private SeleccionListener listener;
+	private JButton btnSeleccionar;
+	private JButton btnAgregarEmpleado;
+	private JButton btnModificarEmpleado;
+	private JButton btnBajaEmpleado;
 
 	/**
 	 * Create the frame.
@@ -42,7 +47,7 @@ public class FrmEmpleados extends JFrame {
 		tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(80);
 		tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(317);
 		
-		JButton btnBajaEmpleado = new JButton("Baja");
+		btnBajaEmpleado = new JButton("Baja");
 		btnBajaEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -67,7 +72,7 @@ public class FrmEmpleados extends JFrame {
 		
 		getContentPane().add(btnBajaEmpleado);
 		
-		JButton btnModificarEmpleado = new JButton("Editar");
+		btnModificarEmpleado = new JButton("Editar");
 		btnModificarEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -96,7 +101,7 @@ public class FrmEmpleados extends JFrame {
 		btnModificarEmpleado.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarEmpleado);
 		
-		JButton btnAgregarEmpleado = new JButton("Alta");
+		btnAgregarEmpleado = new JButton("Alta");
 		btnAgregarEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado(new EmpleadoNuevoListener() {
@@ -130,7 +135,7 @@ public class FrmEmpleados extends JFrame {
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar = new JButton("Seleccionar");
 		btnSeleccionar.setVisible(false);
 		btnSeleccionar.setBounds(10, 289, 89, 23);
 		btnSeleccionar.addActionListener(new ActionListener() {
@@ -146,18 +151,48 @@ public class FrmEmpleados extends JFrame {
 		});
 		getContentPane().add(btnSeleccionar);
 		
-		if(esSeleccion) {
-			btnBajaEmpleado.setVisible(false);
-			btnAgregarEmpleado.setVisible(false);
-			btnModificarEmpleado.setVisible(false);
-			btnSeleccionar.setVisible(true);
-		}
-		
+	
+		this.setLocationRelativeTo(null); 
+		gestionarBotones(esSeleccion);
+		tblEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 	}
 
 	private void cargarEmpleados() {
 		tblEmpleados.removeAll();
 		tblEmpleados.setModel(ctrlEmpleado.listarEmpleados());	
-			
+	}
+	
+	private void gestionarBotones(boolean esSeleccion) {
+		if(tblEmpleados.getModel().getRowCount() == 0) {
+			btnSeleccionar.setEnabled(false);
+			btnModificarEmpleado.setEnabled(false);
+			btnBajaEmpleado.setEnabled(false);		
+		} else {
+			if(esSeleccion) {
+				btnSeleccionar.setVisible(true);
+				btnModificarEmpleado.setVisible(false);
+				btnBajaEmpleado.setVisible(false);
+			}
+			tblEmpleados.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
+	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblEmpleados.getModel().getValueAt(tblEmpleados.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Empleado obj = ctrlEmpleado.getTblEmpleado().obtenerEmpleado(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaEmpleado.setEnabled(true);
+			} else {
+				btnBajaEmpleado.setEnabled(false);
+			}
+		}
 	}
 }

@@ -155,7 +155,7 @@ private BaseDatos db;
 			Usuario objUsuario = null;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idUsuario, nombreUsuario, claveUsuario, descripcionUsuario, fechaAlta, fechaBaja, idRol ";
-			query += "from usuario where nombreUsuario = '" + nombreUsuario + "' and claveUsuario = '" + claveUsuario + "' ";
+			query += "from usuario where nombreUsuario = '" + nombreUsuario + "' and claveUsuario = '" + claveUsuario + "' and fechaBaja is null ";
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {

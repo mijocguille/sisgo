@@ -1,12 +1,12 @@
 package recursos;
 
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import sistema.BaseDatos;
+import sistema.Util;
 
 
 
@@ -17,14 +17,10 @@ public class ControladorInsumo {
 	public TablaInsumo getTblInsumo() {
 		return tblInsumo;
 	}
-
-
-
+	
 	public ControladorInsumo(BaseDatos db) {
 		tblInsumo = new TablaInsumo(db);
 	}
-	
-
 	
 	public TableModel listarInsumos() {
 		
@@ -35,12 +31,8 @@ public class ControladorInsumo {
 		ArrayList<Insumo> colInsumos = tblInsumo.obtenerInsumos(); 
 
 		for(Insumo i : colInsumos) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaAlta = formatter.format(i.getFechaAlta());
-			String fechaBaja = "";
-			if(i.getFechaBaja() != null) {
-				fechaBaja = formatter.format(i.getFechaBaja());	
-			}
+			String fechaAlta = Util.obtenerFechaFormateada(i.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(i.getFechaBaja());
 			
 			String[] row = {String.valueOf(i.getIdInsumo()),i.getDescripcionInsumo(),String.valueOf(i.getCantidadStock()),fechaAlta,fechaBaja};
 			model.addRow(row);

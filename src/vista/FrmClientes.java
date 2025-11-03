@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import entidades.Cliente;
 import entidades.ControladorCliente;
 import sistema.BaseDatos;
+import sistema.Util;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
@@ -17,9 +18,13 @@ import java.awt.event.ActionEvent;
 public class FrmClientes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JTable table;
+	private JTable tblClientes;
 	private ControladorCliente ctrlCliente;
 	private SeleccionListener listener;
+	private JButton btnSeleccionar;
+	private JButton btnAgregarCliente;
+	private JButton btnModificarCliente;
+	private JButton btnBajaCliente;
 	
 	/**
 	 * Create the frame.
@@ -38,15 +43,15 @@ public class FrmClientes extends JFrame {
 		scrollPane.setBounds(10, 11, 700, 267);
 		getContentPane().add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblClientes = new JTable();
+		scrollPane.setViewportView(tblClientes);
+		tblClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		cargarClientes();
 		
-		JButton btnBajaCliente = new JButton("Baja");
+		btnBajaCliente = new JButton("Baja");
 		btnBajaCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int idSeleccionado = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				int idSeleccionado = Integer.parseInt(tblClientes.getModel().getValueAt(tblClientes.getSelectedRow(),0).toString());
 				if( idSeleccionado > 0)	{
 					FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea dar de baja al cliente?",new ConfirmacionListener() {
 					    @Override
@@ -66,11 +71,11 @@ public class FrmClientes extends JFrame {
 		btnBajaCliente.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaCliente);
 		
-		JButton btnModificarCliente = new JButton("Editar");
+		btnModificarCliente = new JButton("Editar");
 		btnModificarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				int idSeleccionado = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				int idSeleccionado = Integer.parseInt(tblClientes.getModel().getValueAt(tblClientes.getSelectedRow(),0).toString());
 				if( idSeleccionado > 0)	{
 					Cliente objCli = ctrlCliente.getTblCliente().obtenerCliente(idSeleccionado);
 					FrmModificarCliente frmEdit = new FrmModificarCliente(objCli, new ClienteModificadoListener() {
@@ -96,7 +101,7 @@ public class FrmClientes extends JFrame {
 		btnModificarCliente.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarCliente);
 		
-		JButton btnAgregarCliente = new JButton("Alta");
+		btnAgregarCliente = new JButton("Alta");
 		btnAgregarCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoCliente frmNuevo = new FrmNuevoCliente(new ClienteNuevoListener() {
@@ -131,11 +136,11 @@ public class FrmClientes extends JFrame {
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar = new JButton("Seleccionar");
 		btnSeleccionar.setVisible(false);
 		btnSeleccionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int idSeleccion = Integer.parseInt(table.getModel().getValueAt(table.getSelectedRow(),0).toString());
+				int idSeleccion = Integer.parseInt(tblClientes.getModel().getValueAt(tblClientes.getSelectedRow(),0).toString());
 				if(idSeleccion > 0) {
 					listener.onSeleccion(idSeleccion);
 					dispose();
@@ -144,20 +149,53 @@ public class FrmClientes extends JFrame {
 		});
 		btnSeleccionar.setBounds(10, 289, 114, 23);
 		getContentPane().add(btnSeleccionar);
-		table.getColumnModel().getColumn(1).setPreferredWidth(245);
-		table.getColumnModel().getColumn(3).setPreferredWidth(152);
+		tblClientes.getColumnModel().getColumn(1).setPreferredWidth(245);
+		tblClientes.getColumnModel().getColumn(3).setPreferredWidth(152);
 		
-		if(esSeleccion) {
-			btnSeleccionar.setVisible(true);
-			btnModificarCliente.setVisible(false);
-			btnBajaCliente.setVisible(false);
-		}
+		gestionarBotones(esSeleccion);
+		this.setLocationRelativeTo(null);
+		
+		tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 		
 	}
 	
 	private void cargarClientes() {
-		table.removeAll();
-		table.setModel(ctrlCliente.listarClientes());	
-			
+		tblClientes.removeAll();
+		tblClientes.setModel(ctrlCliente.listarClientes());			
 	}
+	
+	private void gestionarBotones(boolean esSeleccion) {
+		if(tblClientes.getModel().getRowCount() == 0) {
+			btnSeleccionar.setEnabled(false);
+			btnModificarCliente.setEnabled(false);
+			btnBajaCliente.setEnabled(false);		
+		} else {
+			if(esSeleccion) {
+				btnSeleccionar.setVisible(true);
+				btnModificarCliente.setVisible(false);
+				btnBajaCliente.setVisible(false);
+			}
+			tblClientes.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
+	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblClientes.getModel().getValueAt(tblClientes.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Cliente obj = ctrlCliente.getTblCliente().obtenerCliente(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaCliente.setEnabled(true);
+			} else {
+				btnBajaCliente.setEnabled(false);
+			}
+		}
+	}
+	
 }

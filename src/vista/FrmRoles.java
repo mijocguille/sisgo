@@ -10,6 +10,7 @@ import javax.swing.ListSelectionModel;
 import entidades.ControladorRol;
 import entidades.Rol;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmRoles extends JFrame {
 	
@@ -17,6 +18,9 @@ public class FrmRoles extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable tblRoles;
 	private ControladorRol ctrlRol;
+	private JButton btnAgregarRol;
+	private JButton btnModificarRol;
+	private JButton btnBajaRol;
 
 	/**
 	 * Create the frame.
@@ -38,7 +42,7 @@ public class FrmRoles extends JFrame {
 		cargarRoles();
 		tblRoles.getColumnModel().getColumn(1).setPreferredWidth(397);
 		
-		JButton btnBajaRol = new JButton("Baja");
+		btnBajaRol = new JButton("Baja");
 		btnBajaRol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idSeleccionado = Integer.parseInt(tblRoles.getModel().getValueAt(tblRoles.getSelectedRow(),0).toString());
@@ -61,7 +65,7 @@ public class FrmRoles extends JFrame {
 		btnBajaRol.setBounds(464, 289, 89, 23);
 		getContentPane().add(btnBajaRol);
 		
-		JButton btnModificarRol = new JButton("Editar");
+		btnModificarRol = new JButton("Editar");
 		btnModificarRol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -88,7 +92,7 @@ public class FrmRoles extends JFrame {
 		btnModificarRol.setBounds(365, 289, 89, 23);
 		getContentPane().add(btnModificarRol);
 		
-		JButton btnAgregarRol = new JButton("Alta");
+		btnAgregarRol = new JButton("Alta");
 		btnAgregarRol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoRol frmNuevo = new FrmNuevoRol(new RolNuevoListener() {
@@ -118,11 +122,42 @@ public class FrmRoles extends JFrame {
 
 		btnCerrar.setBounds(464, 339, 89, 23);
 		getContentPane().add(btnCerrar);
+		this.setLocationRelativeTo(null); 
+		gestionarBotones();
+		tblRoles.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 	}
 	
 	private void cargarRoles() {
 		tblRoles.removeAll();
 		tblRoles.setModel(ctrlRol.listarRoles());
+	}
+	
+	private void gestionarBotones() {
+		if(tblRoles.getModel().getRowCount() == 0) {
+			btnModificarRol.setEnabled(false);
+			btnBajaRol.setEnabled(false);		
+		} else {
+			tblRoles.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
+	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblRoles.getModel().getValueAt(tblRoles.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Rol obj = ctrlRol.getTblRol().obtenerRol(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaRol.setEnabled(true);
+			} else {
+				btnBajaRol.setEnabled(false);
+			}
+		}
 	}
 
 }

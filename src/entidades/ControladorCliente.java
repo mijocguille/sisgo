@@ -1,12 +1,12 @@
 package entidades;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class ControladorCliente {
 	
@@ -22,20 +22,23 @@ public class ControladorCliente {
 	
 	public TableModel listarClientes() {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
+		   
 		String[] encabezados = {"#", "Raz\u00F3n Social", "Cuit", "Direcci\u00F3n ", "Tel\u00E9fono", "Fecha Alta", "Fecha Baja"};
 		model.setColumnIdentifiers(encabezados);
 	
 		ArrayList<Cliente> colClientes = tblCliente.obtenerClientes(); 
 
 		for(Cliente c : colClientes) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaAlta = formatter.format(c.getFechaAlta());
-			String fechaBaja = "";
-			if(c.getFechaBaja() != null) {
-				fechaBaja = formatter.format(c.getFechaBaja());	
-			}
-			
+			String fechaAlta = Util.obtenerFechaFormateada(c.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(c.getFechaBaja());
 			String[] row = {String.valueOf(c.getIdCliente()),c.getRazonSocial(),c.getCuit(),c.getDireccion(),c.getTelefono(),fechaAlta,fechaBaja};
 			model.addRow(row);
 		}	

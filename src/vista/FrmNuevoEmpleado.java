@@ -88,7 +88,7 @@ public class FrmNuevoEmpleado extends JFrame {
 		});
 		btnAceptar.setBounds(236, 134, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 
 

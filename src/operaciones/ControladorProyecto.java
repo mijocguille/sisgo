@@ -1,12 +1,12 @@
 package operaciones;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import sistema.BaseDatos;
+import sistema.Util;
 
 
 public class ControladorProyecto {
@@ -39,11 +39,9 @@ public class ControladorProyecto {
 		ArrayList<Proyecto> colProyectos = tblProyecto.obtenerProyectos(); 
 
 		for(Proyecto p : colProyectos) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
-			
-			String fechaCreacion = formatter.format(p.getFechaCreacion());
-			String fechaInicio = formatter.format(p.getFechaEstimadaInicio());
-			String fechaFin = formatter.format(p.getFechaFin());
+			String fechaCreacion = Util.obtenerFechaFormateada(p.getFechaCreacion());
+			String fechaInicio = Util.obtenerFechaFormateada(p.getFechaEstimadaInicio());
+			String fechaFin = Util.obtenerFechaFormateada(p.getFechaFin());
 			
 			Pedido objPedido = tblPedido.obtenerPedidoAsociado(p.getNumeroProyecto());
 			String pedidoAsociado = "";

@@ -97,6 +97,6 @@ public class FrmModificarInsumo extends JFrame {
 		});
 		btnAceptar.setBounds(236, 99, 89, 23);
 		contentPane.add(btnAceptar);
-		
+		this.setLocationRelativeTo(null); 
 	}
 }

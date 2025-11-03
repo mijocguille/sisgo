@@ -94,7 +94,7 @@ public class FrmModificarPresupuesto extends JFrame {
 		});
 		btnAceptar.setBounds(143, 86, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 
 }

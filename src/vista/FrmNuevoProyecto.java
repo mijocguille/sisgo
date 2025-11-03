@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import operaciones.ControladorPedido;
 import operaciones.Pedido;
 import sistema.BaseDatos;
+import sistema.Util;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -15,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 
 public class FrmNuevoProyecto extends JFrame {
@@ -119,22 +119,18 @@ public class FrmNuevoProyecto extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
 					if(listener != null) {
-						SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-					    Date fechaInicio = formatter.parse(txtFechaInicio.getText());
-						Date fechaFin = formatter.parse(txtFechaFin.getText());
-						
+					    Date fechaInicio = Util.obtenerFechaDate(txtFechaInicio.getText());
+						Date fechaFin = Util.obtenerFechaDate(txtFechaFin.getText());						
 						listener.onProyectoCreado(txtNombreProyecto.getText(), fechaInicio, fechaFin, numeroPedido);
 					}					
 					dispose();
-				} catch (Exception objE) {
-					System.out.println(objE.getMessage());
-				}
+				
 			}
 		});
 		btnAceptar.setBounds(333, 116, 89, 23);
 		contentPane.add(btnAceptar);
+		this.setLocationRelativeTo(null); 
 
 	}
 }

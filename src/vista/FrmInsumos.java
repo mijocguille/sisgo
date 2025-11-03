@@ -11,6 +11,7 @@ import javax.swing.ListSelectionModel;
 import recursos.ControladorInsumo;
 import recursos.Insumo;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmInsumos extends JFrame {
 
@@ -18,6 +19,10 @@ public class FrmInsumos extends JFrame {
 	private JTable tblInsumos;
 	private SeleccionListener listener;
 	private ControladorInsumo ctrlInsumo;
+	private JButton btnSeleccionar;
+	private JButton btnAgregarInsumo;
+	private JButton btnModificarInsumo;
+	private JButton btnBajaInsumo;
 
 	
 
@@ -42,7 +47,7 @@ public class FrmInsumos extends JFrame {
 		cargarInsumos();
 		tblInsumos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
-		JButton btnBajaInsumo = new JButton("Baja");
+		btnBajaInsumo = new JButton("Baja");
 		btnBajaInsumo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -66,7 +71,7 @@ public class FrmInsumos extends JFrame {
 		btnBajaInsumo.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaInsumo);
 		
-		JButton btnModificarInsumo = new JButton("Editar");
+		btnModificarInsumo = new JButton("Editar");
 		btnModificarInsumo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -95,7 +100,7 @@ public class FrmInsumos extends JFrame {
 		btnModificarInsumo.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarInsumo);
 		
-		JButton btnAgregarInsumo = new JButton("Alta");
+		btnAgregarInsumo = new JButton("Alta");
 		btnAgregarInsumo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoInsumo frmNuevo = new FrmNuevoInsumo(new InsumoNuevoListener() {
@@ -142,17 +147,49 @@ public class FrmInsumos extends JFrame {
 		btnSeleccionar.setBounds(10, 289, 89, 23);
 		getContentPane().add(btnSeleccionar);
 		
-		if(esSeleccion) {
-			btnSeleccionar.setVisible(true);
-			btnAgregarInsumo.setVisible(false);
-			btnBajaInsumo.setVisible(false);
-			btnModificarInsumo.setVisible(false);
-		}
+		
+		this.setLocationRelativeTo(null); 
+		gestionarBotones(esSeleccion);
+		tblInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 		
 	}
 	
 	private void cargarInsumos() {
 		tblInsumos.removeAll();
 		tblInsumos.setModel(ctrlInsumo.listarInsumos());
+	}
+	
+	private void gestionarBotones(boolean esSeleccion) {
+		if(tblInsumos.getModel().getRowCount() == 0) {
+			btnSeleccionar.setEnabled(false);
+			btnModificarInsumo.setEnabled(false);
+			btnBajaInsumo.setEnabled(false);		
+		} else {
+			if(esSeleccion) {
+				btnSeleccionar.setVisible(true);
+				btnModificarInsumo.setVisible(false);
+				btnBajaInsumo.setVisible(false);
+			}
+			tblInsumos.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
+	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblInsumos.getModel().getValueAt(tblInsumos.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Insumo obj = ctrlInsumo.getTblInsumo().obtenerInsumo(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaInsumo.setEnabled(true);
+			} else {
+				btnBajaInsumo.setEnabled(false);
+			}
+		}
 	}
 }

@@ -2,13 +2,13 @@ package entidades;
 
 
 import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class ControladorUsuario {
 	
@@ -30,13 +30,8 @@ public class ControladorUsuario {
 		ArrayList<Usuario> colUsuarios = tblUsuario.obtenerUsuarios(); 
 
 		for(Usuario u : colUsuarios) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaAlta = formatter.format(u.getFechaAlta());
-			String fechaBaja = "";
-			if(u.getFechaBaja() != null) {
-				fechaBaja = formatter.format(u.getFechaBaja());	
-			}
-			
+			String fechaAlta = Util.obtenerFechaFormateada(u.getFechaAlta());
+			String fechaBaja = Util.obtenerFechaFormateada(u.getFechaBaja());
 			String[] row = {String.valueOf(u.getIdUsuario()),u.getNombreUsuario(), u.getDescripcionUsuario(),fechaAlta,fechaBaja};
 			model.addRow(row);
 		}	

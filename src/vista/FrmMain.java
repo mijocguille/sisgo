@@ -33,6 +33,7 @@ public class FrmMain extends JFrame {
 		frmLogin.setAlwaysOnTop(true);
 		frmLogin.setVisible(true);
 		initialize();
+		this.setLocationRelativeTo(null); 
 	}
 
 	/**

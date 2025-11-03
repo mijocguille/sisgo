@@ -90,6 +90,7 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 		});
 		btnAceptar.setBounds(312, 46, 89, 23);
 		contentPane.add(btnAceptar);
+		this.setLocationRelativeTo(null); 
 
 	}
 

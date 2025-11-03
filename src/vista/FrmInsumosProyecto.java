@@ -97,6 +97,7 @@ public class FrmInsumosProyecto extends JFrame {
 
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
+		this.setLocationRelativeTo(null); 
 	}
 
 	private void cargarInsumos(int numeroProyecto) {

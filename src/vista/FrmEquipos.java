@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import recursos.ControladorEquipo;
 import recursos.Equipo;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmEquipos extends JFrame {
 
@@ -18,6 +19,10 @@ public class FrmEquipos extends JFrame {
 	private JTable tblEquipos;
 	private SeleccionListener listener;
 	private ControladorEquipo ctrlEquipo;
+	private JButton btnSeleccionar;
+	private JButton btnAgregarEquipo;
+	private JButton btnModificarEquipo;
+	private JButton btnBajaEquipo;
 
 	/**
 	 * Create the frame.
@@ -39,7 +44,7 @@ public class FrmEquipos extends JFrame {
 		cargarEquipos();
 		tblEquipos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
-		JButton btnBajaEquipo = new JButton("Baja");
+		btnBajaEquipo = new JButton("Baja");
 		btnBajaEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -63,7 +68,7 @@ public class FrmEquipos extends JFrame {
 		btnBajaEquipo.setBounds(618, 289, 89, 23);
 		getContentPane().add(btnBajaEquipo);
 		
-		JButton btnModificarEquipo = new JButton("Editar");
+	    btnModificarEquipo = new JButton("Editar");
 		btnModificarEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -90,7 +95,7 @@ public class FrmEquipos extends JFrame {
 		btnModificarEquipo.setBounds(519, 289, 89, 23);
 		getContentPane().add(btnModificarEquipo);
 		
-		JButton btnAgregarEquipo = new JButton("Alta");
+		btnAgregarEquipo = new JButton("Alta");
 		btnAgregarEquipo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmNuevoEquipo frmNuevo = new FrmNuevoEquipo(new EquipoNuevoListener() {
@@ -139,17 +144,48 @@ public class FrmEquipos extends JFrame {
 		btnSeleccionar.setBounds(10, 289, 89, 23);
 		getContentPane().add(btnSeleccionar);
 		
-		if(esSeleccion) {
-			btnSeleccionar.setVisible(true);
-			btnAgregarEquipo.setVisible(false);
-			btnModificarEquipo.setVisible(false);
-			btnBajaEquipo.setVisible(false);
-		}
+		
+		this.setLocationRelativeTo(null);
+		gestionarBotones(esSeleccion);
+		tblEquipos.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	gestionarBotonBaja();
+		    }
+		});
 	}
 	
 	private void cargarEquipos() {
 		tblEquipos.removeAll();
 		tblEquipos.setModel(ctrlEquipo.listarEquipos());
 	}
+
+	private void gestionarBotones(boolean esSeleccion) {
+		if(tblEquipos.getModel().getRowCount() == 0) {
+			btnSeleccionar.setEnabled(false);
+			btnModificarEquipo.setEnabled(false);
+			btnBajaEquipo.setEnabled(false);		
+		} else {
+			if(esSeleccion) {
+				btnSeleccionar.setVisible(true);
+				btnModificarEquipo.setVisible(false);
+				btnBajaEquipo.setVisible(false);
+			}
+			tblEquipos.setRowSelectionInterval(0, 0);
+			gestionarBotonBaja();
+		}
+	}
 	
+	private void gestionarBotonBaja() {
+		int idSeleccionado = Integer.parseInt(tblEquipos.getModel().getValueAt(tblEquipos.getSelectedRow(),0).toString());
+		if( idSeleccionado > 0)	{
+			Equipo obj = ctrlEquipo.getTblEquipos().obtenerEquipo(idSeleccionado);
+			String fechaBaja = Util.obtenerFechaFormateada(obj.getFechaBaja());
+			if(fechaBaja == "") {
+				btnBajaEquipo.setEnabled(true);
+			} else {
+				btnBajaEquipo.setEnabled(false);
+			}
+		}
+	}
 }

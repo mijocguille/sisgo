@@ -110,7 +110,7 @@ public class FrmModificarEmpleado extends JFrame {
 		});
 		btnAceptar.setBounds(236, 166, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 
 }

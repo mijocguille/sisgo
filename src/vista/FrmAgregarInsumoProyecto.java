@@ -100,6 +100,6 @@ public class FrmAgregarInsumoProyecto extends JFrame {
 		});
 		btnAceptar.setBounds(302, 71, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

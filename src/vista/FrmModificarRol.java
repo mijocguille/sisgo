@@ -84,6 +84,6 @@ public class FrmModificarRol extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 73, 321, 2);
 		contentPane.add(separator);
-
+		this.setLocationRelativeTo(null); 
 	}
 }

@@ -1,7 +1,5 @@
 package operaciones;
 
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
@@ -10,6 +8,7 @@ import javax.swing.table.TableModel;
 import entidades.Cliente;
 import entidades.TablaCliente;
 import sistema.BaseDatos;
+import sistema.Util;
 
 
 public class ControladorPedido {
@@ -47,8 +46,7 @@ public class ControladorPedido {
 		ArrayList<Pedido> colPedidos = tblPedido.obtenerPedidos(); 
 
 		for(Pedido p : colPedidos) {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String fechaPedido = formatter.format(p.getFechaPedido());
+			String fechaPedido = Util.obtenerFechaFormateada(p.getFechaPedido());
 			String proyectoAsociado = "SIN ASOCIAR";
 			if(p.getNumeroProyecto() > 0) {
 				Proyecto proy = tblProyecto.obtenerProyecto(p.getNumeroProyecto());

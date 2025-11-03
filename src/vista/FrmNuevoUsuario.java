@@ -124,7 +124,7 @@ public class FrmNuevoUsuario extends JFrame {
 		});
 		btnAceptar.setBounds(240, 171, 89, 23);
 		contentPane.add(btnAceptar);
-		
+		this.setLocationRelativeTo(null); 
 	}
 	
 	private void cargarCombo() {

@@ -139,6 +139,6 @@ public class FrmModificarPedido extends JFrame {
 		});
 		btnAceptar.setBounds(299, 337, 89, 23);
 		contentPane.add(btnAceptar);
-
+		this.setLocationRelativeTo(null); 
 	}
 }
