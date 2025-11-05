@@ -47,14 +47,21 @@ public class TablaInsumo {
 		
 	}
 	
-	public ArrayList<Insumo> obtenerInsumos() {
+	public ArrayList<Insumo> obtenerInsumos(boolean soloDeAlta) {
 		
 		try {
+			
+			String where = "";
+			
+			if(soloDeAlta) {
+				where = "WHERE fechaBaja is null ";
+			}
 			
 			ArrayList<Insumo> colInsumos = new ArrayList<Insumo>();
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idInsumo, descripcionInsumo, cantidadStock, fechaAlta, fechaBaja, idUsuario ";
 			query += "from Insumo ";
+			query += where;
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {
@@ -147,9 +154,9 @@ public class TablaInsumo {
 		try {
 			int stock = 0;
 			Statement st = this.db.getConnection().createStatement();
-			String query = "select  i.cantidadStock - (select sum(ip.cantidad) ";
+			String query = "select  i.cantidadStock - coalesce((select sum(ip.cantidad) ";
 			query += "from proyecto p inner join insumo_proyecto ip on p.numeroProyecto = ip.numeroProyecto ";
-			query += "where now() between p.fechaEstimadaInicio and p.fechaFin and ip.idInsumo = i.idInsumo)";
+			query += "where now() between p.fechaEstimadaInicio and p.fechaFin and ip.idInsumo = i.idInsumo),0) ";
 			query += "from insumo i ";
 			query += "where i.idInsumo = " + idInsumo;
 		

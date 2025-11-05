@@ -102,32 +102,6 @@ public class TablaInsumoProyecto {
 	}
 	
 
-	public boolean verificarCantidadDisponible(InsumoProyecto objIP) {
-		
-		try {
-			boolean resultado = false;
-			Statement st = this.db.getConnection().createStatement();
-			String query = "select idInsumo ";
-			query += "from insumo i ";
-			query += "where i.idInsumo = " + objIP.getIdInsumo() + " and (i.cantidadStock - ((select sum(ip.cantidad) ";
-			query += "from proyecto p inner join insumo_proyecto ip on p.numeroProyecto = ip.numeroProyecto ";
-			query += "where now() between p.fechaEstimadaInicio and p.fechaFin and ";
-			query += "ip.idInsumo = i.idInsumo) + " + objIP.getCantidad() + ")) >= 0 ";
-		
-			ResultSet rs = st.executeQuery(query);
-			
-			if(rs != null) {
-			    if(rs.next()) {
-			    	resultado = true;
-			    }
-			    rs.close();
-			}			
-			return resultado;
-		} catch(SQLException e) {
-			System.out.println("Error al ejecutar verificarCantidadDisponible." + e.getMessage()); 
-			return false;
-		}
 	
-	}
 
 }

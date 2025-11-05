@@ -9,7 +9,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import operaciones.ControladorEmpleadoProyecto;
+import operaciones.ControladorEquipoProyecto;
+import operaciones.ControladorInsumoProyecto;
 import operaciones.ControladorPedido;
+import operaciones.ControladorPresupuesto;
 import operaciones.ControladorProyecto;
 import operaciones.Pedido;
 import operaciones.Proyecto;
@@ -21,6 +25,10 @@ public class FrmProyectos extends JFrame {
 	private JTable tblProyectos;
 	private ControladorProyecto ctrlProyecto;
 	private ControladorPedido ctrlPedido;
+	private ControladorInsumoProyecto ctrlInsumoProyecto;
+	private ControladorEmpleadoProyecto ctrlEmpleadoProyecto;
+	private ControladorEquipoProyecto ctrlEquipoProyecto;
+	private ControladorPresupuesto ctrlPresupuesto;
 	private JButton btnAgregarProyecto;
 	private JButton btnModificarProyecto;
 	private JButton btnEliminarProyecto;
@@ -36,6 +44,11 @@ public class FrmProyectos extends JFrame {
 		super();
 		ctrlProyecto = new ControladorProyecto(db);
 		ctrlPedido = new ControladorPedido(db);
+		ctrlEmpleadoProyecto = new ControladorEmpleadoProyecto(db);
+		ctrlEquipoProyecto = new ControladorEquipoProyecto(db);
+		ctrlInsumoProyecto = new ControladorInsumoProyecto(db);
+		ctrlPresupuesto = new ControladorPresupuesto(db);
+		
 		setTitle("Listado de Proyectos");
 		setBounds(100, 100, 736, 437);
 		getContentPane().setLayout(null);
@@ -140,7 +153,7 @@ public class FrmProyectos extends JFrame {
 		btnCerrar.setBounds(621, 364, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		btnEmpleadosProyecto = new JButton("Proyectos Asignados");
+		btnEmpleadosProyecto = new JButton("Empleados Asignados");
 		btnEmpleadosProyecto.addActionListener(new ActionListener() {
 			
 			@Override
@@ -217,13 +230,22 @@ public class FrmProyectos extends JFrame {
 					btnInsumosProyecto.setEnabled(true);
 					btnPresupuestos.setEnabled(true);
 				}
+				
+				int cantidadEmpleadosProyecto = ctrlEmpleadoProyecto.getTblEmpleadoProyecto().obtenerEmpleadosProyecto(idSeleccionado).size();
+				int cantidadEquiposProyecto = ctrlEquipoProyecto.getTblEquipoProyecto().obtenerEquiposProyecto(idSeleccionado).size();
+				int cantidadInsumosProyecto = ctrlInsumoProyecto.getTblInsumoProyecto().obtenerInsumosProyecto(idSeleccionado).size();
+				int cantidadPresupuestosProyecto = ctrlPresupuesto.getTblPresupuesto().obtenerPresupuestos(idSeleccionado).size();
+				btnEmpleadosProyecto.setText("Empleados Asignados ("+ String.valueOf(cantidadEmpleadosProyecto) +")");
+				btnEquiposAsignados.setText("Equipos Asignados ("+ String.valueOf(cantidadEquiposProyecto) +")");
+				btnInsumosProyecto.setText("Insumos Asignados ("+ String.valueOf(cantidadInsumosProyecto) +")");
+				btnPresupuestos.setText("Presupuestos ("+ String.valueOf(cantidadPresupuestosProyecto) +")");
 		    }
 		});
 	}
 	
 	private void cargarProyectos() {
 		tblProyectos.removeAll();
-		tblProyectos.setModel(ctrlProyecto.listarProyectos());		
+		tblProyectos.setModel(ctrlProyecto.listarProyectos());
 	}
 	
 

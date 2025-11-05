@@ -47,14 +47,20 @@ public class TablaEquipo {
 		
 	}
 	
-	public ArrayList<Equipo> obtenerEquipos() {
+	public ArrayList<Equipo> obtenerEquipos(boolean soloDeAlta) {
 		
 		try {
+			String where = "";
+			
+			if(soloDeAlta) {
+				where = "WHERE fechaBaja is null ";
+			}
 			
 			ArrayList<Equipo> colEquipos = new ArrayList<Equipo>();
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idEquipo, descripcionEquipo, cantidadEquipos, fechaAlta, fechaBaja, idUsuario ";
 			query += "from equipo ";
+			query += where;
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {

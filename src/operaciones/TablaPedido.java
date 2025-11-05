@@ -49,14 +49,24 @@ public class TablaPedido {
 		
 	}
 	
-	public ArrayList<Pedido> obtenerPedidos() {
+	public ArrayList<Pedido> obtenerPedidos(boolean sinProyecto) {
 		
 		try {
+			String where = "";
+			
+			if(sinProyecto) {
+				where = "WHERE numeroProyecto is null ";
+			}
 			
 			ArrayList<Pedido> colPedidos = new ArrayList<Pedido>();
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select numeroPedido, fechaPedido, numeroProyecto, idCliente, idUsuario, detallePedido, caracteristicasPedido ";
 			query += "from pedido ";
+			query += where;
+			
+			
+			
+			
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {

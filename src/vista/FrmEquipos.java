@@ -41,7 +41,7 @@ public class FrmEquipos extends JFrame {
 		
 		tblEquipos = new JTable();
 		scrollPane.setViewportView(tblEquipos);
-		cargarEquipos();
+		cargarEquipos(esSeleccion);
 		tblEquipos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
 		btnBajaEquipo = new JButton("Baja");
@@ -55,7 +55,7 @@ public class FrmEquipos extends JFrame {
 					    public void onConfirmar(boolean resultado) {
 					        if(resultado) {
 						        if(ctrlEquipo.darBajaEquipo(idSeleccionado)){
-						        	cargarEquipos();
+						        	cargarEquipos(esSeleccion);
 						        } 
 					        }
 					    }
@@ -83,7 +83,7 @@ public class FrmEquipos extends JFrame {
 					    	objEq.setDescripcionEquipo(descripcionEquipo);
 					    	objEq.setCantidadEquipos(cantidad);
 					        if(ctrlEquipo.modificarEquipo(objEq)){
-					        	cargarEquipos();
+					        	cargarEquipos(esSeleccion);
 					        }
 					    }
 					});
@@ -107,7 +107,7 @@ public class FrmEquipos extends JFrame {
 				    	objEq.setIdUsuario(FrmMain.idUsuarioLogueado);
 				        int idEquipo = ctrlEquipo.darAltaEquipo(objEq);
 				        if(idEquipo > 0) {
-				        	cargarEquipos();
+				        	cargarEquipos(esSeleccion);
 				        }
 				    }
 				});
@@ -128,7 +128,7 @@ public class FrmEquipos extends JFrame {
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar = new JButton("Seleccionar");
 		btnSeleccionar.setVisible(false);
 		btnSeleccionar.addActionListener(new ActionListener() {
 			
@@ -141,7 +141,7 @@ public class FrmEquipos extends JFrame {
 				}
 			}
 		});
-		btnSeleccionar.setBounds(10, 289, 89, 23);
+		btnSeleccionar.setBounds(10, 289, 120, 23);
 		getContentPane().add(btnSeleccionar);
 		
 		
@@ -155,9 +155,9 @@ public class FrmEquipos extends JFrame {
 		});
 	}
 	
-	private void cargarEquipos() {
+	private void cargarEquipos(boolean esSeleccion) {
 		tblEquipos.removeAll();
-		tblEquipos.setModel(ctrlEquipo.listarEquipos());
+		tblEquipos.setModel(ctrlEquipo.listarEquipos(esSeleccion));
 	}
 
 	private void gestionarBotones(boolean esSeleccion) {

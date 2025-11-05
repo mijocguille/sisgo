@@ -3,9 +3,7 @@ package recursos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import sistema.BaseDatos;
 
@@ -49,14 +47,20 @@ public class TablaEmpleado {
 		
 	}
 	
-	public ArrayList<Empleado> obtenerEmpleados() {
+	public ArrayList<Empleado> obtenerEmpleados(boolean soloDeAlta) {
 		
 		try {
+			
+			String where = "";
+			if(soloDeAlta) {
+				where = "WHERE fechaBaja is null ";
+			}
 			
 			ArrayList<Empleado> colEmpleados = new ArrayList<Empleado>();
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idEmpleado, legajo, nombre, apellido, fechaAlta, fechaBaja, idUsuario ";
 			query += "from empleado ";
+			query += where;
 			ResultSet rs = st.executeQuery(query);
 			
 			if(rs != null) {

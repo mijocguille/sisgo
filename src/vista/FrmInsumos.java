@@ -44,7 +44,7 @@ public class FrmInsumos extends JFrame {
 		tblInsumos = new JTable();
 		scrollPane.setViewportView(tblInsumos);
 		tblInsumos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		cargarInsumos();
+		cargarInsumos(esSeleccion);
 		tblInsumos.getColumnModel().getColumn(1).setPreferredWidth(322);
 		
 		btnBajaInsumo = new JButton("Baja");
@@ -58,7 +58,7 @@ public class FrmInsumos extends JFrame {
 					    public void onConfirmar(boolean resultado) {
 					        if(resultado) {
 					            if(ctrlInsumo.darBajaInsumo(idSeleccionado)){
-						        	cargarInsumos();
+						        	cargarInsumos(esSeleccion);
 						        } 
 					        }
 					    }
@@ -88,7 +88,7 @@ public class FrmInsumos extends JFrame {
 					        objInsumo.setCantidadStock(cantidadStock);
 					        
 					        if(ctrlInsumo.modificarInsumo(objInsumo)){
-					        	cargarInsumos();
+					        	cargarInsumos(esSeleccion);
 					        }
 					    }
 					});
@@ -112,7 +112,7 @@ public class FrmInsumos extends JFrame {
 				        objIns.setIdUsuario(FrmMain.idUsuarioLogueado);
 				        int idInsumo = ctrlInsumo.darAltaInsumo(objIns);
 				        if(idInsumo > 0) {
-				        	cargarInsumos();
+				        	cargarInsumos(esSeleccion);
 				        }
 				    }
 				});
@@ -133,7 +133,7 @@ public class FrmInsumos extends JFrame {
 		btnCerrar.setBounds(618, 337, 89, 23);
 		getContentPane().add(btnCerrar);
 		
-		JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar = new JButton("Seleccionar");
 		btnSeleccionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idSeleccion = Integer.parseInt(tblInsumos.getModel().getValueAt(tblInsumos.getSelectedRow(),0).toString());
@@ -144,7 +144,7 @@ public class FrmInsumos extends JFrame {
 			}
 		});
 		btnSeleccionar.setVisible(false);
-		btnSeleccionar.setBounds(10, 289, 89, 23);
+		btnSeleccionar.setBounds(10, 289, 120, 23);
 		getContentPane().add(btnSeleccionar);
 		
 		
@@ -159,9 +159,9 @@ public class FrmInsumos extends JFrame {
 		
 	}
 	
-	private void cargarInsumos() {
+	private void cargarInsumos(boolean esSeleccion) {
 		tblInsumos.removeAll();
-		tblInsumos.setModel(ctrlInsumo.listarInsumos());
+		tblInsumos.setModel(ctrlInsumo.listarInsumos(esSeleccion));
 	}
 	
 	private void gestionarBotones(boolean esSeleccion) {

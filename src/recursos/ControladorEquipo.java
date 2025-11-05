@@ -17,13 +17,20 @@ public class ControladorEquipo {
 		tblEquipos = new TablaEquipo(db);
 	}
 	
-	public TableModel listarEquipos() {
+	public TableModel listarEquipos(boolean soloDeAlta) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"};
 		model.setColumnIdentifiers(encabezados);
 	
-		ArrayList<Equipo> colEquipos = tblEquipos.obtenerEquipos(); 
+		ArrayList<Equipo> colEquipos = tblEquipos.obtenerEquipos(soloDeAlta); 
 
 		for(Equipo eq : colEquipos) {				
 			String fechaAlta = Util.obtenerFechaFormateada(eq.getFechaAlta());

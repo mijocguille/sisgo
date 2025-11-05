@@ -22,7 +22,14 @@ public class ControladorRol {
 	}
 	
 	public TableModel listarRoles() {
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Descripci\u00F3n", "Fecha Alta", "Fecha Baja"};
 		model.setColumnIdentifiers(encabezados);
 	

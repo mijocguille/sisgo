@@ -22,20 +22,41 @@ public class ControladorInsumo {
 		tblInsumo = new TablaInsumo(db);
 	}
 	
-	public TableModel listarInsumos() {
+	public TableModel listarInsumos(boolean soloDeAlta) {
 		
-		DefaultTableModel model = new DefaultTableModel();
-		String[] encabezados = {"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"};
-		model.setColumnIdentifiers(encabezados);
-	
-		ArrayList<Insumo> colInsumos = tblInsumo.obtenerInsumos(); 
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
+		if(!soloDeAlta)
+		{
+			String[] encabezados = {"#", "Descripci\u00F3n", "Cantidad", "Fecha Alta", "Fecha Baja"};
+			model.setColumnIdentifiers(encabezados);
+		} else {
+			String[] encabezados = {"#", "Descripci\u00F3n", "Cantidad", "Stock Actual", "Fecha Alta", "Fecha Baja"};
+			model.setColumnIdentifiers(encabezados);
+		}
+		
+		ArrayList<Insumo> colInsumos = tblInsumo.obtenerInsumos(soloDeAlta); 
 
 		for(Insumo i : colInsumos) {
 			String fechaAlta = Util.obtenerFechaFormateada(i.getFechaAlta());
 			String fechaBaja = Util.obtenerFechaFormateada(i.getFechaBaja());
+			if(!soloDeAlta)
+			{	
+				String[] row = {String.valueOf(i.getIdInsumo()),i.getDescripcionInsumo(),String.valueOf(i.getCantidadStock()),fechaAlta,fechaBaja};
+				model.addRow(row);
+			} else {
+				int stockActual = tblInsumo.obtenerStock(i.getIdInsumo());
+				
+				String[] row = {String.valueOf(i.getIdInsumo()),i.getDescripcionInsumo(),String.valueOf(i.getCantidadStock()),String.valueOf(stockActual),fechaAlta,fechaBaja};
+				model.addRow(row);
+			}
 			
-			String[] row = {String.valueOf(i.getIdInsumo()),i.getDescripcionInsumo(),String.valueOf(i.getCantidadStock()),fechaAlta,fechaBaja};
-			model.addRow(row);
 		}	
 		
 		return model;

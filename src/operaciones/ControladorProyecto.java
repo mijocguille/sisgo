@@ -32,7 +32,14 @@ public class ControladorProyecto {
 	
 	public TableModel listarProyectos() {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Fecha Creaci\u00F3n", "Nombre Proyecto", "Fecha Est. Inicio", "Fecha Fin", "Pedido Asociado"};
 		model.setColumnIdentifiers(encabezados);
 	

@@ -21,7 +21,14 @@ public class ControladorEquipoProyecto {
 
 	public TableModel listarEquipos(int numeroProyecto) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Equipo", "Cantidad"};
 		model.setColumnIdentifiers(encabezados);
 	

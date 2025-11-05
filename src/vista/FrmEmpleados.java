@@ -43,7 +43,7 @@ public class FrmEmpleados extends JFrame {
 		tblEmpleados = new JTable();
 		scrollPane.setViewportView(tblEmpleados);
 		tblEmpleados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		cargarEmpleados();
+		cargarEmpleados(esSeleccion);
 		tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(80);
 		tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(317);
 		
@@ -58,7 +58,7 @@ public class FrmEmpleados extends JFrame {
 					    public void onConfirmar(boolean resultado) {
 					        if(resultado) {
 						        if(ctrlEmpleado.bajaEmpleado(idSeleccionado)){
-						        	cargarEmpleados();
+						        	cargarEmpleados(esSeleccion);
 						        } 
 					        }
 					    }
@@ -89,7 +89,7 @@ public class FrmEmpleados extends JFrame {
 					        objEmp.setApellido(apellido);
 					        
 					        if(ctrlEmpleado.modificaEmpleado(objEmp)){
-					        	cargarEmpleados();
+					        	cargarEmpleados(esSeleccion);
 					        }
 					    }
 					});
@@ -114,7 +114,7 @@ public class FrmEmpleados extends JFrame {
 				        objEmp.setIdUsuario(FrmMain.idUsuarioLogueado);
 				        int idEmpleado = ctrlEmpleado.darAltaEmpleado(objEmp);
 				        if(idEmpleado > 0) {
-				        	cargarEmpleados();
+				        	cargarEmpleados(esSeleccion);
 				        }
 				    }
 				});
@@ -137,7 +137,7 @@ public class FrmEmpleados extends JFrame {
 		
 		btnSeleccionar = new JButton("Seleccionar");
 		btnSeleccionar.setVisible(false);
-		btnSeleccionar.setBounds(10, 289, 89, 23);
+		btnSeleccionar.setBounds(10, 289, 120, 23);
 		btnSeleccionar.addActionListener(new ActionListener() {
 	
 			@Override
@@ -162,9 +162,9 @@ public class FrmEmpleados extends JFrame {
 		});
 	}
 
-	private void cargarEmpleados() {
+	private void cargarEmpleados(boolean esSeleccion) {
 		tblEmpleados.removeAll();
-		tblEmpleados.setModel(ctrlEmpleado.listarEmpleados());	
+		tblEmpleados.setModel(ctrlEmpleado.listarEmpleados(esSeleccion));	
 	}
 	
 	private void gestionarBotones(boolean esSeleccion) {

@@ -23,7 +23,14 @@ public class ControladorUsuario {
 	}
 	
 	public TableModel listarUsuarios() {
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Usuario", "Descripci\u00F3n", "Fecha Alta", "Fecha Baja"};
 		model.setColumnIdentifiers(encabezados);
 	

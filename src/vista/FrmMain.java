@@ -28,10 +28,10 @@ public class FrmMain extends JFrame {
 	 */
 	public FrmMain() {	
 		super();
-		FrmLogin frmLogin = new FrmLogin(db);
+		/*FrmLogin frmLogin = new FrmLogin(db);
 		frmLogin.setModal(true);
 		frmLogin.setAlwaysOnTop(true);
-		frmLogin.setVisible(true);
+		frmLogin.setVisible(true);*/
 		initialize();
 		this.setLocationRelativeTo(null); 
 	}

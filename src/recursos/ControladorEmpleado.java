@@ -21,13 +21,20 @@ public class ControladorEmpleado {
 	}
 	
 	
-	public TableModel listarEmpleados() {
+	public TableModel listarEmpleados(boolean soloDeAlta) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Legajo", "Nombre y Apellido", "Fecha Alta", "Fecha Baja"};
 		model.setColumnIdentifiers(encabezados);
 	
-		ArrayList<Empleado> colEmpleados = tblEmpleado.obtenerEmpleados(); 
+		ArrayList<Empleado> colEmpleados = tblEmpleado.obtenerEmpleados(soloDeAlta); 
 
 		for(Empleado e : colEmpleados) {
 			String fechaAlta = Util.obtenerFechaFormateada(e.getFechaAlta());

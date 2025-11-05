@@ -94,7 +94,9 @@ public class FrmAgregarInsumoProyecto extends JFrame {
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listener.onInsumoProyectoCreado(idInsumo, Integer.parseInt(txtCantidad.getText()));
+				if(listener != null) {
+					listener.onInsumoProyectoCreado(idInsumo, Integer.parseInt(txtCantidad.getText()));
+				}
 				dispose();
 			}
 		});

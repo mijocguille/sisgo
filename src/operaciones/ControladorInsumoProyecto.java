@@ -30,7 +30,14 @@ public class ControladorInsumoProyecto {
 
 	public TableModel listarInsumos(int numeroProyecto) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Insumos", "Cantidad"};
 		model.setColumnIdentifiers(encabezados);
 	
@@ -47,7 +54,7 @@ public class ControladorInsumoProyecto {
 	
 	public boolean agregarInsumoProyecto(InsumoProyecto ip) {
 		boolean resultado = false;
-		if(tblInsumoProyecto.verificarCantidadDisponible(ip)) {
+		if(tblInsumo.obtenerStock(ip.getIdInsumo()) - ip.getCantidad() > 0 ) {
 			resultado = tblInsumoProyecto.agregarInsumoProyecto(ip);
 		} 
 		

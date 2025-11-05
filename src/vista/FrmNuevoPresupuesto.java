@@ -15,7 +15,7 @@ public class FrmNuevoPresupuesto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtNumeroProyecto;
+	private JTextField txtNumeroPresupuesto;
 	private JTextField txtImportePresupuestado;
 	private JTextField txtDiasValidez;
 	private PresupuestoNuevoListener listener;
@@ -23,7 +23,7 @@ public class FrmNuevoPresupuesto extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoPresupuesto(PresupuestoNuevoListener pListener) {
+	public FrmNuevoPresupuesto(int numeroPresupuesto, PresupuestoNuevoListener pListener) {
 		super();
 		listener = pListener;
 		setTitle("Nuevo Presupuesto");
@@ -34,11 +34,12 @@ public class FrmNuevoPresupuesto extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		txtNumeroProyecto = new JTextField();
-		txtNumeroProyecto.setEditable(false);
-		txtNumeroProyecto.setBounds(245, 11, 86, 20);
-		contentPane.add(txtNumeroProyecto);
-		txtNumeroProyecto.setColumns(10);
+		txtNumeroPresupuesto = new JTextField();
+		txtNumeroPresupuesto.setText(String.valueOf(numeroPresupuesto));
+		txtNumeroPresupuesto.setEditable(false);
+		txtNumeroPresupuesto.setBounds(245, 11, 86, 20);
+		contentPane.add(txtNumeroPresupuesto);
+		txtNumeroPresupuesto.setColumns(10);
 		
 		txtImportePresupuestado = new JTextField();
 		txtImportePresupuestado.setBounds(196, 39, 135, 20);
@@ -46,7 +47,7 @@ public class FrmNuevoPresupuesto extends JFrame {
 		txtImportePresupuestado.setColumns(10);
 		
 		JLabel lblNumeroPresupuesto = new JLabel("Número de Presupuesto");
-		lblNumeroPresupuesto.setBounds(10, 14, 121, 14);
+		lblNumeroPresupuesto.setBounds(10, 14, 225, 14);
 		contentPane.add(lblNumeroPresupuesto);
 		
 		JLabel lblImporte = new JLabel("Importe");
@@ -68,7 +69,7 @@ public class FrmNuevoPresupuesto extends JFrame {
 		contentPane.add(separator);
 		
 		JLabel lblDiasValidez = new JLabel("Días Validez");
-		lblDiasValidez.setBounds(10, 42, 66, 14);
+		lblDiasValidez.setBounds(10, 42, 73, 14);
 		contentPane.add(lblDiasValidez);
 		
 		txtDiasValidez = new JTextField();

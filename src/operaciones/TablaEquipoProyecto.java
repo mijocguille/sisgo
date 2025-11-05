@@ -111,7 +111,7 @@ public class TablaEquipoProyecto {
 			Statement st = this.db.getConnection().createStatement();
 			String query = "select idEquipo ";
 			query += "from equipo e ";
-			query += "where e.idEquipo = " + objEP.getIdEquipo() + " and (e.cantidadEquipos - ((select sum(ep.cantidad) ";
+			query += "where e.idEquipo = " + objEP.getIdEquipo() + " and (e.cantidadEquipos - ((select coalesce(sum(ep.cantidad),0) ";
 			query += "from proyecto p inner join equipo_proyecto ep on p.numeroProyecto = ep.numeroProyecto ";
 			query += "where now() between p.fechaEstimadaInicio and p.fechaFin and ";
 			query += "ep.idEquipo = e.idEquipo) + " + objEP.getCantidad() + ")) >= 0 ";

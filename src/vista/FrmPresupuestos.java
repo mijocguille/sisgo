@@ -1,6 +1,5 @@
 package vista;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
@@ -13,12 +12,12 @@ import sistema.BaseDatos;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FrmPresupuestos extends JDialog {
+public class FrmPresupuestos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -37,7 +36,6 @@ public class FrmPresupuestos extends JDialog {
 		ctrlPresupuesto = new ControladorPresupuesto(db);
 		
 		setTitle("Visualizando Presupuestos");
-		setModal(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 570, 269);
 		contentPane = new JPanel();
@@ -113,7 +111,8 @@ public class FrmPresupuestos extends JDialog {
 		btnNuevo = new JButton("Nuevo");
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoPresupuesto frmNuevo = new FrmNuevoPresupuesto(new PresupuestoNuevoListener() {
+				int numeroPresupuesto = ctrlPresupuesto.getTblPresupuesto().obtenerProximoPresupuesto(numeroProyecto);
+				FrmNuevoPresupuesto frmNuevo = new FrmNuevoPresupuesto(numeroPresupuesto, new PresupuestoNuevoListener() {
 				    @Override
 				    public void onPresupuestoCreado(int diasValidez, double importePresupuestado) {
 				    	Presupuesto objPre = new Presupuesto();

@@ -24,7 +24,14 @@ public class ControladorPresupuesto {
 	
 	public TableModel listarPresupuestos(int numeroProyecto) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Fecha Presupuesto", "D\u00EDas Validez", "Importe"};
 		model.setColumnIdentifiers(encabezados);
 	

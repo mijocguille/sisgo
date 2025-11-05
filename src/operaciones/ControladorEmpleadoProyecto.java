@@ -29,7 +29,14 @@ public class ControladorEmpleadoProyecto {
 
 	public TableModel listarPersonalAsignado(int numeroProyecto) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Legajo", "Nombre y Apellido"};
 		model.setColumnIdentifiers(encabezados);
 	

@@ -37,13 +37,20 @@ public class ControladorPedido {
 		tblCliente = new TablaCliente(db);
 	}
 	
-	public TableModel listarPedidos() {
+	public TableModel listarPedidos(boolean sinProyecto) {
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int i, int i1) {
+		        return false;
+		    }
+
+		   };
 		String[] encabezados = {"#", "Fecha Pedido", "Cliente", "Detalle de Pedido", "Caracter\u00EDsticas", "Proyecto Asignado"};
 		model.setColumnIdentifiers(encabezados);
 	
-		ArrayList<Pedido> colPedidos = tblPedido.obtenerPedidos(); 
+		ArrayList<Pedido> colPedidos = tblPedido.obtenerPedidos(sinProyecto); 
 
 		for(Pedido p : colPedidos) {
 			String fechaPedido = Util.obtenerFechaFormateada(p.getFechaPedido());

@@ -41,7 +41,7 @@ public class FrmPedidos extends JFrame {
 		tblPedidos = new JTable();
 		scrollPane.setViewportView(tblPedidos);
 		tblPedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		cargarPedidos();
+		cargarPedidos(esSeleccion);
 		tblPedidos.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tblPedidos.getColumnModel().getColumn(2).setPreferredWidth(185);
 		tblPedidos.getColumnModel().getColumn(3).setPreferredWidth(152);
@@ -58,7 +58,7 @@ public class FrmPedidos extends JFrame {
 					    public void onConfirmar(boolean resultado) {
 					        if(resultado) {
 					            if(ctrlPedidos.anularPedido(idSeleccionado)){
-						        	cargarPedidos();
+						        	cargarPedidos(esSeleccion);
 						        } 
 					        }
 					    }
@@ -90,7 +90,7 @@ public class FrmPedidos extends JFrame {
 					        objPedido.setCaracteristicasPedido(caracteristicasPedido);
 					        
 					        if(ctrlPedidos.modificarPedido(objPedido)){
-					        	cargarPedidos();
+					        	cargarPedidos(esSeleccion);
 					        }
 					    }
 					});
@@ -115,7 +115,7 @@ public class FrmPedidos extends JFrame {
 				        objPed.setIdUsuario(FrmMain.idUsuarioLogueado);
 				        int numeroPedido = ctrlPedidos.crearPedido(objPed);
 				        if(numeroPedido > 0) {
-				        	cargarPedidos();
+				        	cargarPedidos(esSeleccion);
 				        }
 				    }
 				});
@@ -147,16 +147,16 @@ public class FrmPedidos extends JFrame {
 			}
 		});
 		btnSeleccionar.setVisible(false);
-		btnSeleccionar.setBounds(10, 289, 89, 23);
+		btnSeleccionar.setBounds(10, 289, 120, 23);
 		getContentPane().add(btnSeleccionar);
 		
 		this.setLocationRelativeTo(null); 
 		gestionarBotones(esSeleccion);
 	}
 	
-	private void cargarPedidos() {
+	private void cargarPedidos(boolean esSeleccion) {
 		tblPedidos.removeAll();
-		tblPedidos.setModel(ctrlPedidos.listarPedidos());				
+		tblPedidos.setModel(ctrlPedidos.listarPedidos(esSeleccion));				
 	}
 	
 	private void gestionarBotones(boolean esSeleccion) {

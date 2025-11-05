@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 import sistema.BaseDatos;
 
@@ -83,17 +82,15 @@ public class TablaPresupuesto {
 		
 		try {
 			
-			boolean resultado = false;
 			Statement st = this.db.getConnection().createStatement();
 			String query = "insert into presupuesto(numeroProyecto, numeroPresupuesto, fechaPresupuesto, diasValidez, importePresupuestado, idUsuario) ";
-			query += "values("+ objPresupuesto.getNumeroProyecto() +"," + objPresupuesto.getNumeroPresupuesto() +",'"+ objPresupuesto.getFechaPresupuesto()+"',";
+			query += "values("+ objPresupuesto.getNumeroProyecto() +"," + objPresupuesto.getNumeroPresupuesto() +",now(),";
 			query += objPresupuesto.getDiasValidez()+","+ objPresupuesto.getImportePresupuestado() + ","+ objPresupuesto.getIdUsuario() + ")";
 			
-		    if (st.execute(query)) {
-		    	resultado = true;
-		    } 
+		    st.execute(query);
+		    
 			
-			return resultado;
+			return true;
 		} catch(SQLException e) {
 			System.out.println("Error al ejecutar altaPresupuesto." + e.getMessage()); 
 			return false;
