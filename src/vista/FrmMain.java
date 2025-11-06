@@ -7,13 +7,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JToolBar;
+
+import entidades.ControladorUsuario;
 import sistema.BaseDatos;
 
 public class FrmMain extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	static BaseDatos db = new BaseDatos();
-	static int idUsuarioLogueado = 1;
+	static int idUsuarioLogueado = -1;
 	static FrmClientes wndClientes;
 	static FrmPedidos wndPedidos;
 	static FrmInsumos wndInsumos;
@@ -23,15 +25,21 @@ public class FrmMain extends JFrame {
 	static FrmUsuarios wndUsuarios;
 	static FrmRoles wndRoles;
 	
+	private JButton btnClientes;
+	private JButton btnPedidos;
+	private JButton btnInsumos;
+	private JButton btnProyectos;
+	private JButton btnEquipos;
+	private JButton btnEmpleados;
+	private JButton btnUsuarios;
+	private JButton btnRoles;
+	
 	/**
 	 * Create the application.
 	 */
 	public FrmMain() {	
 		super();
-		/*FrmLogin frmLogin = new FrmLogin(db);
-		frmLogin.setModal(true);
-		frmLogin.setAlwaysOnTop(true);
-		frmLogin.setVisible(true);*/
+		iniciarSesion();
 		initialize();
 		this.setLocationRelativeTo(null); 
 	}
@@ -52,11 +60,11 @@ public class FrmMain extends JFrame {
 		toolBar.setBounds(0, 0, 784, 63);
 		this.getContentPane().add(toolBar);
 		
-		JButton btnClientes = new JButton("Clientes");
+		btnClientes = new JButton("Clientes");
 		btnClientes.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnClientes);
 		
-		JButton btnPedidos = new JButton("Pedidos");
+		btnPedidos = new JButton("Pedidos");
 		btnPedidos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmPedidos frmPedidos = FrmMain.crearWndPedidos();
@@ -67,7 +75,7 @@ public class FrmMain extends JFrame {
 		btnPedidos.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnPedidos);
 		
-		JButton btnInsumos = new JButton("Insumos");
+		btnInsumos = new JButton("Insumos");
 		btnInsumos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmInsumos frmInsumos = FrmMain.crearWndInsumos();
@@ -78,7 +86,7 @@ public class FrmMain extends JFrame {
 		btnInsumos.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnInsumos);
 		
-		JButton btnProyectos = new JButton("Proyectos");
+		btnProyectos = new JButton("Proyectos");
 		btnProyectos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmProyectos frmProyectos = FrmMain.crearWndProyectos();
@@ -89,7 +97,7 @@ public class FrmMain extends JFrame {
 		btnProyectos.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnProyectos);
 		
-		JButton btnEquipos = new JButton("Equipos");
+		btnEquipos = new JButton("Equipos");
 		btnEquipos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmEquipos frmEquipos = FrmMain.crearWndEquipos();
@@ -100,7 +108,7 @@ public class FrmMain extends JFrame {
 		btnEquipos.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnEquipos);
 		
-		JButton btnEmpleados = new JButton("Empleados");
+		btnEmpleados = new JButton("Empleados");
 		btnEmpleados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmEmpleados frmEmpleados = FrmMain.crearWndEmpleados();
@@ -111,7 +119,7 @@ public class FrmMain extends JFrame {
 		btnEmpleados.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnEmpleados);
 		
-		JButton btnUsuarios = new JButton("Usuarios");
+		btnUsuarios = new JButton("Usuarios");
 		btnUsuarios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmUsuarios frmUsuarios = FrmMain.crearWndUsuarios();
@@ -122,7 +130,7 @@ public class FrmMain extends JFrame {
 		btnUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnUsuarios);
 		
-		JButton btnRoles = new JButton("Roles");
+		btnRoles = new JButton("Roles");
 		btnRoles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FrmRoles frmRoles = FrmMain.crearWndRoles();
@@ -132,6 +140,25 @@ public class FrmMain extends JFrame {
 		});
 		btnRoles.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		toolBar.add(btnRoles);
+		
+		JButton btnCerrarSesion= new JButton("Cerrar Sesión");
+		btnCerrarSesion.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		toolBar.add(btnCerrarSesion);
+		btnCerrarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrmConfirmacion frmConfirmacion = new FrmConfirmacion("¿Seguro que desea cerrar la sesión?",new ConfirmacionListener() {
+				    @Override
+				    public void onConfirmar(boolean resultado) {
+				        if(resultado) {
+					        idUsuarioLogueado = -1;
+					        iniciarSesion();
+				        }
+				    }
+				});
+				frmConfirmacion.setAlwaysOnTop(true);
+				frmConfirmacion.setVisible(true);
+			}
+		});
 		
 		
 		JButton btnSalir = new JButton("Salir");
@@ -150,6 +177,15 @@ public class FrmMain extends JFrame {
 					
 			}
 		});
+	}
+	
+	private void iniciarSesion() {
+		FrmLogin frmLogin = new FrmLogin(db);
+		frmLogin.setModal(true);
+		frmLogin.setAlwaysOnTop(true);
+		frmLogin.setVisible(true);
+		
+		
 	}
 	
 	public static FrmClientes crearWndClientes() {
@@ -218,4 +254,5 @@ public class FrmMain extends JFrame {
 		
 		return wndRoles;
 	}
+	
 }

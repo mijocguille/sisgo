@@ -2,6 +2,9 @@ package sistema;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Util {
 	
@@ -25,6 +28,43 @@ public class Util {
 		}
 		
 	}
+	
+	public static boolean esDoble(String texto) {
+	    if (texto == null || texto.trim().isEmpty()) {
+	        return false;
+	    }
+	    try {
+	        Double.parseDouble(texto);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	
+	public static boolean esEntero(String texto) {
+	    if (texto == null || texto.trim().isEmpty()) {
+	        return false;
+	    }
+	    try {
+	        Integer.parseInt(texto);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	
+	 public static boolean validarFecha(String textoFecha) {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	        try {
+	            LocalDate.parse(textoFecha, formatter);
+	            return true; 
+	        } catch (DateTimeParseException e) {
+	            return false; 
+	        }
+	    }
+
+	
 	
 	public static Date transformarFecha(java.sql.Date fecha ) {
 		return new java.util.Date(fecha.getTime());

@@ -46,7 +46,7 @@ public class ControladorRol {
 		
 	}
 	
-	public DefaultComboBoxModel cargarComboRoles() {
+	public DefaultComboBoxModel<String> cargarComboRoles() {
 		ArrayList<Rol> colRoles = tblRol.obtenerRoles(); 
 		String[] items = new String[colRoles.size()];
 		int i=0;
@@ -54,7 +54,7 @@ public class ControladorRol {
 			items[i] = r.getNombreRol();
 			i++;	
 		}	
-		return new DefaultComboBoxModel(items);
+		return new DefaultComboBoxModel<String>(items);
 		
 	}
 	

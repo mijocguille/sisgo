@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import operaciones.Presupuesto;
+import sistema.Util;
 
 public class FrmModificarPresupuesto extends JFrame {
 
@@ -21,6 +22,7 @@ public class FrmModificarPresupuesto extends JFrame {
 	private JTextField txtImportePresupuestado;
 	private JTextField txtDiasValidez;
 	private PresupuestoModificadoListener listener;
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -86,15 +88,43 @@ public class FrmModificarPresupuesto extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener != null) {
-					listener.onPresupuestoModificado(objPresupuesto.getNumeroPresupuesto(), Integer.parseInt(txtDiasValidez.getText()), Double.parseDouble(txtImportePresupuestado.getText()));
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onPresupuestoModificado(objPresupuesto.getNumeroPresupuesto(), Integer.parseInt(txtDiasValidez.getText()), Double.parseDouble(txtImportePresupuestado.getText()));
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();
 			}
 		});
 		btnAceptar.setBounds(143, 86, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtDiasValidez.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar los días de validez del presupuesto";
+			valido = false;
+		} else if(!Util.esEntero(txtDiasValidez.getText())) {
+			textoMensaje = "Los días de validez deben ser un número";
+			valido = false;
+		} else if(txtImportePresupuestado.getText().length() == 0) {
+			textoMensaje = "Debe ingresar un importe para el presupuesto";
+			valido = false;
+		} else if (!Util.esDoble(txtImportePresupuestado.getText())) {
+			textoMensaje = "El importe debe ser un número";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 
 }

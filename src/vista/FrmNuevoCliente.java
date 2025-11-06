@@ -3,6 +3,9 @@ package vista;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import sistema.Util;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
@@ -22,6 +25,7 @@ public class FrmNuevoCliente extends JFrame {
 	private JButton btnCancelar;
 	private JButton btnAceptar;
 	private ClienteNuevoListener listener;
+	private FrmMensaje frmMsg;
 
 	
 	public FrmNuevoCliente(ClienteNuevoListener pListener) {
@@ -85,6 +89,7 @@ public class FrmNuevoCliente extends JFrame {
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(e -> {
+			if(validarInformacionVentana()) {
 	            if (listener != null) {
 	                listener.onClienteCreado(
 	                    txtRazonSocial.getText(),
@@ -94,10 +99,40 @@ public class FrmNuevoCliente extends JFrame {
 	                );
 	            }
 	            dispose();
-	        });
+			} else {
+				frmMsg.setAlwaysOnTop(true);
+				frmMsg.setVisible(true);
+			}
+	    });
 		btnAceptar.setBounds(236, 139, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if(txtRazonSocial.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar una razón social";
+			valido = false;
+		} else if (txtCuit.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un CUIT";
+			valido = false;
+		} else if( !Util.validarCUIT(txtCuit.getText())) {
+			textoMensaje = "El CUIT ingresado no es correcto";
+			valido = false;
+		} else if (txtDireccion.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar una dirección";
+			valido = false;
+		} else if (txtTelefono.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un teléfono";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 
 }

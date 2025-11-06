@@ -29,6 +29,7 @@ public class FrmNuevoProyecto extends JFrame {
 	private ProyectoNuevoListener listener;
 	private ControladorPedido ctrlPedido;
 	private int numeroPedido; 
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -119,18 +120,44 @@ public class FrmNuevoProyecto extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(validarInformacionVentana()) {
 					if(listener != null) {
 					    Date fechaInicio = Util.obtenerFechaDate(txtFechaInicio.getText());
 						Date fechaFin = Util.obtenerFechaDate(txtFechaFin.getText());						
 						listener.onProyectoCreado(txtNombreProyecto.getText(), fechaInicio, fechaFin, numeroPedido);
 					}					
 					dispose();
-				
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
 			}
 		});
 		btnAceptar.setBounds(333, 116, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
 
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtNombreProyecto.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre para el proyecto";
+			valido = false;
+		} else if(!Util.validarFecha(txtFechaInicio.getText())) {
+			textoMensaje = "Debe proporcionar una fecha correcta";
+			valido = false;
+		} else if(!Util.validarFecha(txtFechaFin.getText())) {
+			textoMensaje = "Debe proporcionar una fecha correcta";
+			valido = false;
+		} else if (txtPedidoAsociado.getText().length() == 0) {
+			textoMensaje = "Debe seleccionar un pedido asociado";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

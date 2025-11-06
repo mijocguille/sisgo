@@ -11,6 +11,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import recursos.ControladorEmpleado;
+import sistema.BaseDatos;
+import sistema.Util;
+
 public class FrmNuevoEmpleado extends JFrame {
 
 
@@ -20,13 +24,16 @@ public class FrmNuevoEmpleado extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private EmpleadoNuevoListener listener;
+	private FrmMensaje frmMsg;
+	private ControladorEmpleado ctrlEmpleado;
 	
 	/**
 	 * Create the frame.
 	 */
-	public FrmNuevoEmpleado(EmpleadoNuevoListener pListener) {
+	public FrmNuevoEmpleado(BaseDatos db, EmpleadoNuevoListener pListener) {
 		super();
 		listener = pListener;
+		ctrlEmpleado = new ControladorEmpleado(db);
 		setTitle("Nuevo Empleado");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 207);
@@ -80,10 +87,15 @@ public class FrmNuevoEmpleado extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener != null) {
-					listener.onEmpleadoCreado(Integer.parseInt(txtLegajo.getText()), txtNombre.getText(), txtApellido.getText());
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onEmpleadoCreado(Integer.parseInt(txtLegajo.getText()), txtNombre.getText(), txtApellido.getText());
+					}
+					dispose();				
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();				
 			}
 		});
 		btnAceptar.setBounds(236, 134, 89, 23);
@@ -92,4 +104,29 @@ public class FrmNuevoEmpleado extends JFrame {
 	}
 
 
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if(txtLegajo.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar el legajo";
+			valido = false;
+		} else if (txtNombre.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre";
+			valido = false;
+		} else if (txtApellido.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un apellido";
+			valido = false;
+		} else if (!Util.esEntero(txtLegajo.getText())) {
+			textoMensaje = "El legajo debe ser un número";
+			valido = false;
+		} else if (!ctrlEmpleado.getTblEmpleado().legajoUnico(0, Integer.parseInt(txtLegajo.getText()))) {
+			textoMensaje = "El legajo ya está utilizado para otro empleado";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
+	}
 }

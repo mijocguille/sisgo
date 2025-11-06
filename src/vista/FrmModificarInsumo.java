@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import recursos.Insumo;
+import sistema.Util;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -20,6 +22,7 @@ public class FrmModificarInsumo extends JFrame {
 	private JTextField txtDescripcion;
 	private JTextField txtStock;
 	private InsumoModificadoListener listener;
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -88,15 +91,39 @@ public class FrmModificarInsumo extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener != null) {
-					listener.onInsumoModificado(objInsumo.getIdInsumo(), txtDescripcion.getText(), Integer.parseInt(txtStock.getText()));
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onInsumoModificado(objInsumo.getIdInsumo(), txtDescripcion.getText(), Integer.parseInt(txtStock.getText()));
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();
-				
 			}
 		});
 		btnAceptar.setBounds(236, 99, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtDescripcion.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar una descripción para el insumo";
+			valido = false;
+		} else if(txtStock.getText().length() == 0) {
+			textoMensaje = "Debe ingresar el stock";
+			valido = false;
+		} else if (!Util.esEntero(txtStock.getText())) {
+			textoMensaje = "El Stock debe ser un número";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

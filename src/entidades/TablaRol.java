@@ -44,6 +44,33 @@ public class TablaRol {
 		
 	}
 	
+	public Rol obtenerRol(String rol) {
+		
+		try {
+			
+			Rol objRol = null;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idRol, nombreRol, fechaAlta, fechaBaja from rol where nombreRol = '" + rol + "'";
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				objRol = new Rol();
+			    if(rs.next()) {
+			    	objRol.setIdRol(rs.getInt("idRol"));
+			    	objRol.setNombreRol(rs.getString("nombreRol"));
+			    	objRol.setFechaAlta(rs.getDate("fechaAlta"));
+			    	objRol.setFechaBaja(rs.getDate("fechaBaja"));
+			    }
+			    rs.close();
+			}
+			return objRol;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerRol." + e.getMessage()); 
+			return null;
+		}
+		
+	}
+	
 	public ArrayList<Rol> obtenerRoles() {
 		
 		try {

@@ -24,9 +24,12 @@ public class FrmModificarPedido extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtCliente;
 	private JTextField txtNumeroPedido;
+	private JTextArea txtDetalle;
+	private JTextArea txtCaracteristicas;
 	private ControladorPedido ctrlPedido;
 	private PedidoModificadoListener listener;
 	private int idCliente;
+	private FrmMensaje frmMsg;
 
 
 	/**
@@ -92,12 +95,12 @@ public class FrmModificarPedido extends JFrame {
 		btnCancelar.setBounds(398, 337, 89, 23);
 		contentPane.add(btnCancelar);
 		
-		JTextArea txtDetalle = new JTextArea();
+		txtDetalle = new JTextArea();
 		txtDetalle.setBounds(66, 83, 421, 93);
 		txtDetalle.setText(objPedido.getDetallePedido());
 		contentPane.add(txtDetalle);
 		
-		JTextArea txtCaracteristicas = new JTextArea();
+		txtCaracteristicas = new JTextArea();
 		txtCaracteristicas.setText(objPedido.getCaracteristicasPedido());
 		txtCaracteristicas.setBounds(66, 212, 420, 106);
 		contentPane.add(txtCaracteristicas);
@@ -126,7 +129,8 @@ public class FrmModificarPedido extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 if (listener != null) {
+				if(validarInformacionVentana()) {
+				 	if (listener != null) {
 		                listener.onPedidoModificado(
 		                		objPedido.getNumeroPedido(),
 		                		idCliente,
@@ -135,10 +139,32 @@ public class FrmModificarPedido extends JFrame {
 		                		);
 		            }
 		            dispose();	
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
 			}
 		});
 		btnAceptar.setBounds(299, 337, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtDetalle.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un detalle para el pedido";
+			valido = false;
+		} 
+		else if (txtCaracteristicas.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar las características para el pedido";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

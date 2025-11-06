@@ -23,6 +23,7 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 	private EmpleadoProyectoNuevoListener listener;
 	private ControladorEmpleadoProyecto ctrlControladorEmpleadoProyecto;
 	private int idEmpleado;
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -84,8 +85,15 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listener.onEmpleadoACrear(idEmpleado);
-				dispose();
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onEmpleadoACrear(idEmpleado);
+						dispose();
+					}
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
 			}
 		});
 		btnAceptar.setBounds(312, 46, 89, 23);
@@ -94,4 +102,17 @@ public class FrmAgregarEmpleadoProyecto extends JFrame {
 
 	}
 
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtEmpleado.getText().length() == 0) {
+			textoMensaje = "Debe seleccionar un empleado para agregar al proyecto";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
+	}
 }

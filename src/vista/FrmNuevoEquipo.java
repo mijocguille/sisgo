@@ -10,6 +10,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import sistema.Util;
+
 public class FrmNuevoEquipo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -17,6 +19,7 @@ public class FrmNuevoEquipo extends JFrame {
 	private JTextField txtDescripcion;
 	private JTextField txtCantidad;
 	private EquipoNuevoListener listener;
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -69,15 +72,41 @@ public class FrmNuevoEquipo extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener!=null) {
-					listener.onEquipoCreado(txtDescripcion.getText(), Integer.parseInt(txtCantidad.getText()));
+				if(validarInformacionVentana()) {
+					if(listener!=null) {
+						listener.onEquipoCreado(txtDescripcion.getText(), Integer.parseInt(txtCantidad.getText()));
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();
 			}
 		});
 		btnAceptar.setBounds(236, 77, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtDescripcion.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar una descripción para el equipo";
+			valido = false;
+		} 
+		else if(txtCantidad.getText().length() == 0) {
+			textoMensaje = "Debe ingresar la cantidad";
+			valido = false;
+		} else if (!Util.esEntero(txtCantidad.getText())) {
+			textoMensaje = "La cantidad debe ser un número";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 
 }

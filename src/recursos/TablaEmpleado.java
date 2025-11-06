@@ -150,6 +150,27 @@ public class TablaEmpleado {
 		}
 	
 	}
+	
+	public boolean legajoUnico(int idEmpleado, int legajo) {
+		
+		try {
+						
+			boolean resultado = true;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idEmpleado, legajo, nombre, apellido, fechaAlta, fechaBaja, idUsuario ";
+			query += "from empleado where idEmpleado <> " + idEmpleado + " and legajo = " + legajo;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				resultado = false;
+			}
+			return resultado;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerEmpleado." + e.getMessage()); 
+			return false;
+		}
+		
+	}
 
 
 }

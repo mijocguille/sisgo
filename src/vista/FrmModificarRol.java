@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entidades.Rol;
-
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -21,7 +20,7 @@ public class FrmModificarRol extends JFrame {
 	private JTextField txtIdRol;
 	private JTextField txtNombreRol;
 	private RolModificadoListener listener;
-	
+	private FrmMensaje frmMsg;
 
 	/**
 	 * Create the frame.
@@ -63,10 +62,15 @@ public class FrmModificarRol extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener != null) {
-					listener.onRolModificado(objRol.getIdRol(), txtNombreRol.getText());
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onRolModificado(objRol.getIdRol(), txtNombreRol.getText());
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();
 			}
 		});
 		btnAceptar.setBounds(143, 86, 89, 23);
@@ -85,5 +89,19 @@ public class FrmModificarRol extends JFrame {
 		separator.setBounds(10, 73, 321, 2);
 		contentPane.add(separator);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtNombreRol.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre de rol";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

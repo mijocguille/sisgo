@@ -118,7 +118,7 @@ private BaseDatos db;
 			{
 				query += "claveUsuario = '"+ objUsuario.getClaveUsuario() +"', ";
 			}
-			query += "descripcionUsuario = '"+ objUsuario.getDescripcionUsuario() +"' ";
+			query += "descripcionUsuario = '"+ objUsuario.getDescripcionUsuario() +"', ";
 			query += "idRol = "+ String.valueOf(objUsuario.getIdRol()) +" ";
 			query += "where idUsuario = " + objUsuario.getIdUsuario();
 			

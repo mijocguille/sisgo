@@ -25,6 +25,7 @@ public class FrmModificarProyecto extends JFrame {
 	private JTextField txtPedidoAsociado;
 	private JTextField txtNumeroProyecto;
 	private ProyectoModificadoListener listener;
+	private FrmMensaje frmMsg;
 	
 
 	/**
@@ -104,18 +105,23 @@ public class FrmModificarProyecto extends JFrame {
 		
 		JButton btnAceptar = new JButton("Aceptar ");
 		btnAceptar.addActionListener(e -> {
-            if (listener != null) {
-                Date fechaInicioL = Util.obtenerFechaDate(txtFechaInicio.getText());
-                Date fechaFinL = Util.obtenerFechaDate(txtFechaFin.getText());
-                listener.onProyectoModificado(
-                	Integer.parseInt(txtNumeroProyecto.getText()),
-                    txtNombreProyecto.getText(),
-                    fechaInicioL,
-                    fechaFinL,
-                    Integer.parseInt(txtPedidoAsociado.getText())
-                );
-            }
-            dispose();
+			if(validarInformacionVentana()) {
+	            if (listener != null) {
+	                Date fechaInicioL = Util.obtenerFechaDate(txtFechaInicio.getText());
+	                Date fechaFinL = Util.obtenerFechaDate(txtFechaFin.getText());
+	                listener.onProyectoModificado(
+	                	Integer.parseInt(txtNumeroProyecto.getText()),
+	                    txtNombreProyecto.getText(),
+	                    fechaInicioL,
+	                    fechaFinL,
+	                    Integer.parseInt(txtPedidoAsociado.getText())
+	                );
+	            }
+	            dispose();
+			} else {
+				frmMsg.setAlwaysOnTop(true);
+				frmMsg.setVisible(true);
+			}
         });
 		btnAceptar.setBounds(333, 144, 89, 23);
 		contentPane.add(btnAceptar);
@@ -131,6 +137,29 @@ public class FrmModificarProyecto extends JFrame {
 		contentPane.add(txtNumeroProyecto);
 		txtNumeroProyecto.setColumns(10);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtNombreProyecto.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre para el proyecto";
+			valido = false;
+		} else if(!Util.validarFecha(txtFechaInicio.getText())) {
+			textoMensaje = "Debe proporcionar una fecha correcta";
+			valido = false;
+		} else if(!Util.validarFecha(txtFechaFin.getText())) {
+			textoMensaje = "Debe proporcionar una fecha correcta";
+			valido = false;
+		} else if (txtPedidoAsociado.getText().length() == 0) {
+			textoMensaje = "Debe seleccionar un pedido asociado";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 
 }

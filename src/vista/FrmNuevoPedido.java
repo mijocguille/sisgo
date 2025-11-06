@@ -22,10 +22,12 @@ public class FrmNuevoPedido extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtCliente;
+	private JTextArea txaDetallePedido;
+	private JTextArea txaCaracteristicasConstruccion;
 	private PedidoNuevoListener listener;
 	private ControladorPedido ctrlPedido;
 	private int idCliente;
-	
+	private FrmMensaje frmMsg;	
 	
 
 	/**
@@ -78,11 +80,11 @@ public class FrmNuevoPedido extends JFrame {
 		lblCaracteristicasConstruccion.setBounds(10, 300, 414, 14);
 		contentPane.add(lblCaracteristicasConstruccion);
 		
-		JTextArea txaDetallePedido = new JTextArea();
+		txaDetallePedido = new JTextArea();
 		txaDetallePedido.setBounds(10, 146, 414, 143);
 		contentPane.add(txaDetallePedido);
 		
-		JTextArea txaCaracteristicasConstruccion = new JTextArea();
+		txaCaracteristicasConstruccion = new JTextArea();
 		txaCaracteristicasConstruccion.setBounds(10, 325, 414, 124);
 		contentPane.add(txaCaracteristicasConstruccion);
 		
@@ -111,14 +113,19 @@ public class FrmNuevoPedido extends JFrame {
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (listener != null) {
-	                listener.onPedidoCreado(
-                		idCliente, 
-                		txaDetallePedido.getText(), 
-                		txaCaracteristicasConstruccion.getText()
-	                );
-	            }
-	            dispose();
+				if(validarInformacionVentana()) {
+					if (listener != null) {
+		                listener.onPedidoCreado(
+	                		idCliente, 
+	                		txaDetallePedido.getText(), 
+	                		txaCaracteristicasConstruccion.getText()
+		                );
+		            }
+		            dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
 			}
 		});
 		
@@ -134,5 +141,23 @@ public class FrmNuevoPedido extends JFrame {
 		btnCancelar.setBounds(339, 475, 89, 23);
 		contentPane.add(btnCancelar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txaDetallePedido.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un detalle para el pedido";
+			valido = false;
+		} 
+		else if (txaCaracteristicasConstruccion.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar las características para el pedido";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

@@ -17,6 +17,7 @@ public class FrmNuevoRol extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNombreRol;
 	private RolNuevoListener listener;
+	private FrmMensaje frmMsg;
 	
 	/**
 	 * Create the frame.
@@ -59,14 +60,33 @@ public class FrmNuevoRol extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(listener != null) {
-					listener.onRolCreado(txtNombreRol.getText());
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onRolCreado(txtNombreRol.getText());
+					}
+					dispose();
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
 				}
-				dispose();
 			}
 		});
 		btnAceptar.setBounds(140, 55, 89, 23);
 		contentPane.add(btnAceptar);
 		this.setLocationRelativeTo(null); 
+	}
+	
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtNombreRol.getText().length() == 0) {
+			textoMensaje = "Debe proporcionar un nombre de rol";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
 	}
 }

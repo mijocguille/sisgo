@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import entidades.ControladorRol;
-import entidades.Rol;
 import sistema.BaseDatos;
 
 public class FrmNuevoUsuario extends JFrame {
@@ -28,7 +27,7 @@ public class FrmNuevoUsuario extends JFrame {
 	private JButton btnAceptar;
 	private JPasswordField txtContrasenia;
 	private JPasswordField txtConfirmarContrasenia;
-	private JComboBox<Rol> cboRoles;
+	private JComboBox<String> cboRoles;
 	private UsuarioNuevoListener listener;
 	private ControladorRol ctrlRol;
 	private FrmMensaje frmMsg;
@@ -100,7 +99,8 @@ public class FrmNuevoUsuario extends JFrame {
 		lblRol.setBounds(10, 133, 46, 14);
 		contentPane.add(lblRol);
 		
-		cboRoles = new JComboBox<Rol>();
+		cboRoles = new JComboBox<String>();
+		cboRoles.setMaximumRowCount(3);
 		cargarCombo();
 		cboRoles.setBounds(98, 129, 217, 22);
 		contentPane.add(cboRoles);
@@ -112,8 +112,9 @@ public class FrmNuevoUsuario extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(validarInformacionVentana()) {
 					if(listener != null) {
-						int idRol = cboRoles.getSelectedIndex();
-						listener.onUsuarioCreado(txtUsuario.getText(), txtDescripcionUsuario.getText(), txtContrasenia.getPassword().toString(), idRol);
+						String rol = cboRoles.getSelectedItem().toString();
+						int idRol = ctrlRol.getTblRol().obtenerRol(rol).getIdRol();
+						listener.onUsuarioCreado(txtUsuario.getText(), String.valueOf(txtContrasenia.getPassword()), txtDescripcionUsuario.getText(),idRol);
 					}
 					dispose();
 				} else {
@@ -135,6 +136,8 @@ public class FrmNuevoUsuario extends JFrame {
 	private boolean validarInformacionVentana() {
 
 		boolean valido = true;
+		String pass = String.valueOf(txtContrasenia.getPassword());
+		String confpass = String.valueOf(txtConfirmarContrasenia.getPassword());
 		String textoMensaje = "";
 		if(txtUsuario.getText().length() == 0) {
 			textoMensaje = "Debe proporcionar un nombre de usuario";
@@ -142,7 +145,7 @@ public class FrmNuevoUsuario extends JFrame {
 		} else if (txtDescripcionUsuario.getText().length() == 0) {
 			textoMensaje = "Debe proporcionar una descripción para el usuario";
 			valido = false;
-		} else if(txtContrasenia.getPassword().toString() != txtConfirmarContrasenia.getPassword().toString()) {
+		} else if( !pass.equals(confpass)  && pass.length() > 0) {
 			textoMensaje = "Las contraseñas no coinciden";
 			valido = false;
 		} else if (cboRoles.getSelectedItem() == null) {

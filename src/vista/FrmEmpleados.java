@@ -79,7 +79,7 @@ public class FrmEmpleados extends JFrame {
 				int idSeleccionado = Integer.parseInt(tblEmpleados.getModel().getValueAt(tblEmpleados.getSelectedRow(),0).toString());
 				if( idSeleccionado > 0)	{
 					Empleado objEmpleado = ctrlEmpleado.getTblEmpleado().obtenerEmpleado(idSeleccionado);
-					FrmModificarEmpleado frmEdit = new FrmModificarEmpleado(objEmpleado, new EmpleadoModificadoListener() {
+					FrmModificarEmpleado frmEdit = new FrmModificarEmpleado(db, objEmpleado, new EmpleadoModificadoListener() {
 					    @Override
 					    public void onEmpleadoModificado(int idEmpleado, int legajo, String nombre, String apellido) {
 					        Empleado objEmp = new Empleado();
@@ -104,7 +104,7 @@ public class FrmEmpleados extends JFrame {
 		btnAgregarEmpleado = new JButton("Alta");
 		btnAgregarEmpleado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado(new EmpleadoNuevoListener() {
+				FrmNuevoEmpleado frmNuevo = new FrmNuevoEmpleado(db, new EmpleadoNuevoListener() {
 				    @Override
 				    public void onEmpleadoCreado(int legajo, String nombre, String apellido) {
 				        Empleado objEmp = new Empleado();

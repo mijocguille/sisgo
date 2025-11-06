@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import operaciones.ControladorEquipoProyecto;
 import recursos.Equipo;
 import sistema.BaseDatos;
+import sistema.Util;
 
 public class FrmAgregarEquipoProyecto extends JFrame {
 
@@ -24,6 +25,7 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 	private ControladorEquipoProyecto ctrlEquipoProyecto;
 	private EquipoProyectoNuevoListener listener;
 	private int idEquipo;
+	private FrmMensaje frmMsg;
 
 
 	/**
@@ -95,8 +97,15 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listener.onEquipoProyectoCreado(idEquipo, Integer.parseInt(txtCantidad.getText()));
-				dispose();
+				if(validarInformacionVentana()) {
+					if(listener != null) {
+						listener.onEquipoProyectoCreado(idEquipo, Integer.parseInt(txtCantidad.getText()));
+						dispose();
+					}
+				} else {
+					frmMsg.setAlwaysOnTop(true);
+					frmMsg.setVisible(true);
+				}
 			}
 		});
 		btnAceptar.setBounds(302, 71, 89, 23);
@@ -104,4 +113,26 @@ public class FrmAgregarEquipoProyecto extends JFrame {
 		this.setLocationRelativeTo(null); 
 	}
 
+	private boolean validarInformacionVentana() {
+
+		boolean valido = true;
+		String textoMensaje = "";
+		if (txtEquipo.getText().length() == 0) {
+			textoMensaje = "Debe seleccionar un equipo para agregar al proyecto";
+			valido = false;
+		} else if (txtCantidad.getText().length() == 0) {
+			textoMensaje = "Debe ingresar una cantidad a agregar";
+			valido = false;
+		} else if (!Util.esEntero(txtCantidad.getText())) {
+			textoMensaje = "La cantidad debe ser un número";
+			valido = false;
+		} else if (Integer.parseInt(txtCantidad.getText()) <= 0) {
+			textoMensaje = "La cantidad debe ser mayor a 0";
+			valido = false;
+		}
+
+		frmMsg = new FrmMensaje(textoMensaje);
+				
+		return valido;
+	}
 }
