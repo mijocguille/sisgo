@@ -309,9 +309,6 @@ public class FrmMain extends JFrame {
 				}
 			}
 		}
-		
-		
-		
 	}
 	
 }
