@@ -4,11 +4,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JToolBar;
 
-import entidades.ControladorUsuario;
+import entidades.Accion;
+import entidades.TablaAccion;
+import entidades.TablaPermiso;
+import entidades.TablaUsuario;
+import entidades.Usuario;
 import sistema.BaseDatos;
 
 public class FrmMain extends JFrame {
@@ -34,13 +39,20 @@ public class FrmMain extends JFrame {
 	private JButton btnUsuarios;
 	private JButton btnRoles;
 	
+	private TablaUsuario tblUsuario;
+	private TablaPermiso tblPermiso;
+	private TablaAccion tblAccion;
+	
 	/**
 	 * Create the application.
 	 */
 	public FrmMain() {	
 		super();
-		iniciarSesion();
+		tblUsuario = new TablaUsuario(db);
+		tblPermiso = new TablaPermiso(db);
+		tblAccion = new TablaAccion(db);
 		initialize();
+		iniciarSesion();
 		this.setLocationRelativeTo(null); 
 	}
 
@@ -184,8 +196,7 @@ public class FrmMain extends JFrame {
 		frmLogin.setModal(true);
 		frmLogin.setAlwaysOnTop(true);
 		frmLogin.setVisible(true);
-		
-		
+		aplicarPermisos();
 	}
 	
 	public static FrmClientes crearWndClientes() {
@@ -253,6 +264,54 @@ public class FrmMain extends JFrame {
 		}
 		
 		return wndRoles;
+	}
+	
+	private void aplicarPermisos() {
+		Usuario usr = tblUsuario.obtenerUsuario(idUsuarioLogueado);
+		int idRol = usr.getIdRol();
+		ArrayList<Accion> colAcciones = tblAccion.obtenerAcciones();
+		btnClientes.setEnabled(false);
+		btnEmpleados.setEnabled(false);
+		btnEquipos.setEnabled(false);
+		btnInsumos.setEnabled(false);
+		btnPedidos.setEnabled(false);
+		btnProyectos.setEnabled(false);
+		btnRoles.setEnabled(false);
+		btnUsuarios.setEnabled(false);
+		
+		for(Accion a: colAcciones) {
+			if(tblPermiso.poseePermiso(idRol,a.getIdAccion())) {
+				switch(a.getNombreAccion()) {
+				case "Usuarios":
+					btnUsuarios.setEnabled(true);
+					break;
+				case "Roles":
+					btnRoles.setEnabled(true);
+					break;
+				case "Clientes":
+					btnClientes.setEnabled(true);
+					break;
+				case "Empleados":
+					btnEmpleados.setEnabled(true);
+					break;
+				case "Pedidos":
+					btnPedidos.setEnabled(true);
+					break;
+				case "Equipos":
+					btnEquipos.setEnabled(true);
+					break;
+				case "Insumos":
+					btnInsumos.setEnabled(true);
+					break;
+				case "Proyectos":
+					btnProyectos.setEnabled(true);
+					break;
+				}
+			}
+		}
+		
+		
+		
 	}
 	
 }

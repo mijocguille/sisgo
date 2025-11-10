@@ -67,5 +67,27 @@ public class TablaPermiso {
 		}
 		
 	}
+	
+	public boolean poseePermiso(int idRol, int idAccion) {
+		
+		try {
+			
+			boolean resultado = false;
+			Statement st = this.db.getConnection().createStatement();
+			String query = "select idAccion, idRol from permiso where idRol = " + idRol + " and idAccion = " + idAccion;
+			ResultSet rs = st.executeQuery(query);
+			
+			if(rs != null) {
+				if(rs.next()) {
+			    	resultado = true;			    	
+			    }
+			}
+			return resultado;
+		} catch(SQLException e) {
+			System.out.println("Error al ejecutar obtenerPermiso." + e.getMessage()); 
+			return false;
+		}
+		
+	}
 
 }
